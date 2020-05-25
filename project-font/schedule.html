@@ -37,13 +37,13 @@
       position: relative;
       border: 1px solid black;
       display: block;
+      border-radius: 4px;
     }
 
     div.schedule_header {
       width: 100%;
       height: 65px;
       position: relative;
-      border: 1px solid black;
       background-color: #E6903B;
       display: block;
     }
@@ -70,9 +70,10 @@
       display: block;
       height: calc(100% - 65px);
       position: relative;
+      overflow-y: scroll;
     }
 
-    div.schedule_body p {
+    div.schedule_body p.no_schedule {
       font-size: 32px;
       font-weight: bold;
       color: #E0DFDF;
@@ -82,12 +83,56 @@
       transform: translate(-50%, -50%);
     }
 
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    div.detail_block {
+      width: 450px;
+      height: 150px;
+      border: 1px solid black;
+      margin-top: 20px;
+      font-size: 0;
+      box-shadow: 0 0 6px;
+      border-radius: 4px;
+    }
+    div.detail_info{
+      border-top: 1px solid black;
+      display: block;
+      width: 100%;
+      height: calc(100% -80px);
+      font-size: 16px;
+    }
+    div.detail_time{
+     display: inline-block;
+     width: calc(100% - 120px);
+     height: 100%;
+     font-size: 16px;
+     text-align: center;
+    }
+    div.detail_img{
+      display: inline-block;
+      vertical-align: bottom;
+      width: 120px;
+      height: 100%;
+    }
+    div.detail_img img{
+      width:100%;
+      height: 100%;
+    }
+
+    div.detail_top{
+      width: 100%;
+      height: 80px;
+    }
+
     /* -----------------產品內容----------------- */
     div.product_content {
       width: 100%;
       height: 750px;
       position: relative;
       border: 1px solid black;
+      border-radius: 4px;
     }
 
     div.product_header {
@@ -98,7 +143,6 @@
       font-weight: bold;
       color: #343434;
       display: block;
-      border: 1px solid black;
       background-color: #E6903B;
     }
 
@@ -117,17 +161,13 @@
       height: 60px;
       position: relative;
       display: block;
-      border: 1px solid black;
       background-color: #E0DFDF;
       /* text-align: center; */
     }
-   
 
     div.product_body {
       max-width: 100%;
       height: calc(100% - 60px - 65px);
-      border: 1px solid black;
-      
     }
 
     div.body_content {
@@ -137,8 +177,10 @@
       max-width: 100%;
       max-height: 100%;
     }
-    div.body_content div.card{
+
+    div.body_content div.card {
       margin-top: 20px;
+      box-shadow: 0 0 6px;
     }
 
     div.btn_model button {
@@ -146,8 +188,7 @@
       float: right;
       margin: 20px 0 0 15px;
     }
-
-    div.input_title input {
+    div.input_title{
       width: 100%;
       height: 75px;
       border-radius: 0 30px 30px 0;
@@ -155,13 +196,20 @@
       font-size: 32px;
       font-weight: bold;
       color: white;
+      text-align: center;
+    }
+
+    div.input_title input {
+      
       border: 0px solid;
     }
 
     div#first_row div {
-      height: 90px;
+      height: 80px;
+      margin-bottom: 10px;
     }
-    span.love{
+
+    span.love {
       float: right;
     }
 
@@ -228,32 +276,37 @@
       outline: none;
       background: #f0f0f0;
     }
-    label.label_area{
-      text-align: center;
+
+    label.label_area {
       font-size: 20px;
       margin-right: 50px;
     }
-    label.label_area input{
-      text-align: center;
+
+    label.label_area input {
       display: inline-block;
-      /* position: relative; */
       top: 3px;
       width: 21px;
       height: 21px;
     }
+
     label.label_area a {
-      text-align: center;
       display: inline-block;
     }
-    div.checkbox_area{
-      position: absolute;
+
+    div.checkbox_area {
+      width: 100%;
+      /* position: absolute;
       top: 50%;
       right: 50%;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%); */
     }
-
-
-    /*------------------------------------------------------*/
+    /*---------------------操控none-------------------------*/
+    .-none{
+      display: none;
+    }
+    .-on{
+      display: none;
+    }
   </style>
 </head>
 
@@ -270,28 +323,30 @@
     <div class="row" id="first_row">
       <div class="col col-md-3" style="padding: 0;">
         <div class="input_title">
-          <input type="text" placeholder="請輸入標題">
-          <span><i class="fas fa-pen"></i></span>
+          <p></span>請輸入標題 <span><i class="fas fa-pen" style="font-size: 20px;"></i></p>
+          <input type="text" class="title_update -none">
+          
         </div>
       </div>
       <div class="col col-md-9">
         <div class="btn_model">
-          <button id="btn_map" type="button" class="btn btn-primary btn-lg">地圖模式</button>
-          <button id="btn_produce" type="button" class="btn btn-primary btn-lg">產生行程</button>
-          <button id="btn_Store" type="button" class="btn btn-primary btn-lg">儲存行程</button>
           <button id="btn_share" type="button" class="btn btn-primary btn-lg">分享行程</button>
+          <button id="btn_Store" type="button" class="btn btn-primary btn-lg">儲存行程</button>
+          <button id="btn_produce" type="button" class="btn btn-primary btn-lg">產生行程</button>
+          <button id="btn_map" type="button" class="btn btn-primary btn-lg">地圖模式</button>
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col col-md-1">
-        <input type="date" name="date" style="width: 100%;">
-        <button type="button" class="btn btn-primary btn-lg">Day1</button>
-        <button type="button" class="btn btn-primary btn-lg">Day2</button>
-        <button type="button" class="btn btn-primary btn-lg">Day3</button>
-        <button type="button" class="btn btn-primary btn-lg">Day4</button>
-        <button type="button" class="btn btn-primary btn-lg">Day5</button>
-        <button type="button" class="btn btn-primary btn-lg">新增一天</button>
+        <input class="update_date" type="date" name="date" style="width: 100%;">
+        <ul class="sum_day" data-days="5">
+          
+        
+        </ul>
+        <div class="add_day">
+          <button type="button" class="btn btn-primary btn-lg add_day">新增一天</button>
+        </div>
       </div>
       <div class="col col-md-4">
         <div class="schedule_content">
@@ -301,7 +356,12 @@
             <span class="plus"><i class="fas fa-plus fa-2x"></i></span>
           </div>
           <div class="schedule_body">
-            <p class="">請加入行程</p>
+            <p class="no_schedule">請加入行程</p>
+            <div class="schedule_body_content">
+              <ul class="schedule_list">
+                <!---------- 動態新增 ---------->
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -314,108 +374,49 @@
               <span class="icon"><i class="fa fa-search"></i></span>
             </div>
           </div>
+
           <div class="product_checkbox">
             <div class="checkbox_area">
-              <label class="label_area">
-                <input type="checkbox" name="product_group" value="all" class="checkbox_area">
-                <a>全部</a>
-              </label>
-              <label class="label_area">
-                <input type="checkbox" name="product_group" value="activities" class="checkbox_area">
-                <a>景點</a>
-              </label>
-              <label class="label_area">
-                <input type="checkbox" name="product_group" value="restaurant" class="checkbox_area">
-                <a>美食</a>
-              </label>
-              <label class="label_area">
-                <input type="checkbox" name="product_group" value="accommodation" class="checkbox_area">
-                <a>住宿</a>
-              </label>
-            </div>
-          </div>
-
-
-
-          <div class="product_body">
-            <div class="body_content" style="padding-left: 15px; padding-right: 15px;">
-              <div class="row">
-
-                <div class="col-6 col-md-6 col-lg-4">
-                  <div class="card">
-                    <img src="https://picsum.photos/200/100/?random=1" class="card-img-top">
-                    <div class="card-body">
-                      <h5 class="card-title">自由廣場</h5>
-                      <p class="card-text"><i class="fas fa-map-marker-alt"></i> 100台北市中正區民主大道</p>
-                      <span>4.3</span>
-                      <span><i class="fas fa-star"></i></span>
-                      <span><i class="fas fa-star"></i></span>
-                      <span><i class="fas fa-star"></i></span>
-                      <span><i class="fas fa-star"></i></span>
-                      <span><i class="fas fa-star"></i></span>
-                      <span class="love"><i class="far fa-heart fa-2x"></i></span>
-                    </div>
-                    <div class="list-group list-group-flush">
-                      <p class="list-group-item">Some quick example text to build on the card title and make up the bulk
-                        of the card's content</p>
-                    </div>
-                  </div>
+              <div class="row" style="padding-left: 15px; padding-right: 15px;">
+                <div class="col col-md-3">
+                  <label class="label_area">
+                    <input type="checkbox" name="product_group" value="all" class="checkbox_area">
+                    <a>全部</a>
+                  </label>
                 </div>
-
-                <div class="col-6 col-md-6 col-lg-4">
-                  <div class="card">
-                    <img src="https://picsum.photos/200/100/?random=1" class="card-img-top">
-                    <div class="card-body">
-                      <h5 class="card-title">自由廣場</h5>
-                      <p class="card-text"><i class="fas fa-map-marker-alt"></i> 100台北市中正區民主大道</p>
-                      <span>4.3</span>
-                      <span><i class="fas fa-star"></i></span>
-                      <span><i class="fas fa-star"></i></span>
-                      <span><i class="fas fa-star"></i></span>
-                      <span><i class="fas fa-star"></i></span>
-                      <span><i class="fas fa-star"></i></span>
-                      <span class="love"><i class="far fa-heart fa-2x"></i></span>
-                    </div>
-                    <div class="list-group list-group-flush">
-                      <p class="list-group-item">Some quick example text to build on the card title and make up the bulk
-                        of the card's content</p>
-                    </div>
-                  </div>
+                <div class="col col-md-3">
+                  <label class="label_area">
+                    <input type="checkbox" name="product_group" value="activities" class="checkbox_area">
+                    <a>景點</a>
+                  </label>
                 </div>
-
-                <div class="col-12 col-md-12 col-lg-4" style="width: 90%;"> 
-                  <div class="card">
-                    <img src="https://picsum.photos/200/100/?random=1" class="card-img-top">
-                    <div class="card-body">
-                      <h5 class="card-title">自由廣場</h5>
-                      <p class="card-text"><i class="fas fa-map-marker-alt"></i> 100台北市中正區民主大道</p>
-                      <span>4.3</span>
-                      <span><i class="fas fa-star"></i></span>
-                      <span><i class="fas fa-star"></i></span>
-                      <span><i class="fas fa-star"></i></span>
-                      <span><i class="fas fa-star"></i></span>
-                      <span><i class="fas fa-star"></i></span>
-                      <span class="love"><i class="far fa-heart fa-2x"></i></span>
-                    </div>
-                    <div class="list-group list-group-flush">
-                      <p class="list-group-item">Some quick example text to build on the card title and make up the bulk
-                        of the card's content</p>
-                    </div>
-                  </div>
+                <div class="col col-md-3">
+                  <label class="label_area">
+                    <input type="checkbox" name="product_group" value="restaurant" class="checkbox_area">
+                    <a>美食</a>
+                  </label>
                 </div>
-              
-
-
-
+                <div class="col col-md-3">
+                  <label class="label_area">
+                    <input type="checkbox" name="product_group" value="accommodation" class="checkbox_area">
+                    <a>住宿</a>
+                  </label>
+                </div>
               </div>
             </div>
           </div>
+
+          <div class="product_body">
+            <div class="body_content" style="padding-left: 15px; padding-right: 15px;">
+                <!---------- 動態新增 ---------->
+            </div>
+          </div>
+        </div>
 
         </div>
       </div>
     </div>
   </div>
-
 
 
   <!-- Optional JavaScript -->
@@ -428,6 +429,161 @@
   </script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
     integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous">
+  </script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    $(function(){
+      init();
+
+      $("div.body_content").on("click", "div.card", function(){
+        $(this).closest("div.col-lg-4").toggle("-none");
+        $("p.no_schedule").addClass("-none");
+        let product_name = $(this).find("h5").html();
+        let product_img = $(this).find("img").attr("src");
+        let stay_time = $(this).find("p.stay_time").html();
+        let insertHtml = 
+          `<li class="schedule_block" style="padding-left: 15px; padding-right: 15px;">
+                    <div class="row" style="padding-left: 15px; padding-right: 15px;">
+                      
+                      <div class="col col-md-10">
+                        <div class="row" style="padding-left: 15px; padding-right: 15px; margin-top: 20px;">
+                          <div class="col col-md-6">
+                            <span><i class="fas fa-car-side fa-2x"></i></span>
+                            <span>25KM</span>
+                          </div>
+                          <div class="col col-md-6">
+                            <span><i class="fas fa-arrow-down fa-2x"></i></span>
+                          </div>
+                        </div>
+
+                        <div class="detail_block">
+                          <div class="detail_top">
+                            <div class="detail_img">
+                              <img src="`+ product_img +`">
+                            </div>
+                            <div class="detail_time">
+                              <p style="font-size: 24px">`+ product_name +`</p>
+                              <p><i class="far fa-clock"></i><span> 建議遊玩時間：`+ stay_time +`小時</span></p>
+                            </div>
+                          </div>
+                          <div class="detail_info">
+                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem quisquam minima molestiae dolorem consequatur</p>
+                          </div>
+                        </div>
+
+                      </div>
+
+                      <div class="col col-md-1 align-self-center">
+                        <span class="trash"><i class="fas fa-trash-alt fa-2x"></i></span>
+                      </div>
+                      <div class="col col-md-1 align-self-center">
+                        <span><i class="fas fa-bars fa-2x"></i></span>
+                      </div>
+                    </div>
+
+                  </li>`;
+
+        let no_km = `<li class="schedule_block" style="padding-left: 15px; padding-right: 15px;">
+                    <div class="row" style="padding-left: 15px; padding-right: 15px;">
+                      <div class="col col-md-10">
+                        <div class="detail_block">
+                          <div class="detail_top">
+                            <div class="detail_img">
+                              <img src="`+ product_img +`">
+                            </div>
+                            <div class="detail_time">
+                              <p style="font-size: 24px">`+ product_name +`</p>
+                              <p><i class="far fa-clock"></i><span> 建議遊玩時間：`+ stay_time +`小時</span></p>
+                            </div>
+                          </div>
+                          <div class="detail_info">
+                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem quisquam minima molestiae dolorem consequatur</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col col-md-1 align-self-center">
+                        <span class="trash"><i class="fas fa-trash-alt fa-2x"></i></span>
+                      </div>
+                      <div class="col col-md-1 align-self-center">
+                        <span><i class="fas fa-bars fa-2x"></i></span>
+                      </div>
+                    </div>
+                  </li>`;
+
+        if($("ul.schedule_list").find("li").hasClass("schedule_block")){
+          $("ul.schedule_list").append(insertHtml); 
+        }else{
+          $("ul.schedule_list").append(no_km);   
+        }
+      });
+        
+      $("div.add_day").on("click", function(){
+        let last_day_num = parseInt($("ul.sum_day").find("li").last().attr("data-sort")) + 1;
+        let add_day = 
+          `<li class="day`+last_day_num+`" data-sort="`+last_day_num+`">
+            <button type="button" class="btn btn-primary btn-lg">Day`+last_day_num+`</button>
+          </li>`;
+        $("ul.sum_day").append(add_day);
+      })
+      let add_day ="";
+      let day = $("ul.sum_day").attr("data-days");
+          for(let i = 1; i <= day; i++){
+            add_day += 
+              `<li class="day`+ i +`" data-sort="`+ i +`">
+                <button type="button" class="btn btn-primary btn-lg">Day`+i+`</button>
+              </li>`;
+          }
+          $("ul.sum_day").append(add_day);
+
+    });
+
+    function init(){
+      $.ajax({
+        url: "http://localhost:8081/TDA101G1/project/JsonController",
+        type: "GET",
+        data: {"test": "test"},
+        dataType: "json",
+        beforeSend: function(){
+          $("div.body_content").html('<li style="text-align: center;"><i class="fas fa-spinner fa-spin fa-3x"></i></li>');
+        },
+        success: function(data){
+          let insertHtml = "";
+          let items = data.products;              //products = server傳回的key
+          console.log(items)
+          $.each(items, function(index, value){
+            console.log(value.product_Name)
+            insertHtml += `<div class="col-6 col-md-6 col-lg-4">
+                            <div class="card">
+                              <img src="https://picsum.photos/200/100/?random=1" class="card-img-top">
+                              <div class="card-body">
+                                <h5 class="card-title">`+ value.product_Name +`</h5>
+                                <p class="card-text"><i class="fas fa-map-marker-alt"></i><span> `+ value.product_Address +`</span></p>
+                                <span>4.3</span>
+                                <span><i class="fas fa-star"></i></span>
+                                <span><i class="fas fa-star"></i></span>
+                                <span><i class="fas fa-star"></i></span>
+                                <span><i class="fas fa-star"></i></span>
+                                <span><i class="fas fa-star"></i></span>
+                                <span class="love"><i class="far fa-heart fa-2x"></i></span>
+                              </div>
+                              <div class="list-group list-group-flush">
+                                <p class="list-group-item">`+ value.product_Intro +`</p>
+                              </div>
+                              <p class="stay_time -none">`+ value.product_Staytime+`</p>
+                            </div>
+                          </div>`
+          });
+         $("div.body_content").html("<div class='row'>" + insertHtml);
+
+
+        },
+        error: function(){
+          alert("fail")
+        }
+      });
+    }
+
+
   </script>
 </body>
 
