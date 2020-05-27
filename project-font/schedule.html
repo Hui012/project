@@ -331,7 +331,7 @@
       /* 預設：完全透明；設定 z-index: -1 會在整個頁面的後方，看不到，才不會擋到頁面元素。 */
       opacity: 0;
       z-index: -1;
-      transition: opacity 1s;
+      /* transition: opacity 1s; */
     }
 
     div.overlay_add_schedule.-on1 {
@@ -412,6 +412,9 @@
       display: inline-block;
       width: calc(100% - 120px - 34px - 34px);
       text-align: center;
+      vertical-align: bottom;
+    }
+    div.context_title p.text{
       font-size: 32px;
       font-weight: bold;
     }
@@ -460,9 +463,6 @@
       color: white;
     }
 
-    
-
-
   </style>
 </head>
 
@@ -497,8 +497,7 @@
       <div class="col col-md-1">
         <input class="update_date" type="date" name="date" style="width: 100%;">
         <ul class="sum_day" data-days="5">
-
-
+          <!--------------- 動態新增 --------------->
         </ul>
         <div class="add_day">
           <button type="button" class="btn btn-primary btn-lg add_day">新增一天</button>
@@ -515,7 +514,7 @@
             <p class="no_schedule">請加入行程</p>
             <div class="schedule_body_content">
               <ul class="schedule_list" id="schedule_list">
-                <!---------- 動態新增 ---------->
+                <!--------------- 動態新增 --------------->
               </ul>
             </div>
           </div>
@@ -564,7 +563,7 @@
 
           <div class="product_body">
             <div class="product_body_content" style="padding-left: 15px; padding-right: 15px;">
-              <!---------- 動態新增 ---------->
+              <!--------------- 動態新增 --------------->
             </div>
           </div>
         </div>
@@ -589,6 +588,7 @@
               </div>
               <div class="context_title">
                 <p class="text"></p>
+                <p style="font-size: 16px;"><i class="far fa-clock fa-1x"></i> 建議遊玩時間：<span></span>小時</p>
               </div>
             </div>
             <hr class="content_hr">
@@ -625,19 +625,25 @@
     $(function () {
       init();
       init2();
+
+      /*-----------------------------選取卡片的動作------------------------------*/
       let temp = "";
       let sort = 0;
       $("div.product_body_content").on("click", "div.card", function () {
         $(this).closest("div.col-lg-4").toggle("-none");
-        let product_ID = $(this).attr("data-product-id");
+        $("div.overlay_add_schedule").addClass("-on1");
+        $("div.overlay_add_schedule").fadeIn();
+        let product_ID = $(this).attr("id");
         let product_name = $(this).find("h5").html();
         let product_img = $(this).find("img").attr("src");
         let stay_time = $(this).find("p.stay_time").html();
-        $("div.context_title p").html(product_name);
+        $("div.context_title p.text").html(product_name);
         $("div.overlay_add_schedule img").attr("src", product_img);
         $("div.overlay_add_schedule").attr("data-product-id", product_ID);
+        $("div.context_title span").html(stay_time);
+        $("textarea#content_area").val("");
 
-
+        
 
         // let temp2 = $("ul.schedule_list").html()
         // if (temp !== temp2) {
@@ -672,18 +678,23 @@
         
         
 
-        $("div.overlay_add_schedule").addClass("-on1");
+        
 
       });
 
-      /*---------------------------------------------------------------------*/
+      /*-----------------------------點選確認的動作------------------------------*/
       $("div.btn_block button#btn_confirm").on("click", function(){      
-      $("p.no_schedule").addClass("-none");
-        let product_ID = $(this).attr("data-product-id");
-        let product_name = $(this).find("h5").html();
-        let product_img = $(this).find("img").attr("src");
-        let stay_time = $(this).find("p.stay_time").html();
-        let schedule_info = $(this).closest("div.overlay_content").find("textarea").val();
+        $("p.no_schedule").addClass("-none");
+        $("div.overlay_add_schedule").fadeOut();
+        let product_ID = $(this).closest("div.overlay_add_schedule").attr("data-product-id");
+        let product_name = $(this).closest("div.overlay_add_schedule").find("div.context_title p.text").html();
+        let product_img = $(this).closest("div.overlay_add_schedule").find("div.content_img img").attr("src");
+        let stay_time = $(this).closest("div.overlay_add_schedule").find("div.context_title span").html();
+        let schedule_info = $(this).closest("div.overlay_add_schedule").find("div.overlay_content textarea").val();
+        console.log(product_ID)
+        console.log(product_name)
+        console.log(product_img)
+        console.log(stay_time)
         console.log(schedule_info)
         sort += 1;
         let insertHtml =
@@ -740,7 +751,7 @@
                                   </div>
                                 </div>
                                 <div class="detail_info">
-                                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem quisquam minima molestiae dolorem consequatur</p>
+                                  <p>`+schedule_info+`</p>
                                 </div>
                               </div>
                             </div>
@@ -760,23 +771,29 @@
         }
       });
 
-      /***--------------------------------------------------------*/
+      /*-----------------------------點選取消的動作------------------------------*/
       // 關閉 Modal
       $("div.btn_block button#btn_cancel").on("click", function(){
-        let product_ID = $("div.overlay_add_schedule").attr("data-product-id");
-        $("div.overlay_add_schedule").addClass("-opacity-zero");
-                
-        // 設定隔一秒後，移除相關 class
-        setTimeout(function(){
-        $("div.overlay_add_schedule").removeClass("-on1 -opacity-zero");
-        }, 1000);
+        let product_ID = $(this).closest("div.overlay_add_schedule").attr("data-product-id");
+        $("div.overlay_add_schedule").fadeOut();
+        $("div.product_body_content").find("div#"+product_ID).closest("div.col-lg-4").toggle("-none"); //點選取消時，原選取的卡片，會返回產品列表
 
-        if($("div.card").attr("data-product-id") == product_ID){   /*--------------------------做到這裏要把取消的景點加回去*/
-          $(this).closest("div.col-lg-4").toggle("-none");
-        }
+
+        // $("div.overlay_add_schedule").addClass("-opacity-zero");
+        
+        // 設定隔一秒後，移除相關 class
+        // setTimeout(function(){
+        // $("div.overlay_add_schedule").removeClass("-on1 -opacity-zero");
+        // }, 700);
+
+       // $("div.product_body_content").find("div.col-lg-4").each(function(index, items){ //迴圈方式
+          // if($(items).find("div.card").attr("data-product-id") == product_ID){         //點選取消時，原選取的卡片，會返回產品列表
+          //   $(this).closest("div.col-lg-4").toggle("-none");
+          // }
+       // });
       });
 
-      /*-----------------------------新增天數------------------------------*/
+      /*-----------------------------新增天數的按鈕------------------------------*/
       $("div.add_day").on("click", function () {
         let last_day_num = parseInt($("ul.sum_day").find("li").last().attr("data-sort")) + 1;
         let add_day =
@@ -815,6 +832,7 @@
 
     });
 
+/*-----------------------------畫面一載入時的動作------------------------------*/
     function init() {
       $.ajax({
         url: "http://localhost:8081/TDA101G1/project/JsonController",
@@ -833,7 +851,7 @@
           console.log(items)
           $.each(items, function (index, value) {
             insertHtml += `<div class="col-6 col-md-6 col-lg-4">
-                            <div class="card" data-product-id="` + value.product_ID + `">
+                            <div id="`+ value.product_ID +`" class="card">
                               <img src="https://picsum.photos/200/100/?random=1" class="card-img-top">
                               <div class="card-body">
                                 <h5 class="card-title">` + value.product_Name + `</h5>
@@ -863,8 +881,8 @@
       });
     }
 
+/*-----------------------------載入選擇的天數------------------------------*/
     function init2() {
-      /*-----------------------------載入選擇的天數------------------------------*/
       let add_day = "";
       let day = $("ul.sum_day").attr("data-days");
       for (let i = 1; i <= day; i++) {
