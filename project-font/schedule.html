@@ -1,3 +1,9 @@
+<!-- <%@ page language="java" contentType="text/html; charset=BIG5"
+    pageEncoding="BIG5"%>
+<%
+	String date = (String)session.getAttribute("date");
+
+%> -->
 <!doctype html>
 <html lang="en">
 
@@ -320,6 +326,10 @@
       display: none;
     }
 
+    .-bg {
+      background-color: #E6903B;
+    }
+
     /*-----------------------填寫資訊-----------------------*/
     div.overlay_add_schedule {
       position: fixed;
@@ -399,22 +409,26 @@
     div.content_top {
       margin: 20px 34px 0 34px;
     }
+
     div.content_img {
       width: 150px;
       height: 120px;
       display: inline-block;
     }
+
     div.content_img img {
       width: 100%;
       height: 100%;
     }
+
     div.context_title {
       display: inline-block;
       width: calc(100% - 120px - 34px - 34px);
       text-align: center;
       vertical-align: bottom;
     }
-    div.context_title p.text{
+
+    div.context_title p.text {
       font-size: 32px;
       font-weight: bold;
     }
@@ -430,9 +444,11 @@
       font-weight: bold;
       color: #343434;
     }
+
     div.text_info {
       text-align: center;
     }
+
     textarea#content_area {
       max-height: 110px;
       min-height: 110px;
@@ -447,6 +463,7 @@
       bottom: 0;
       text-align: center;
     }
+
     button#btn_confirm {
       background-color: #E6903B;
       width: 150px;
@@ -454,6 +471,7 @@
       border-radius: 4px;
       color: white;
     }
+
     button#btn_cancel {
       background-color: #E5B280;
       width: 150px;
@@ -462,7 +480,6 @@
       border-radius: 4px;
       color: white;
     }
-
   </style>
 </head>
 
@@ -478,8 +495,8 @@
   <div class="container-fluid">
     <div class="row" id="first_row">
       <div class="col col-md-3" style="padding: 0;">
-        <div class="input_title">
-          <p data-schedule-id="CID000001"></span>請輸入標題 <span><i class="fas fa-pen" style="font-size: 20px;"></i></p>
+        <div class="input_title" data-schedule-id="CID000001">
+          <p></span>請輸入標題 <span><i class="fas fa-pen" style="font-size: 20px;"></i></p>
           <input type="text" class="title_update -none">
 
         </div>
@@ -513,9 +530,12 @@
           <div class="schedule_body">
             <p class="no_schedule">請加入行程</p>
             <div class="schedule_body_content">
+
               <ul class="schedule_list" id="schedule_list">
                 <!--------------- 動態新增 --------------->
+
               </ul>
+
             </div>
           </div>
         </div>
@@ -621,7 +641,6 @@
   </script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script>
-
     $(function () {
       init();
       init2();
@@ -643,7 +662,7 @@
         $("div.context_title span").html(stay_time);
         $("textarea#content_area").val("");
 
-        
+
 
         // let temp2 = $("ul.schedule_list").html()
         // if (temp !== temp2) {
@@ -675,122 +694,46 @@
         //   });
         // }
 
-        
-        
 
-        
+
 
       });
 
       /*-----------------------------點選確認的動作------------------------------*/
-      $("div.btn_block button#btn_confirm").on("click", function(){      
+      $("div.btn_block button#btn_confirm").on("click", function () {
         $("p.no_schedule").addClass("-none");
         $("div.overlay_add_schedule").fadeOut();
         let product_ID = $(this).closest("div.overlay_add_schedule").attr("data-product-id");
         let product_name = $(this).closest("div.overlay_add_schedule").find("div.context_title p.text").html();
         let product_img = $(this).closest("div.overlay_add_schedule").find("div.content_img img").attr("src");
         let stay_time = $(this).closest("div.overlay_add_schedule").find("div.context_title span").html();
-        let schedule_info = $(this).closest("div.overlay_add_schedule").find("div.overlay_content textarea").val();
-        console.log(product_ID)
-        console.log(product_name)
-        console.log(product_img)
-        console.log(stay_time)
-        console.log(schedule_info)
+        let schedule_info = $(this).closest("div.overlay_add_schedule").find("div.overlay_content textarea")
+          .val();
         sort += 1;
-        let insertHtml =
-          `<li class="schedule_block" data-product-id="` + product_ID + `" data-sort="` + sort + `" style="padding-left: 15px; padding-right: 15px;">
-                          <div class="row" style="padding-left: 15px; padding-right: 15px;">
-                            <div class="col col-md-10">
-                              <div class="row" style="padding-left: 15px; padding-right: 15px; margin-top: 20px;">
-                                <div class="col col-md-6">
-                                  <span><i class="fas fa-car-side fa-2x"></i></span>
-                                  <span>25KM</span>
-                                </div>
-                                <div class="col col-md-6">
-                                  <span><i class="fas fa-arrow-down fa-2x"></i></span>
-                                </div>
-                              </div>
-
-                              <div class="detail_block">
-                                <div class="detail_top">
-                                  <div class="detail_img">
-                                    <img src="` + product_img + `">
-                                  </div>
-                                  <div class="detail_time">
-                                    <p style="font-size: 24px">` + product_name + `</p>
-                                    <p><i class="far fa-clock"></i><span> 建議遊玩時間：` + stay_time + `小時</span></p>
-                                  </div>
-                                </div>
-                                <div class="detail_info">
-                                  <p>`+schedule_info+`</p>
-                                </div>
-                              </div>
-
-                            </div>
-
-                            <div class="col col-md-1 align-self-center">
-                              <span class="trash"><i class="fas fa-trash-alt fa-2x"></i></span>
-                            </div>
-                            <div class="col col-md-1 align-self-center">
-                              <span><i class="fas fa-bars fa-2x"></i></span>
-                            </div>
-                          </div>
-                        </li>`;
-
-        let no_km = `<li class="schedule_block" data-product-id="` + product_ID + `" style="padding-left: 15px; padding-right: 15px;">
-                          <div class="row" style="padding-left: 15px; padding-right: 15px;">
-                            <div class="col col-md-10">
-                              <div class="detail_block">
-                                <div class="detail_top">
-                                  <div class="detail_img">
-                                    <img src="` + product_img + `">
-                                  </div>
-                                  <div class="detail_time">
-                                    <p style="font-size: 24px">` + product_name + `</p>
-                                    <p><i class="far fa-clock"></i><span> 建議遊玩時間：` + stay_time + `小時</span></p>
-                                  </div>
-                                </div>
-                                <div class="detail_info">
-                                  <p>`+schedule_info+`</p>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col col-md-1 align-self-center">
-                              <span class="trash"><i class="fas fa-trash-alt fa-2x"></i></span>
-                            </div>
-                            <div class="col col-md-1 align-self-center">
-                              <span><i class="fas fa-bars fa-2x"></i></span>
-                            </div>
-                          </div>
-                        </li>`;
-
-        if ($("ul.schedule_list").find("li").hasClass("schedule_block")) {
-          $("ul.schedule_list").append(insertHtml);
-        } else {
-          $("ul.schedule_list").append(no_km);
-        }
+        scheduleView(product_ID, sort, product_img, product_name, stay_time, schedule_info);
       });
 
       /*-----------------------------點選取消的動作------------------------------*/
       // 關閉 Modal
-      $("div.btn_block button#btn_cancel").on("click", function(){
+      $("div.btn_block button#btn_cancel").on("click", function () {
         let product_ID = $(this).closest("div.overlay_add_schedule").attr("data-product-id");
         $("div.overlay_add_schedule").fadeOut();
-        $("div.product_body_content").find("div#"+product_ID).closest("div.col-lg-4").toggle("-none"); //點選取消時，原選取的卡片，會返回產品列表
+        $("div.product_body_content").find("div#" + product_ID).closest("div.col-lg-4").toggle(
+          "-none"); //點選取消時，原選取的卡片，會返回產品列表
 
 
         // $("div.overlay_add_schedule").addClass("-opacity-zero");
-        
+
         // 設定隔一秒後，移除相關 class
         // setTimeout(function(){
         // $("div.overlay_add_schedule").removeClass("-on1 -opacity-zero");
         // }, 700);
 
-       // $("div.product_body_content").find("div.col-lg-4").each(function(index, items){ //迴圈方式
-          // if($(items).find("div.card").attr("data-product-id") == product_ID){         //點選取消時，原選取的卡片，會返回產品列表
-          //   $(this).closest("div.col-lg-4").toggle("-none");
-          // }
-       // });
+        // $("div.product_body_content").find("div.col-lg-4").each(function(index, items){ //迴圈方式
+        // if($(items).find("div.card").attr("data-product-id") == product_ID){         //點選取消時，原選取的卡片，會返回產品列表
+        //   $(this).closest("div.col-lg-4").toggle("-none");
+        // }
+        // });
       });
 
       /*-----------------------------新增天數的按鈕------------------------------*/
@@ -803,24 +746,72 @@
         $("ul.sum_day").append(add_day);
       });
 
+      /*-----------------------------選取天數的按鈕------------------------------*/
       $("ul.sum_day").on("click", "button", function () {
-        $("div.schedule_header p").text($(this).text());
-        $("ul.schedule_list").html("");
-        temp = "";
-        init();
-        $.ajax({
-          url: "http://localhost:8081/TDA101G1/project/JsonController",
-          type: "GET",
-          data: {
-            "updateSchedule": "updateSchedule"
-          },
-          dataType: "json",
-          success: function (data) {
-            console.log(data);
-          }
-
+        let daynumber = $("div.schedule_header p").html();              //取得當前的天數
+        let get_data = JSON.parse(sessionStorage.getItem(daynumber));   //取得當前sessionStorage資料
+        let cid = $("div.input_title").attr("data-schedule-id");        //取得總行程ID
+        let current_data = [];
+        $("ul.schedule_list").find("li").each(function (index, items) { //讀取當前天數的內容，儲存於current_data
+          let product_ID = $(this).attr("data-product-id");
+          let product_name = $(this).find("div.detail_time p").html();
+          let product_img = $(this).find("div.detail_img img").attr("src");
+          let stay_time = $(this).find("div.detail_time span").html();
+          let schedule_info = $(this).find("div.detail_info p").html();
+          let sort = $(this).attr("data-sort");
+          let data = {
+            "product_ID": product_ID,
+            "product_name": product_name,
+            "product_img": product_img,
+            "stay_time": stay_time,
+            "sort": sort,
+            "schedule_info": schedule_info
+          };
+          current_data.push(data);
         });
 
+        if(current_data.equals(get_data)){
+          console.log("the_same")
+
+
+        }else{
+          console.log("diffrent")
+          sessionStorage.setItem(daynumber, JSON.stringify(current_data));
+         }
+        // if (current_data == get_data) {
+        //   console.log("yes")
+        //   $.each(JSON.parse(get_data), function (index, value) {
+
+        //     console.log(value)
+        //     //scheduleView(product_ID, sort, product_img, product_name, stay_time, schedule_info);
+        //   });
+        // } else {
+        //   // console.log("no")
+        //   sessionStorage.setItem(daynumber, JSON.stringify(current_data));
+        // }
+
+        let title = $(this).text();
+        $("div.schedule_header p").text(title);
+        $("ul.schedule_list").html("");
+
+
+        // let get_data = JSON.parse(sessionStorage.getItem($(this).text()));
+
+
+        //   temp = "";
+        init();
+        //   $.ajax({
+        //     url: "http://localhost:8081/TDA101G1/project/JsonController",
+        //     type: "GET",
+        //     data: {
+        //       "updateSchedule": "updateSchedule"
+        //     },
+        //     dataType: "json",
+        //     success: function (data) {
+        //       console.log(data);
+        //     }
+
+        //   });
 
 
       });
@@ -829,10 +820,37 @@
       // console.log("新增了")
       // })
 
+      $("button#btn_Store").on("click", function(){
+        let insertData = [];
+        let cid = $("div.input_title").attr("data-schedule-id"); 
+        $("ul.sum_day").find("li").each(function(index, items){
+          let sessionDate = JSON.parse(sessionStorage.getItem("Day"+(index+1)));
+          insertData.push(sessionDate);
+        });
+        console.log(insertData)
+        $.ajax({
+        url: "http://localhost:8081/TDA101G1/project/JsonController",
+        type: "GET",
+        data: {
+          "insertSchedule": "insertSchedule", 
+          "cid" : cid,
+          "insertData": JSON.stringify(insertData)
+        },
+        dataType: "json",
+        success: function (data) {
+          console.log(data);
+        },
+        error:function(){
+          console.log("fail")
+        }
+        });
+      });
+
+
 
     });
 
-/*-----------------------------畫面一載入時的動作------------------------------*/
+    /*-----------------------------畫面一載入時的動作------------------------------*/
     function init() {
       $.ajax({
         url: "http://localhost:8081/TDA101G1/project/JsonController",
@@ -851,7 +869,7 @@
           console.log(items)
           $.each(items, function (index, value) {
             insertHtml += `<div class="col-6 col-md-6 col-lg-4">
-                            <div id="`+ value.product_ID +`" class="card">
+                            <div id="` + value.product_ID + `" class="card">
                               <img src="https://picsum.photos/200/100/?random=1" class="card-img-top">
                               <div class="card-body">
                                 <h5 class="card-title">` + value.product_Name + `</h5>
@@ -881,18 +899,136 @@
       });
     }
 
-/*-----------------------------載入選擇的天數------------------------------*/
+    /*-----------------------------載入選擇的天數------------------------------*/
     function init2() {
       let add_day = "";
       let day = $("ul.sum_day").attr("data-days");
       for (let i = 1; i <= day; i++) {
         add_day +=
-          `<li class="day` + i + `" data-sort="` + i + `">
+          `<li class="Day` + i + `" data-sort="` + i + `">
                 <button type="button" class="btn btn-primary btn-lg">Day` + i + `</button>
               </li>`;
       }
       $("ul.sum_day").append(add_day);
     }
+
+
+    /*--------------------------------------------------------*/
+
+    function scheduleView(product_ID, sort, product_img, product_name, stay_time, schedule_info) {
+      let insertHtml =
+        `<li class="schedule_block" data-product-id="` + product_ID + `"data-sort="` + sort + `" style="padding-left: 15px; padding-right: 15px;">
+                          <div class="row" style="padding-left: 15px; padding-right: 15px;">
+                            <div class="col col-md-10">
+                                <div class="row" style="padding-left: 15px; padding-right: 15px; margin-top: 20px;">
+                                <div class="col col-md-6">
+                                  <span><i class="fas fa-car-side fa-2x"></i></span>
+                                  <span>25KM</span>
+                                </div>
+                                <div class="col col-md-6">
+                                  <span><i class="fas fa-arrow-down fa-2x"></i></span>
+                                </div>
+                              </div>
+
+                              <div class="detail_block">
+                                <div class="detail_top">
+                                  <div class="detail_img">
+                                    <img src="` + product_img + `">
+                                  </div>
+                                  <div class="detail_time">
+                                    <p style="font-size: 24px">` + product_name + `</p>
+                                    <p><i class="far fa-clock"></i> 建議遊玩時間：<span>` + stay_time + `</span>小時</p>
+                                  </div>
+                                </div>
+                                <div class="detail_info">
+                                  <p>` + schedule_info + `</p>
+                                </div>
+                              </div>
+
+                            </div>
+                            
+                            <div class="col col-md-1 align-self-center" style="margin-top:50px;">
+                              <span class="trash"><i class="fas fa-trash-alt fa-2x"></i></span>
+                            </div>
+                            <div class="col col-md-1 align-self-center" style="margin-top:50px;">
+                              <span><i class="fas fa-bars fa-2x"></i></span>
+                            </div>
+                          </div>
+                        </li>`;
+
+      let no_km = `<li class="schedule_block" data-product-id="` + product_ID + `"data-sort="` + sort + `" style="padding-left: 15px; padding-right: 15px;">
+                          <div class="row" style="padding-left: 15px; padding-right: 15px;">
+                            <div class="col col-md-10">
+                              <div class="detail_block">
+                                <div class="detail_top">
+                                  <div class="detail_img">
+                                    <img src="` + product_img + `">
+                                  </div>
+                                  <div class="detail_time">
+                                    <p style="font-size: 24px">` + product_name + `</p>
+                                    <p><i class="far fa-clock"></i> 建議遊玩時間：<span>` + stay_time + `</span>小時</p>
+                                  </div>
+                                </div>
+                                <div class="detail_info">
+                                  <p>` + schedule_info + `</p>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col col-md-1 align-self-center">
+                              <span class="trash"><i class="fas fa-trash-alt fa-2x"></i></span>
+                            </div>
+                            <div class="col col-md-1 align-self-center">
+                              <span><i class="fas fa-bars fa-2x"></i></span>
+                            </div>
+                          </div>
+                        </li>`;
+
+      if ($("ul.schedule_list").find("li").hasClass("schedule_block")) {
+        $("ul.schedule_list").append(insertHtml);
+      } else {
+        $("ul.schedule_list").append(no_km);
+      }
+      // let product_ID = $("ul.schedule_list").find("li").attr("data-product-id");
+      //     let product_name = $("ul.schedule_list").find("div.detail_time p").html();
+      //     let product_img = $("ul.schedule_list").find("div.detail_img img").attr("src");
+      //     let stay_time = $("ul.schedule_list").find("div.detail_time span").html();
+      //     let schedule_info = $("ul.schedule_list").find("div.detail_info p").html();
+      //     let storage = {"Day1": $("ul.schedule_list").html()}
+      //     console.log(daynumber)
+      //     console.log(product_ID)
+      //     console.log(product_name)
+      //     console.log(product_img)
+      //     console.log(stay_time)
+      //     console.log(schedule_info)
+      //     console.log(cid)
+    }
+
+    // attach the .equals method to Array's prototype to call it on any array
+    Array.prototype.equals = function (array) {
+      // if the other array is a falsy value, return
+      if (!array)
+        return false;
+      // compare lengths - can save a lot of time 
+      if (this.length != array.length)
+        return false;
+
+      for (var i = 0, l = this.length; i < l; i) {
+        // Check if we have nested arrays
+        if (this[i] instanceof Object && array[i] instanceof Object) {
+          for (let j in this[i]){
+            console.log(this[i][j])
+            console.log(array[i][j])
+            if(this[i][j] != array[i][j])
+              return false;
+          }
+        }
+      }
+      return true;
+    }
+    // Hide method from for-in loops
+    Object.defineProperty(Array.prototype, "equals", {
+      enumerable: false
+    });
   </script>
 </body>
 
