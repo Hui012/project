@@ -495,7 +495,7 @@
   <div class="container-fluid">
     <div class="row" id="first_row">
       <div class="col col-md-3" style="padding: 0;">
-        <div class="input_title" data-schedule-id="CID000001">
+        <div class="input_title" data-schedule-id="CID000020">
           <p></span>請輸入標題 <span><i class="fas fa-pen" style="font-size: 20px;"></i></p>
           <input type="text" class="title_update -none">
 
@@ -658,7 +658,7 @@
         let stay_time = $(this).find("p.stay_time").html();
         $("div.context_title p.text").html(product_name);
         $("div.overlay_add_schedule img").attr("src", product_img);
-        $("div.overlay_add_schedule").attr("data-product-id", product_ID);
+        $("div.overlay_add_schedule").attr("id", product_ID);
         $("div.context_title span").html(stay_time);
         $("textarea#content_area").val("");
 
@@ -693,46 +693,80 @@
         //     },
         //   });
         // }
-
-
-
-
       });
 
       /*-----------------------------點選確認的動作------------------------------*/
       $("div.btn_block button#btn_confirm").on("click", function () {
         $("p.no_schedule").addClass("-none");
         $("div.overlay_add_schedule").fadeOut();
-        let product_ID = $(this).closest("div.overlay_add_schedule").attr("data-product-id");
+        let product_ID = $(this).closest("div.overlay_add_schedule").attr("id");
         let product_name = $(this).closest("div.overlay_add_schedule").find("div.context_title p.text").html();
         let product_img = $(this).closest("div.overlay_add_schedule").find("div.content_img img").attr("src");
         let stay_time = $(this).closest("div.overlay_add_schedule").find("div.context_title span").html();
-        let schedule_info = $(this).closest("div.overlay_add_schedule").find("div.overlay_content textarea")
-          .val();
+        let schedule_info = $(this).closest("div.overlay_add_schedule").find("div.overlay_content textarea").val();
         sort += 1;
-        scheduleView(product_ID, sort, product_img, product_name, stay_time, schedule_info);
+
+        // if($("ul.schedule_list").find("li").attr("id") == null){
+        //   scheduleView(product_ID, sort, product_img, product_name, stay_time, schedule_info);
+        // } else{
+        let schedule_id = [];
+        $("ul.schedule_list").find("li").each(function (index, items) {
+          schedule_id.push($(this).attr("id"));
+        });
+        console.log(schedule_id)
+        let boolean = false;
+        if (schedule_id.length != 0) {
+          for (j of schedule_id) {
+            if (j === product_ID) {
+              boolean = true;
+            }
+          }
+        } 
+          
+          if(boolean == false){
+            scheduleView(product_ID, sort, product_img, product_name, stay_time, schedule_info);
+          }else{
+            $("div.detail_block").closest("li#" + product_ID).find("div.detail_info p").html(schedule_info);
+          }
+
+        
+
+
+        // }
+
+
+        // if ($("ul.schedule_list").find("li").hasClass("schedule_block")) {
+        //  $("div.detail_b  lock").closest("li#" + product_ID).find("div.detail_info p").html(schedule_info)
+        // }else{
+        // }
+        // scheduleView(product_ID, sort, product_img, product_name, stay_time, schedule_info);
+
       });
 
       /*-----------------------------點選取消的動作------------------------------*/
       // 關閉 Modal
       $("div.btn_block button#btn_cancel").on("click", function () {
-        let product_ID = $(this).closest("div.overlay_add_schedule").attr("data-product-id");
+        let product_ID = $(this).closest("div.overlay_add_schedule").attr("id");
         $("div.overlay_add_schedule").fadeOut();
-        $("div.product_body_content").find("div#" + product_ID).closest("div.col-lg-4").toggle("-none"); //點選取消時，原選取的卡片，會返回產品列表
 
+        let schedule_id = [];
+        $("ul.schedule_list").find("li").each(function (index, items) {
+          schedule_id.push($(this).attr("id"));
+        });
+        console.log(schedule_id)
+        let boolean = false;              //只是為了判別陣列的內容是否相等，若存在為true
+        if (schedule_id.length != 0) {
+          for (j of schedule_id) {
+            if (j === product_ID) {
+              boolean = true;
+            }
+          }
+        } 
 
-        // $("div.overlay_add_schedule").addClass("-opacity-zero");
-
-        // 設定隔一秒後，移除相關 class
-        // setTimeout(function(){
-        // $("div.overlay_add_schedule").removeClass("-on1 -opacity-zero");
-        // }, 700);
-
-        // $("div.product_body_content").find("div.col-lg-4").each(function(index, items){ //迴圈方式
-        // if($(items).find("div.card").attr("data-product-id") == product_ID){         //點選取消時，原選取的卡片，會返回產品列表
-        //   $(this).closest("div.col-lg-4").toggle("-none");
-        // }
-        // });
+        if(boolean == false){             //若為false就是產品列表所點選的動作
+          $("div.product_body_content").find("div#" + product_ID).closest("div.col-lg-4").toggle("-none"); //點選取消時，原選取的卡片，會返回產品列表
+        }
+  
       });
 
       /*-----------------------------新增天數的按鈕------------------------------*/
@@ -747,13 +781,13 @@
 
       /*-----------------------------選取天數的按鈕------------------------------*/
       $("ul.sum_day").on("click", "button", function () {
-        let day_number = $("div.schedule_header p").html();                    //取得當前的天數
-        let get_sessionData = JSON.parse(sessionStorage.getItem(day_number));  //取得當前sessionStorage資料
-        let cid = $("div.input_title").attr("data-schedule-id");               //取得總行程ID
+        let day_number = $("div.schedule_header p").html(); //取得當前的天數
+        let get_sessionData = JSON.parse(sessionStorage.getItem(day_number)); //取得當前sessionStorage資料
+        let cid = $("div.input_title").attr("data-schedule-id"); //取得總行程ID
 
         let current_data = [];
-        $("ul.schedule_list").find("li").each(function (index, items) {        //讀取當前天數的內容，儲存於current_data
-          let product_ID = $(this).attr("data-product-id");
+        $("ul.schedule_list").find("li").each(function (index, items) { //讀取當前天數的內容，儲存於current_data
+          let product_ID = $(this).attr("id");
           let product_name = $(this).find("div.detail_time p").html();
           let product_img = $(this).find("div.detail_img img").attr("src");
           let stay_time = $(this).find("div.detail_time span").html();
@@ -770,26 +804,18 @@
           current_data.push(data);
         });
 
-        $("div.schedule_header p").text($(this).text());                            //將行程表的天數切換為選取的天數
-        $("ul.schedule_list").html("");                               //先將列表清空
-        if(!current_data.equals(get_sessionData)){
+        $("div.schedule_header p").text($(this).text()); //將行程表的天數切換為選取的天數
+        $("ul.schedule_list").html(""); //先將列表清空
+        if (!current_data.equals(get_sessionData)) {
           console.log("diffrent")
-          sessionStorage.setItem(day_number, JSON.stringify(current_data));         //若內容物不同，就存到sessionStorage
-        }else{
-                                                      
-         
+          sessionStorage.setItem(day_number, JSON.stringify(current_data)); //若內容物不同，就存到sessionStorage
         }
 
-        let get_Data = JSON.parse(sessionStorage.getItem($(this).text()));          //取得要切換天數的sessionStorage
-          console.log(get_Data);
-          $.each(get_Data, function(index, items){
-            scheduleView(items.product_ID, items.sort, items.product_img, items.product_name, items.stay_time, items.schedule_info);
-          });
-          
-         
-
-        
-
+        let get_Data = JSON.parse(sessionStorage.getItem($(this).text())); //取得要切換天數的sessionStorage，把資料印出
+        console.log(get_Data);
+        $.each(get_Data, function (index, items) {
+          scheduleView(items.product_ID, items.sort, items.product_img, items.product_name, items.stay_time,items.schedule_info);
+        });
 
         //   temp = "";
         init();
@@ -812,12 +838,50 @@
       // $("ul#schedule_list").on("DOMNodeInserted",function(){
       // console.log("新增了")
       // })
+      /*-----------------------------刪除行程，點選垃圾桶的icon------------------------------*/
+      $("ul.schedule_list").on("click", "li span.trash", function () {
+        $(this).closest("li.schedule_block").remove();
+        let current_data = [];
+          $("ul.schedule_list").find("li").each(function (index, items) {
+            let product_ID = $(this).attr("id");
+            let product_name = $(this).find("div.detail_time p").html();
+            let product_img = $(this).find("div.detail_img img").attr("src");
+            let stay_time = $(this).find("div.detail_time span").html();
+            let schedule_info = $(this).find("div.detail_info p").html();
+            let sort = $(this).attr("data-sort");
+            let data = {
+              "product_ID": product_ID,
+              "product_name": product_name,
+              "product_img": product_img,
+              "stay_time": stay_time,
+              "sort": sort,
+              "schedule_info": schedule_info
+            };
+            current_data.push(data);
+          });
+          
+          $("ul.schedule_list").html("");
+          for(i of current_data){
+            scheduleView(i.product_ID, i.sort, i.product_img, i.product_name, i.stay_time, i.schedule_info);
+          }       
+        
+        // $(this).closest("li.schedule_block").animate({
+        //   opacity: 0,
+        // },1000, function(){
+        //     $(this).remove();
 
-      $("button#btn_Store").on("click", function(){
+        //     //$(this).next().find("div.row.del").remove();
+        //    });
+
+           // $(this).closest("li.schedule_block").fadeOut()
+      });
+
+      /*-----------------------------點選儲存的按鈕------------------------------*/
+      $("button#btn_Store").on("click", function () {
         let insertData = [];
-        let cid = $("div.input_title").attr("data-schedule-id"); 
-        $("ul.sum_day").find("li").each(function(index, items){
-          let sessionDate = JSON.parse(sessionStorage.getItem("Day"+(index+1)));
+        let cid = $("div.input_title").attr("data-schedule-id");
+        $("ul.sum_day").find("li").each(function (index, items) {
+          let sessionDate = JSON.parse(sessionStorage.getItem("Day" + (index + 1)));
           // if(sessionDate == null){
           //   sessionDate = [];
           // }
@@ -825,32 +889,51 @@
         });
         console.log(insertData)
         $.ajax({
-        url: "http://localhost:8081/TDA101G1/project/JsonController",
-        type: "GET",
-        data: {
-          "insertSchedule": "insertSchedule", 
-          "cid" : cid,
-          "insertData": JSON.stringify(insertData)
-        },
-        dataType: "json",
-        success: function (data) {
-          console.log(data);
-          $.each(data.result, function(index, items){
-            // console.log(index)
-            // console.log(items)
-          })
-        },
-        error:function(){
-          console.log("fail")
-        }
+          url: "http://localhost:8081/TDA101G1/project/JsonController",
+          type: "GET",
+          data: {
+            "insertSchedule": "insertSchedule",
+            "cid": cid,
+            "insertData": JSON.stringify(insertData)
+          },
+          dataType: "json",
+          success: function (data) {
+            console.log(data);
+            alert("儲存成功")
+            $.each(data.result, function (index, items) {
+              // console.log(index)
+              // console.log(items)
+            })
+          },
+          error: function () {
+            console.log("fail")
+          }
         });
       });
 
+      /*-----------------------------點選行程，修改行程備註------------------------------*/
+      $("ul.schedule_list").on("click", "li div.detail_block", function () {
+        $("div.overlay_add_schedule").addClass("-on1");
+        $("div.overlay_add_schedule").fadeIn();
+        let day_number = $("div.schedule_header p").html();
+        let product_ID = $(this).closest("li").attr("id");
+        let product_name = $(this).find("div.detail_time p").html();
+        let product_img = $(this).find("div.detail_img img").attr("src");
+        let stay_time = $(this).find("div.detail_time span").html();
+        let schedule_info = $(this).find("div.detail_info p").html();
+        let sort = $(this).attr("data-sort");
 
+        $("div.overlay_add_schedule").attr("id", product_ID);
+        $("div.context_title p.text").html(product_name);
+        $("div.overlay_add_schedule img").attr("src", product_img);
+        $("div.context_title span").html(stay_time);
+        $("textarea#content_area").val(schedule_info);
+
+      });
 
     });
 
-    /*-----------------------------畫面一載入時的動作------------------------------*/
+    /*-----------------------------畫面一載入時的function------------------------------*/
     function init() {
       $.ajax({
         url: "http://localhost:8081/TDA101G1/project/JsonController",
@@ -873,8 +956,7 @@
                               <img src="https://picsum.photos/200/100/?random=1" class="card-img-top">
                               <div class="card-body">
                                 <h5 class="card-title">` + value.product_Name + `</h5>
-                                <p class="card-text"><i class="fas fa-map-marker-alt"></i><span> ` + value
-              .product_Address + `</span></p>
+                                <p class="card-text"><i class="fas fa-map-marker-alt"></i><span> ` + value.product_Address + `</span></p>
                                 <span>4.3</span>
                                 <span><i class="fas fa-star"></i></span>
                                 <span><i class="fas fa-star"></i></span>
@@ -913,14 +995,14 @@
     }
 
 
-    /*--------------------------------------------------------*/
+    /*--------------------------新增行程區塊-------------------------*/
 
     function scheduleView(product_ID, sort, product_img, product_name, stay_time, schedule_info) {
       let insertHtml =
-        `<li class="schedule_block" data-product-id="` + product_ID + `"data-sort="` + sort + `" style="padding-left: 15px; padding-right: 15px;">
+        `<li class="schedule_block" id="` + product_ID + `"data-sort="` + sort + `" style="padding-left: 15px; padding-right: 15px;">
                           <div class="row" style="padding-left: 15px; padding-right: 15px;">
                             <div class="col col-md-10">
-                                <div class="row" style="padding-left: 15px; padding-right: 15px; margin-top: 20px;">
+                                <div class="row del" style="padding-left: 15px; padding-right: 15px; margin-top: 20px;">
                                 <div class="col col-md-6">
                                   <span><i class="fas fa-car-side fa-2x"></i></span>
                                   <span>25KM</span>
@@ -956,7 +1038,7 @@
                           </div>
                         </li>`;
 
-      let no_km = `<li class="schedule_block" data-product-id="` + product_ID + `"data-sort="` + sort + `" style="padding-left: 15px; padding-right: 15px;">
+      let no_km = `<li class="schedule_block" id="` + product_ID + `"data-sort="` + sort + `" style="padding-left: 15px; padding-right: 15px;">
                           <div class="row" style="padding-left: 15px; padding-right: 15px;">
                             <div class="col col-md-10">
                               <div class="detail_block">
@@ -988,7 +1070,7 @@
       } else {
         $("ul.schedule_list").append(no_km);
       }
-      // let product_ID = $("ul.schedule_list").find("li").attr("data-product-id");
+      // let product_ID = $("ul.schedule_list").find("li").attr("id");
       //     let product_name = $("ul.schedule_list").find("div.detail_time p").html();
       //     let product_img = $("ul.schedule_list").find("div.detail_img img").attr("src");
       //     let stay_time = $("ul.schedule_list").find("div.detail_time span").html();
@@ -1012,13 +1094,13 @@
       if (this.length != array.length)
         return false;
 
-      for (var i = 0, l = this.length; i < l; i) {
+      for (var i = 0; i < this.length; i++) {
         // Check if we have nested arrays
         if (this[i] instanceof Object && array[i] instanceof Object) {
-          for (let j in this[i]){
+          for (var j = 0; j < this[i].length; j++) {
             console.log(this[i][j])
             console.log(array[i][j])
-            if(this[i][j] != array[i][j])
+            if (this[i][j] != array[i][j])
               return false;
           }
         }
