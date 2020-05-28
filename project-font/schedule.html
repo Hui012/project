@@ -718,8 +718,7 @@
       $("div.btn_block button#btn_cancel").on("click", function () {
         let product_ID = $(this).closest("div.overlay_add_schedule").attr("data-product-id");
         $("div.overlay_add_schedule").fadeOut();
-        $("div.product_body_content").find("div#" + product_ID).closest("div.col-lg-4").toggle(
-          "-none"); //點選取消時，原選取的卡片，會返回產品列表
+        $("div.product_body_content").find("div#" + product_ID).closest("div.col-lg-4").toggle("-none"); //點選取消時，原選取的卡片，會返回產品列表
 
 
         // $("div.overlay_add_schedule").addClass("-opacity-zero");
@@ -748,11 +747,12 @@
 
       /*-----------------------------選取天數的按鈕------------------------------*/
       $("ul.sum_day").on("click", "button", function () {
-        let daynumber = $("div.schedule_header p").html();              //取得當前的天數
-        let get_data = JSON.parse(sessionStorage.getItem(daynumber));   //取得當前sessionStorage資料
-        let cid = $("div.input_title").attr("data-schedule-id");        //取得總行程ID
+        let day_number = $("div.schedule_header p").html();                    //取得當前的天數
+        let get_sessionData = JSON.parse(sessionStorage.getItem(day_number));  //取得當前sessionStorage資料
+        let cid = $("div.input_title").attr("data-schedule-id");               //取得總行程ID
+
         let current_data = [];
-        $("ul.schedule_list").find("li").each(function (index, items) { //讀取當前天數的內容，儲存於current_data
+        $("ul.schedule_list").find("li").each(function (index, items) {        //讀取當前天數的內容，儲存於current_data
           let product_ID = $(this).attr("data-product-id");
           let product_name = $(this).find("div.detail_time p").html();
           let product_img = $(this).find("div.detail_img img").attr("src");
@@ -770,32 +770,25 @@
           current_data.push(data);
         });
 
-        if(current_data.equals(get_data)){
-          console.log("the_same")
-
-
-        }else{
+        $("div.schedule_header p").text($(this).text());                            //將行程表的天數切換為選取的天數
+        $("ul.schedule_list").html("");                               //先將列表清空
+        if(!current_data.equals(get_sessionData)){
           console.log("diffrent")
-          sessionStorage.setItem(daynumber, JSON.stringify(current_data));
-         }
-        // if (current_data == get_data) {
-        //   console.log("yes")
-        //   $.each(JSON.parse(get_data), function (index, value) {
+          sessionStorage.setItem(day_number, JSON.stringify(current_data));         //若內容物不同，就存到sessionStorage
+        }else{
+                                                      
+         
+        }
 
-        //     console.log(value)
-        //     //scheduleView(product_ID, sort, product_img, product_name, stay_time, schedule_info);
-        //   });
-        // } else {
-        //   // console.log("no")
-        //   sessionStorage.setItem(daynumber, JSON.stringify(current_data));
-        // }
+        let get_Data = JSON.parse(sessionStorage.getItem($(this).text()));          //取得要切換天數的sessionStorage
+          console.log(get_Data);
+          $.each(get_Data, function(index, items){
+            scheduleView(items.product_ID, items.sort, items.product_img, items.product_name, items.stay_time, items.schedule_info);
+          });
+          
+         
 
-        let title = $(this).text();
-        $("div.schedule_header p").text(title);
-        $("ul.schedule_list").html("");
-
-
-        // let get_data = JSON.parse(sessionStorage.getItem($(this).text()));
+        
 
 
         //   temp = "";
@@ -825,6 +818,9 @@
         let cid = $("div.input_title").attr("data-schedule-id"); 
         $("ul.sum_day").find("li").each(function(index, items){
           let sessionDate = JSON.parse(sessionStorage.getItem("Day"+(index+1)));
+          // if(sessionDate == null){
+          //   sessionDate = [];
+          // }
           insertData.push(sessionDate);
         });
         console.log(insertData)
@@ -839,6 +835,10 @@
         dataType: "json",
         success: function (data) {
           console.log(data);
+          $.each(data.result, function(index, items){
+            // console.log(index)
+            // console.log(items)
+          })
         },
         error:function(){
           console.log("fail")
