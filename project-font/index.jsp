@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <!doctype html>
 <html lang="en">
 
@@ -301,7 +302,7 @@
                                 <div class="btn_submit">
                                     <input type="button" class="btn_cloose_style" value="送出">
                                     <input type="submit" class="confirm">
-                                    <input type="hidden" class="user_dates" name="user_dates" value="">
+                                    <input type="hidden" class="user_dates" name="user_dates">
                                 </div>
                             </main>
                         </div>
@@ -313,77 +314,77 @@
                         <div class="row">
                             <div class="col-6 col-md-6 col-lg-4">
                                 <div class="img_block0">
-                                    <img class="keelung" name="keelung" src="/img/keelung.png" data-sort="0">
+                                    <img class="keelung" name="keelung" src="<%=request.getContextPath()%>/project/img/keelung.png" data-sort="0">
                                  </div>
                             </div>
                             <div class="col-6 col-md-6 col-lg-4">
                                  <div class="img_block1">
-                                     <img class="taipei" name="taipei" src="/img/taipei.png" data-sort="1">
+                                     <img class="taipei" name="taipei" src="<%=request.getContextPath()%>/project/img/taipei.png" data-sort="1">
                                  </div>
                             </div>
                             <div class="col-12 col-md-12 col-lg-4">
                                 <div class="img_block2">
-                                    <img class="taoyuan" name="taoyuan" src="/img/taoyuan.png" data-sort="2">
+                                    <img class="taoyuan" name="taoyuan" src="<%=request.getContextPath()%>/project/img/taoyuan.png" data-sort="2">
                                 </div>
                             </div>
                             <div class="col-6 col-md-6 col-lg-4">
                                 <div class="img_block3">
-                                    <img class="hsinchu" name="hsinchu" src="/img/hsinchu.png" data-sort="3">
+                                    <img class="hsinchu" name="hsinchu" src="<%=request.getContextPath()%>/project/img/hsinchu.png" data-sort="3">
                                 </div>
                             </div>
                             <div class="col-6 col-md-6 col-lg-4">
                                 <div class="img_block4">
-                                    <img class="miaoli" name="miaoli" src="/img/miaoli.png" data-sort="4">
+                                    <img class="miaoli" name="miaoli" src="<%=request.getContextPath()%>/project/img/miaoli.png" data-sort="4">
                                 </div>
                             </div>
                             <div class="col-12 col-md-12 col-lg-4">
                                 <div class="img_block5">
-                                    <img class="taichung" name="taichung" src="/img/taichung.png" data-sort="5">
+                                    <img class="taichung" name="taichung" src="<%=request.getContextPath()%>/project/img/taichung.png" data-sort="5">
                                 </div>
                             </div>
                             <div class="col-6 col-md-6 col-lg-4">
                                 <div class="img_block6">
-                                    <img class="nantou" name="nantou" src="/img/nantou.png" data-sort="6">
+                                    <img class="nantou" name="nantou" src="<%=request.getContextPath()%>/project/img/nantou.png" data-sort="6">
                                 </div>
                             </div>
                             <div class="col-6 col-md-6 col-lg-4">
                                 <div class="img_block7">
-                                    <img class="yunlin" name="yunlin" src="/img/yunlin.png" data-sort="7">
+                                    <img class="yunlin" name="yunlin" src="<%=request.getContextPath()%>/project/img/yunlin.png" data-sort="7">
                                 </div>
                             </div>
                             <div class="col-12 col-md-12 col-lg-4">
                                 <div class="img_block8">
-                                    <img class="chiayi" name="chiayi" src="/img/chiayi.png" data-sort="8">
+                                    <img class="chiayi" name="chiayi" src="<%=request.getContextPath()%>/project/img/chiayi.png" data-sort="8">
                                 </div>
                             </div>
                             <div class="col-6 col-md-6 col-lg-4">
                                 <div class="img_block9">
-                                    <img class="tainan" name="tainan" src="/img/tainan.png" data-sort="9">
+                                    <img class="tainan" name="tainan" src="<%=request.getContextPath()%>/project/img/tainan.png" data-sort="9">
                                 </div>
                             </div>
                             <div class="col-6 col-md-6 col-lg-4">
                                 <div class="img_block10">
-                                    <img class="kaohsiung" name="kaohsiung" src="/img/kaohsiung.png" data-sort="10">
+                                    <img class="kaohsiung" name="kaohsiung" src="<%=request.getContextPath()%>/project/img/kaohsiung.png" data-sort="10">
                                 </div>
                             </div>
                             <div class="col-12 col-md-12 col-lg-4">
                                 <div class="img_block11">
-                                    <img class="pingtung" name="pingtung" src="/img/pingtung.png" data-sort="11">
+                                    <img class="pingtung" name="pingtung" src="<%=request.getContextPath()%>/project/img/pingtung.png" data-sort="11">
                                 </div>
                             </div>
                             <div class="col-6 col-md-6 col-lg-4">
                                 <div class="img_block12">
-                                    <img class="yilan" name="yilan" src="/img/yilan.png" data-sort="12">
+                                    <img class="yilan" name="yilan" src="<%=request.getContextPath()%>/project/img/yilan.png" data-sort="12">
                                 </div>
                             </div>
                             <div class="col-6 col-md-6 col-lg-4">
                                 <div class="img_block13">
-                                    <img class="hualien" name="hualien" src="/img/hualien.png" data-sort="13">
+                                    <img class="hualien" name="hualien" src="<%=request.getContextPath()%>/project/img/hualien.png" data-sort="13">
                                 </div>
                             </div>
                             <div class="col-12 col-md-12 col-lg-4">
                                 <div class="img_block14">
-                                    <img class="taitung" name="taitung" src="/img/taitung.png" data-sort="14">
+                                    <img class="taitung" name="taitung" src="<%=request.getContextPath()%>/project/img/taitung.png" data-sort="14">
                                 </div>
                             </div>
                         </div>
@@ -564,40 +565,42 @@
                 }, 1000);
             });
         });
-
+		
         function listDateResult(startDateObj) {
-            if (startDateObj !== null) {
                 var allDate = [];  
                 let startTime = "";
                 let endTime = "";
                 $.each(startDateObj, function(index, items){     //宣告變數承接所有日期
-                    let time = new Date(items);                  //宣告一個日期變數
-                    if(index == 0){
-                        startTime = items;
-                        let flatDate = flatpickr.formatDate(startTime, 'Y-m-d');    //格式化日期
-                        allDate.push(flatDate)
-                    }else{
-                        endTime = items;
-                        let flatDate = flatpickr.formatDate(endTime, 'Y-m-d');
-                        allDate.push(flatDate) 
-                    }
-                });            	
-
-                if(startTime.length != 0 && endTime != ""){
-                    let result = endTime - startTime;
-                    result = (result / (60*60*24*1000)) + 1;
-                    allDate.push(result.toString);
-
-                    let dateJSON = {
-                        "listDate": allDate,
-                    };
-
-                    $("input.user_dates").val(JSON.stringify(dateJSON)); 
-                }       //將資料轉成JSON格式，放入隱藏的input
-            }
+	                let time = new Date(items);                  //宣告一個日期變數
+	                	if(index == 0){
+		                    startTime = items;
+		                    let flatDate = flatpickr.formatDate(startTime, 'Y-m-d');    //格式化日期
+		                    allDate.push(flatDate)
+	                    }else{
+	                        endTime = items;
+	                        let flatDate = flatpickr.formatDate(endTime, 'Y-m-d');
+	                        allDate.push(flatDate) 
+	                    }
+                });
+                
+             	console.log(startTime.length != 0)
+             	console.log(endTime != "")
+               	if(startTime.length != 0 && endTime != ""){
+	                let result = endTime - startTime;
+	                result = (result / (60*60*24*1000)) + 1;
+	                allDate.push(result.toString());
+	
+	                let dateJSON = {
+	                    "listDate": allDate,
+	                };
+	
+	                $("input.user_dates").attr("value", JSON.stringify(dateJSON));        //將資料轉成JSON格式，放入隱藏的input
+                }
+            
+       
         };    
 
     </script>
 </body>
 
-</html>
+</html>>
