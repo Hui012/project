@@ -248,8 +248,13 @@
         input.confirm{
             display: none;
         }
-
+        .form-control{
+            display: inline-block;
+        }
+        
     </style>
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> -->
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_orange.css">
 </head>
 
 <body>
@@ -272,11 +277,11 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12 col-md-4">
-                <form>
+                <form action="CustController" method="GET">
                     <div class="row">
                         <div class="col-12 col-sm-12">
                             <aside class="aside1">
-                                <span>日期：</span><input type="date" name="date"><br>
+                                <span>日期：</span><input class="user_date" type="text" name="date"><br>
                                 <span>人數：</span><input type="text" name="people"><br>
                                 <span>地點：</span><input type="text" name="first_location">
                             </aside>
@@ -296,6 +301,7 @@
                                 <div class="btn_submit">
                                     <input type="button" class="btn_cloose_style" value="送出">
                                     <input type="submit" class="confirm">
+                                    <input type="hidden" class="user_dates" name="user_dates" value="">
                                 </div>
                             </main>
                         </div>
@@ -441,8 +447,23 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous">
     </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         $(function(){
+            var selectedDate = $("input.user_date").flatpickr({
+                altInput: true,
+                altFormat: "Y-m-d",
+                dateFormat: "Y/m/d",
+                minDate: "today",
+                mode: "range",
+            });
+            
+            $("input.btn_cloose_style").click(function(){
+                $("div.overlay_schedule").addClass("-on1"); 
+                listDateResult(selectedDate.selectedDates);
+            });
+
              $("aside.aside2 img").on("click", function(){
                 $(this).closest("div.col-lg-4").toggleClass("-on");
                 let data = $(this).attr("name");
@@ -498,9 +519,6 @@
                 //     $("aside.aside2 div.img_block"+index).prepend(items);
                 // });
             
-            $("input.btn_cloose_style").click(function(){
-                $("div.overlay_schedule").addClass("-on1"); 
-            });
 
 
             // 關閉 Modal
@@ -546,10 +564,34 @@
                 }, 1000);
             });
         });
-                
 
-            
+        function listDateResult(startDateObj) {
+            if (startDateObj !== null) {
+                var allDate = [];  
+                $.each(startDateObj, function(index, items){     //宣告變數承接所有日期
+                    let time = new Date(items);                  //宣告一個日期變數
+                    if(index == 0){
+                        startTime = items;
+                        let flatDate = flatpickr.formatDate(startTime, 'Y-m-d');    //格式化日期
+                        allDate.push(flatDate)
+                    }else{
+                        endTime = items;
+                        let flatDate = flatpickr.formatDate(endTime, 'Y-m-d');
+                        allDate.push(flatDate) 
+                    }
+                });
              
+                let result = endTime - startTime;
+                result = (result / (60*60*24*1000)) + 1;
+                allDate.push(result.toString);
+
+                let dateJSON = {
+                    "listDate": allDate,
+                };
+
+                $("input.user_dates").val(JSON.stringify(dateJSON));        //將資料轉成JSON格式，放入隱藏的input
+            }
+        };    
 
     </script>
 </body>

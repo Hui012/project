@@ -481,6 +481,7 @@
       color: white;
     }
   </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 
 <body>
@@ -498,7 +499,7 @@
         <div class="input_title" data-schedule-id="CID000001">
           <p></span>請輸入標題 <span><i class="fas fa-pen" style="font-size: 20px;"></i></p>
           <input type="text" class="title_update -none">
-
+            <button class="user_button">確定</button>
         </div>
       </div>
       <div class="col col-md-9">
@@ -512,7 +513,8 @@
     </div>
     <div class="row">
       <div class="col col-md-1">
-        <input class="update_date" type="date" name="date" style="width: 100%;">
+        <input class="update_date" type="text" name="date" style="width: 100%;">
+        <input type="text" class="user_days">
         <ul class="sum_day" data-days="5">
           <!--------------- 動態新增 --------------->
         </ul>
@@ -640,8 +642,13 @@
     integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous">
   </script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script>
     $(function () {
+     
+
+
+
       init();
       init2();
 
@@ -657,11 +664,11 @@
       let temp = "";
       let sort = 0;
       $("div.product_body_content").on("click", "div.card", function () {
-        $(this).closest("div.col-lg-4").toggle("-none");                            //被選到的卡片display:none
-        $("div.overlay_add_schedule").addClass("-on1");                             //開啟被隱藏的頁面(填寫資訊頁面)
-        $("div.overlay_add_schedule").fadeIn();                                     //動畫
-        $("div.overlay_content").find("textarea#content_area").focus();             //填寫資訊頁面彈出時，focus在輸入框
-        let product_ID = $(this).attr("id");                  
+        $(this).closest("div.col-lg-4").toggle("-none"); //被選到的卡片display:none
+        $("div.overlay_add_schedule").addClass("-on1"); //開啟被隱藏的頁面(填寫資訊頁面)
+        $("div.overlay_add_schedule").fadeIn(); //動畫
+        $("div.overlay_content").find("textarea#content_area").focus(); //填寫資訊頁面彈出時，focus在輸入框
+        let product_ID = $(this).attr("id");
         let product_name = $(this).find("h5").html();
         let product_img = $(this).find("img").attr("src");
         let stay_time = $(this).find("p.stay_time").html();
@@ -712,7 +719,8 @@
         let product_name = $(this).closest("div.overlay_add_schedule").find("div.context_title p.text").html();
         let product_img = $(this).closest("div.overlay_add_schedule").find("div.content_img img").attr("src");
         let stay_time = $(this).closest("div.overlay_add_schedule").find("div.context_title span").html();
-        let schedule_info = $(this).closest("div.overlay_add_schedule").find("div.overlay_content textarea").val();
+        let schedule_info = $(this).closest("div.overlay_add_schedule").find("div.overlay_content textarea")
+          .val();
         sort += 1;
 
         let schedule_id = [];
@@ -720,18 +728,10 @@
           schedule_id.push($(this).attr("id"));
         });
 
-        let checkId = false;
-        if (schedule_id.length != 0) {
-          for (j of schedule_id) {
-            if (j === product_ID) {
-              checkId = true;
-            }
-          }
-        } 
-          
-        if(checkId == false){
+        if (check_Id(schedule_id, product_ID) == false) {         //若為false就是就新增行程到左邊列表中
           scheduleView(product_ID, sort, product_img, product_name, stay_time, schedule_info);
-        }else{
+        } else {
+          console.log()                                           //若為ture就是等於更新左側的行程備註
           $("div.detail_block").closest("li#" + product_ID).find("div.detail_info p").html(schedule_info);
         }
 
@@ -748,19 +748,9 @@
           schedule_id.push($(this).attr("id"));
         });
 
-        let checkId = false;              //只是為了判別陣列的內容是否相等，若存在為true
-        if (schedule_id.length != 0) {
-          for (j of schedule_id) {
-            if (j === product_ID) {
-              checkId = true;
-            }
-          }
-        } 
-
-        if(checkId == false){             //若為false就是產品列表所點選的動作
-          $("div.product_body_content").find("div#" + product_ID).closest("div.col-lg-4").toggle("-none"); //點選取消時，原選取的卡片，會返回產品列表
-        }
-  
+        if(check_Id(schedule_id, product_ID) == false){         //若為false就是產品列表所點選的動作
+          $("div.product_body_content").find("div#" + product_ID).closest("div.col-lg-4").toggle("-none");        
+        }                                                       //點選取消時，原選取的卡片，會返回產品列表
       });
 
       /*-----------------------------新增天數的按鈕------------------------------*/
@@ -775,42 +765,17 @@
 
       /*-----------------------------選取天數的按鈕------------------------------*/
       $("ul.sum_day").on("click", "button", function () {
-        let day_number = $("div.schedule_header p").html();                   //取得當前的天數
-        let get_sessionData = JSON.parse(sessionStorage.getItem(day_number)); //取得當前sessionStorage資料
-
+        let day_number = $("div.schedule_header p").html();                      //取得當前的天數
         let current_data = [];
-        take_schedule_list(current_data);
-        $("ul.schedule_list").find("li").each(function (index, items) {       //讀取當前天數的內容，儲存於current_data
-          let product_ID = $(this).attr("id");
-          let product_name = $(this).find("div.detail_time p").html();
-          let product_img = $(this).find("div.detail_img img").attr("src");
-          let stay_time = $(this).find("div.detail_time span").html();
-          let schedule_info = $(this).find("div.detail_info p").html();
-          let sort = $(this).attr("data-sort");
-          let currentData = {
-            "product_ID": product_ID,
-            "product_name": product_name,
-            "product_img": product_img,
-            "stay_time": stay_time,
-            "sort": sort,
-            "schedule_info": schedule_info
-          }; 
-          current_data.push(currentData);
-        });
+        take_schedule_list(current_data);                                        //取得行程列表當前資料
+        sessionStorage.setItem(day_number, JSON.stringify(current_data));        //存到sessionStorage
 
-        
+        $("div.schedule_header p").text($(this).text());                         //將行程表的天數切換為選取的天數
+        $("ul.schedule_list").html("");                                          //先將行程列表清空
 
-        
-        $("div.schedule_header p").text($(this).text());                    //將行程表的天數切換為選取的天數
-        $("ul.schedule_list").html("");                                     //先將行程列表清空
-        if (!current_data.equals(get_sessionData)) {
-          console.log("different")
-          sessionStorage.setItem(day_number, JSON.stringify(current_data)); //若內容物不同，就存到sessionStorage
-        }
-
-        let get_Data = JSON.parse(sessionStorage.getItem($(this).text()));  //取得要切換天數的sessionStorage，把資料印出
+        let get_Data = JSON.parse(sessionStorage.getItem($(this).text()));       //取得要切換天數的sessionStorage，把資料印出
         $.each(get_Data, function (index, items) {
-          scheduleView(items.product_ID, items.sort, items.product_img, items.product_name, items.stay_time,items.schedule_info);
+          scheduleView(items.product_ID, items.sort, items.product_img, items.product_name, items.stay_time, items.schedule_info);
         });
 
         //   temp = "";
@@ -826,18 +791,18 @@
         //       console.log(data);
         //     }
 
-       
+
 
       });
 
       // $("ul#schedule_list").on("DOMNodeInserted",function(){
       // console.log("新增了")
       // })
-      
+
       /*-----------------------------點選儲存的按鈕------------------------------*/
       $("button#btn_Store").on("click", function () {
         let last_data = [];
-        let day_number = $("div.schedule_header p").html(); 
+        let day_number = $("div.schedule_header p").html();
         take_schedule_list(last_data);
         sessionStorage.setItem(day_number, JSON.stringify(last_data));
 
@@ -850,7 +815,7 @@
           // }
           insertData.push(sessionDate);
         });
-        
+
         console.log(insertData)
         $.ajax({
           url: "http://localhost:8081/TDA101G1/project/JsonController",
@@ -873,8 +838,12 @@
             console.log("fail")
           }
         });
+
+    
+
+
       });
-      
+
       /*-----------------------------點選行程，修改行程備註------------------------------*/
       $("ul.schedule_list").on("click", "li div.detail_block", function () {
         $("div.overlay_add_schedule").addClass("-on1");
@@ -887,37 +856,37 @@
         let stay_time = $(this).find("div.detail_time span").html();
         let schedule_info = $(this).find("div.detail_info p").html();
         let sort = $(this).attr("data-sort");
-        
+
         $("div.overlay_add_schedule").attr("id", product_ID);
         $("div.context_title p.text").html(product_name);
         $("div.overlay_add_schedule img").attr("src", product_img);
         $("div.context_title span").html(stay_time);
         $("textarea#content_area").val(schedule_info);
-        
+
       });
-    
-    /*-----------------------------刪除行程，點選垃圾桶的icon------------------------------*/
-    $("ul.schedule_list").on("click", "li span.trash", function () {
-      $(this).closest("li.schedule_block").remove();
-      let current_data = [];
-      take_schedule_list(current_data);
-        
-      $("ul.schedule_list").html("");
-      for(i of current_data){
-        scheduleView(i.product_ID, i.sort, i.product_img, i.product_name, i.stay_time, i.schedule_info);
-      }       
-      
-      // $(this).closest("li.schedule_block").animate({
-      //   opacity: 0,
-      // },1000, function(){
-      //     $(this).remove();
 
-      //     //$(this).next().find("div.row.del").remove();
-      //    });
+      /*-----------------------------刪除行程，點選垃圾桶的icon------------------------------*/
+      $("ul.schedule_list").on("click", "li span.trash", function () {
+        $(this).closest("li.schedule_block").remove();
+        let current_data = [];
+        take_schedule_list(current_data);
 
-         // $(this).closest("li.schedule_block").fadeOut()
+        $("ul.schedule_list").html("");
+        for (i of current_data) {
+          scheduleView(i.product_ID, i.sort, i.product_img, i.product_name, i.stay_time, i.schedule_info);
+        }
+
+        // $(this).closest("li.schedule_block").animate({
+        //   opacity: 0,
+        // },1000, function(){
+        //     $(this).remove();
+
+        //     //$(this).next().find("div.row.del").remove();
+        //    });
+
+        // $(this).closest("li.schedule_block").fadeOut()
+      });
     });
-  });
 
     /*-----------------------------畫面一載入時的function------------------------------*/
     function init() {
@@ -935,14 +904,15 @@
         success: function (data) {
           let insertHtml = "";
           let items = data.products; //products = server傳回的key
-          console.log(items)
+          // console.log(items)
           $.each(items, function (index, value) {
             insertHtml += `<div class="col-6 col-md-6 col-lg-4">
                             <div id="` + value.product_ID + `" class="card">
                               <img src="https://picsum.photos/200/100/?random=1" class="card-img-top">
                               <div class="card-body">
                                 <h5 class="card-title">` + value.product_Name + `</h5>
-                                <p class="card-text"><i class="fas fa-map-marker-alt"></i><span> ` + value.product_Address + `</span></p>
+                                <p class="card-text"><i class="fas fa-map-marker-alt"></i><span> ` + value
+              .product_Address + `</span></p>
                                 <span>4.3</span>
                                 <span><i class="fas fa-star"></i></span>
                                 <span><i class="fas fa-star"></i></span>
@@ -979,7 +949,6 @@
       }
       $("ul.sum_day").append(add_day);
     }
-
 
     /*----------------------------------新增行程區塊----------------------------*/
 
@@ -1056,67 +1025,85 @@
       } else {
         $("ul.schedule_list").append(no_km);
       }
-      // let product_ID = $("ul.schedule_list").find("li").attr("id");
-      //     let product_name = $("ul.schedule_list").find("div.detail_time p").html();
-      //     let product_img = $("ul.schedule_list").find("div.detail_img img").attr("src");
-      //     let stay_time = $("ul.schedule_list").find("div.detail_time span").html();
-      //     let schedule_info = $("ul.schedule_list").find("div.detail_info p").html();
-      //     let storage = {"Day1": $("ul.schedule_list").html()}
-      //     console.log(daynumber)
-      //     console.log(product_ID)
-      //     console.log(product_name)
-      //     console.log(product_img)
-      //     console.log(stay_time)
-      //     console.log(schedule_info)
-      //     console.log(cid)
+    }
+    /*--------------------------------取得行程列表的當前資訊------------------------------*/
+    function take_schedule_list(array) {
+      $("ul.schedule_list").find("li").each(function (index, items) { //讀取當前天數的內容，儲存於current_data
+        let product_ID = $(this).attr("id");
+        let product_name = $(this).find("div.detail_time p").html();
+        let product_img = $(this).find("div.detail_img img").attr("src");
+        let stay_time = $(this).find("div.detail_time span").html();
+        let schedule_info = $(this).find("div.detail_info p").html();
+        let sort = $(this).attr("data-sort");
+        let currentData = {
+          "product_ID": product_ID,
+          "product_name": product_name,
+          "product_img": product_img,
+          "stay_time": stay_time,
+          "sort": sort,
+          "schedule_info": schedule_info
+        };
+        array.push(currentData);
+      });
     }
 
-    function take_schedule_list(array){
-      $("ul.schedule_list").find("li").each(function (index, items) {       //讀取當前天數的內容，儲存於current_data
-          let product_ID = $(this).attr("id");
-          let product_name = $(this).find("div.detail_time p").html();
-          let product_img = $(this).find("div.detail_img img").attr("src");
-          let stay_time = $(this).find("div.detail_time span").html();
-          let schedule_info = $(this).find("div.detail_info p").html();
-          let sort = $(this).attr("data-sort");
-          let currentData = {
-            "product_ID": product_ID,
-            "product_name": product_name,
-            "product_img": product_img,
-            "stay_time": stay_time,
-            "sort": sort,
-            "schedule_info": schedule_info
-          }; 
-          array.push(currentData);
-        });
-    }
-
-    // attach the .equals method to Array's prototype to call it on any array
-    Array.prototype.equals = function (array) {
-      // if the other array is a falsy value, return
-      if (!array)
+    /*------------------檢查當前行程列表全部的ID是否跟彈跳視窗的產品ID相同-------------------*/
+    function check_Id(schedule_id, product_id){
+          if (schedule_id.length != 0) {
+            for (j of schedule_id) {
+              if (j === product_id) {
+                return true;
+              }
+            }
+          }
+          return false
+        }
+    /*----------------------------------檢查兩個陣列裡物件的內容----------------------------*/
+    function checkArray(arrayA, arrayB) {
+      if (!Array.isArray(arrayA) || !Array.isArray(arrayB)) {
         return false;
-      // compare lengths - can save a lot of time 
-      if (this.length != array.length)
+      } else if (arrayA.length != arrayB.length) {
         return false;
-
-      for (var i = 0; i < this.length; i++) {
-        // Check if we have nested arrays
-        if (this[i] instanceof Object && array[i] instanceof Object) {
-          for (var j = 0; j < this[i].length; j++) {
-            console.log(this[i][j])
-            console.log(array[i][j])
-            if (this[i][j] != array[i][j])
-              return false;
+      } else {
+        for (var i = 0; i < arrayA.length; i++) {
+          console.log("進迴圈")
+          if (arrayA[i].product_ID !== arrayB[i].product_ID || arrayA[i].schedule_info !== arrayB[i].schedule_info) {
+            console.log("不一樣") //依照物件內的name自行更改
+            return false;
+            break;
           }
         }
       }
-      return true;
     }
-    // Hide method from for-in loops
-    Object.defineProperty(Array.prototype, "equals", {
-      enumerable: false
-    });
+    var a = $("input.update_date").flatpickr({
+          altInput: true,
+          altFormat: "Y-m-d",
+          dateFormat: "Y/m/d",
+          minDate: "today",
+        });
+    $("button.user_button").on("click", function(){
+      let days = parseInt($("input.user_days").val());
+      console.log(listDateResult(a.selectedDateElem.dateObj, days));
+      
+    })
+    /*----------------------------------日期篩選器-------------------------------*/
+    function listDateResult(startDateObj, days) {
+      if (startDateObj !== null && days > 0) {
+        var allDate = [];                         //宣告變數承接所有日期
+        for (i = 0; i <= days; i++) {
+          let endDateObj = new Date();            //宣告一個日期變數
+          endDateObj.setDate(startDateObj.getDate() + i); //把初始日期 + days放到 endDateObj
+          let flatDate = flatpickr.formatDate(endDateObj, 'Y-m-d');
+          allDate.push(flatDate);
+        }
+      }
+
+      let dateJSON = {
+        "listDate": allDate,
+        "days": days
+      }
+      return dateJSON;
+    }
   </script>
 </body>
 
