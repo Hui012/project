@@ -496,7 +496,7 @@
   <div class="container-fluid">
     <div class="row" id="first_row">
       <div class="col col-md-3" style="padding: 0;">
-        <div class="input_title" data-schedule-id="CID000001">
+        <div class="input_title" data-schedule-id="${custVO.cust_Schedule_ID}" data-last-time="${custVO.cust_Schedule_Last_Timestamp}">
           <p></span>請輸入標題 <span><i class="fas fa-pen" style="font-size: 20px;"></i></p>
           <input type="text" class="title_update -none">
             <button class="user_button">確定</button>
@@ -515,7 +515,8 @@
       <div class="col col-md-1">
         <input class="update_date" type="text" name="date" style="width: 100%;">
         <input type="text" class="user_days">
-        <ul class="sum_day" data-days="5">
+        <ul class="sum_day" data-start="${custVO.cust_Schedule_Start_Time}" data-end="${custVO.cust_Schedule_End_Time}"
+        data-days="${custVO.cust_Schedule_Total_Day}">
           <!--------------- 動態新增 --------------->
         </ul>
         <div class="add_day">
@@ -734,7 +735,6 @@
           console.log()                                           //若為ture就是等於更新左側的行程備註
           $("div.detail_block").closest("li#" + product_ID).find("div.detail_info p").html(schedule_info);
         }
-
       });
 
       /*-----------------------------點選取消的動作------------------------------*/
@@ -761,6 +761,9 @@
             <button type="button" class="btn btn-primary btn-lg">Day` + last_day_num + `</button>
           </li>`;
         $("ul.sum_day").append(add_day);
+        console.log($("ul.sum_day").attr("data-days"))
+        $("ul.sum_day").attr("data-days", last_day_num);
+        console.log($("ul.sum_day").attr("data-days"))
       });
 
       /*-----------------------------選取天數的按鈕------------------------------*/
@@ -810,9 +813,6 @@
         let cid = $("div.input_title").attr("data-schedule-id");
         $("ul.sum_day").find("li").each(function (index, items) {
           let sessionDate = JSON.parse(sessionStorage.getItem("Day" + (index + 1)));
-          // if(sessionDate == null){
-          //   sessionDate = [];
-          // }
           insertData.push(sessionDate);
         });
 
@@ -838,10 +838,6 @@
             console.log("fail")
           }
         });
-
-    
-
-
       });
 
       /*-----------------------------點選行程，修改行程備註------------------------------*/
@@ -888,7 +884,7 @@
       });
     });
 
-    /*-----------------------------畫面一載入時的function------------------------------*/
+    /*-----------------------------讀取產品的動作------------------------------*/
     function init() {
       $.ajax({
         url: "http://localhost:8081/TDA101G1/project/JsonController",
@@ -940,10 +936,18 @@
     /*-----------------------------載入選擇的天數------------------------------*/
     function init2() {
       let add_day = "";
-      let day = $("ul.sum_day").attr("data-days");
-      for (let i = 1; i <= day; i++) {
+      let millisecond = 60*60*24*1000;
+      let total_day = $("ul.sum_day").attr("data-days");
+      let first_day = $("ul.sum_day").attr("data-start");
+      let start_time = new Date(first_day).getTime() - millisecond;    //因為下面迴圈第一天日期會往後一天
+      																   //所以這邊先減一次millisecond
+      for (let i = 1; i <= total_day; i++) {
+      	start_time += millisecond;
+      	let date = new Date(start_time);
+      	console.log(start_time)
+    	let start_date = flatpickr.formatDate(date, 'Y-m-d');
         add_day +=
-          `<li class="Day` + i + `" data-sort="` + i + `">
+          `<li class="Day` + i + `" data-sort="` + i + `" data-date="`+ start_date +`">
                 <button type="button" class="btn btn-primary btn-lg">Day` + i + `</button>
               </li>`;
       }
@@ -1075,35 +1079,35 @@
         }
       }
     }
-    var a = $("input.update_date").flatpickr({
-          altInput: true,
-          altFormat: "Y-m-d",
-          dateFormat: "Y/m/d",
-          minDate: "today",
-        });
-    $("button.user_button").on("click", function(){
-      let days = parseInt($("input.user_days").val());
-      console.log(listDateResult(a.selectedDateElem.dateObj, days));
+    // var a = $("input.update_date").flatpickr({
+    //       altInput: true,
+    //       altFormat: "Y-m-d",
+    //       dateFormat: "Y/m/d",
+    //       minDate: "today",
+    //     });
+    // $("button.user_button").on("click", function(){
+    //   let days = parseInt($("input.user_days").val());
+    //   console.log(listDateResult(a.selectedDateElem.dateObj, days));
       
-    })
-    /*----------------------------------日期篩選器-------------------------------*/
-    function listDateResult(startDateObj, days) {
-      if (startDateObj !== null && days > 0) {
-        var allDate = [];                         //宣告變數承接所有日期
-        for (i = 0; i <= days; i++) {
-          let endDateObj = new Date();            //宣告一個日期變數
-          endDateObj.setDate(startDateObj.getDate() + i); //把初始日期 + days放到 endDateObj
-          let flatDate = flatpickr.formatDate(endDateObj, 'Y-m-d');
-          allDate.push(flatDate);
-        }
-      }
+    // })
+    // /*----------------------------------日期篩選器-------------------------------*/
+    // function listDateResult(startDateObj, days) {
+    //   if (startDateObj !== null && days > 0) {
+    //     var allDate = [];                         //宣告變數承接所有日期
+    //     for (i = 0; i <= days; i++) {
+    //       let endDateObj = new Date();            //宣告一個日期變數
+    //       endDateObj.setDate(startDateObj.getDate() + i); //把初始日期 + days放到 endDateObj
+    //       let flatDate = flatpickr.formatDate(endDateObj, 'Y-m-d');
+    //       allDate.push(flatDate);
+    //     }
+    //   }
 
-      let dateJSON = {
-        "listDate": allDate,
-        "days": days
-      }
-      return dateJSON;
-    }
+    //   let dateJSON = {
+    //     "listDate": allDate,
+    //     "days": days
+    //   }
+    //   return dateJSON;
+    // }
   </script>
 </body>
 
