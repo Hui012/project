@@ -278,7 +278,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12 col-md-4">
-                <form action="CustController" method="GET">
+                <form action="CustController" method="POST">
                     <div class="row">
                         <div class="col-12 col-sm-12">
                             <aside class="aside1">
@@ -302,6 +302,7 @@
                                 <div class="btn_submit">
                                     <input type="button" class="btn_cloose_style" value="送出">
                                     <input type="submit" class="confirm">
+                                    <input type="hidden" name="action" value="user_dates">
                                     <input type="hidden" class="user_dates" name="user_dates">
                                 </div>
                             </main>
@@ -567,37 +568,37 @@
         });
 		
         function listDateResult(startDateObj) {
-                var allDate = [];  
-                let startTime = "";
-                let endTime = "";
-                $.each(startDateObj, function(index, items){     //宣告變數承接所有日期
-	                let time = new Date(items);                  //宣告一個日期變數
-	                	if(index == 0){
-		                    startTime = items;
-		                    let flatDate = flatpickr.formatDate(startTime, 'Y-m-d');    //格式化日期
-		                    allDate.push(flatDate)
-	                    }else{
-	                        endTime = items;
-	                        let flatDate = flatpickr.formatDate(endTime, 'Y-m-d');
-	                        allDate.push(flatDate) 
-	                    }
-                });
-                
-             	console.log(startTime.length != 0)
-             	console.log(endTime != "")
-               	if(startTime.length != 0 && endTime != ""){
-	                let result = endTime - startTime;
-	                result = (result / (60*60*24*1000)) + 1;
-	                allDate.push(result.toString());
-	
-	                let dateJSON = {
-	                    "listDate": allDate,
-	                };
-	
-	                $("input.user_dates").attr("value", JSON.stringify(dateJSON));        //將資料轉成JSON格式，放入隱藏的input
-                }
+            var allDate = [];  
+            let startTime = "";
+            let endTime = "";
+            $.each(startDateObj, function(index, items){     //宣告變數承接所有日期
+                let time = new Date(items);                  //宣告一個日期變數
+                    if(index == 0){
+                        startTime = items;
+                        let flatDate = flatpickr.formatDate(startTime, 'Y-m-d');    //格式化日期
+                        allDate.push(flatDate)
+                    }else{
+                        endTime = items;
+                        let flatDate = flatpickr.formatDate(endTime, 'Y-m-d');
+                        allDate.push(flatDate) 
+                    }
+            });
             
-       
+            console.log(startTime)
+            console.log(endTime)
+            console.log(startTime.length != 0)
+            console.log(endTime != "")
+            if(startTime.length != 0 && endTime != ""){
+                result = ((endTime - startTime) / (60*60*24*1000)) + 1;               //沒有轉換為毫秒，也可相減
+                allDate.push(result.toString());
+
+                let dateJSON = {
+                    "listDate": allDate,
+                };
+
+                $("input.user_dates").attr("value", JSON.stringify(dateJSON));        //將資料轉成JSON格式，放入隱藏的input
+            }
+
         };    
 
     </script>

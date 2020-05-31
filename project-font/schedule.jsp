@@ -562,7 +562,7 @@
         <div class="last_change" data-last-time="${custVO.cust_Schedule_Last_Timestamp}">
           <span>最後修改時間：${custVO.cust_Schedule_Last_Timestamp}</span>
           <div class="current_date">
-            <span></span>
+            <span>選擇的日期為：${custVO.cust_Schedule_Start_Time} ～ ${custVO.cust_Schedule_End_Time}</span>
           </div>
           <div class="update_date">
             <input class="-none" type="text" name="date" style="width: 100%;">
@@ -574,12 +574,16 @@
         </div>
       </div>
       <div class="col col-md-5">
-        <div class="btn_model">
-          <button id="btn_share" type="button" class="btn btn-primary btn-lg">分享行程</button>
-          <button id="btn_Store" type="button" class="btn btn-primary btn-lg">儲存行程</button>
-          <button id="btn_produce" type="button" class="btn btn-primary btn-lg">產生行程</button>
-          <button id="btn_map" type="button" class="btn btn-primary btn-lg">地圖模式</button>
-        </div>
+        <form action="CustController" method="POST">
+          <div class="btn_model">
+            <button id="btn_share" type="button" class="btn btn-primary btn-lg">分享行程</button>
+            <button id="btn_Store" type="button" class="btn btn-primary btn-lg">儲存行程</button>
+            <button id="btn_produce" type="submit" class="btn btn-primary btn-lg">產生行程</button>
+            <button id="btn_map" type="button" class="btn btn-primary btn-lg">地圖模式</button>
+            <input type="hidden" name="action" value="produce_schedule">
+            <input id="produce_schedule" type="hidden" name="schedule_data">
+          </div>
+        </form>
       </div>
   </div>
     <div class="row">
@@ -595,7 +599,7 @@
       <div class="col col-md-4">
         <div class="schedule_content">
 
-          <div class="schedule_header">
+          <div class="schedule_header" data-date="${custVO.cust_Schedule_Start_Time}">
             <p>Day1</p>
             <span class="plus"><i class="fas fa-plus fa-2x"></i></span>
           </div>
@@ -726,21 +730,23 @@
         }
       });
 
+      /*-----------------------------筆icon按下去的動作------------------------------*/
       $("span.edit_title").on("click", function(){
-        let title = $("p.text_title").text();
-        $("p.text_title").addClass("-none");
-        $("span.edit_title").addClass("-none");
-        $("input.update_title").removeClass("-none");
-        $("input.update_title").focus();
-        $("input.update_title").attr("placeholder", title);
+        let title = $("p.text_title").text();                       //取得原有的標題
+        $("p.text_title").addClass("-none");                        //display:none p標籤
+        $("span.edit_title").addClass("-none");                     //display:none 筆icon
+        $("input.update_title").removeClass("-none");               //將隱藏的input顯示出來
+        $("input.update_title").focus();                            //input一顯示出來時，focus
+        $("input.update_title").attr("placeholder", title);         //將原有的標題，加入到input的placeholder
       });
 
+      /*-----------------------------標題input離開的動作------------------------------*/
       $("input.update_title").on("blur", function(){
-        let title = $(this).val();
-        $("p.text_title").text(title);
-        $("p.text_title").removeClass("-none");
-        $("span.edit_title").removeClass("-none");
-        $(this).addClass("-none");
+        let title = $(this).val();                                   //取得輸入的文字 
+        $("p.text_title").text(title);                               //將輸入的文字，加入到p標籤，更改文字
+        $("p.text_title").removeClass("-none");                      //移除display:none p標籤
+        $("span.edit_title").removeClass("-none");                   //移除display:none 筆icon
+        $(this).addClass("-none");                                   //display:none input
         
       });
       // $("input.update_title").keyup(function(e){
@@ -892,6 +898,8 @@
         //       console.log(data);
         //     }
 
+        
+
 
 
       });
@@ -908,13 +916,13 @@
         // console.log(time)
         // console.log(current_time)
         let last_data = [];
-        let day_number = $("div.schedule_header p").html();
-        take_schedule_list(last_data);
-        sessionStorage.setItem(day_number, JSON.stringify(last_data));                    //將當前天數行程資料存入sessionStorage
+        let day_number = $("div.schedule_header p").html();                               //取得當前的天數
+        take_schedule_list(last_data);                                                    //取得當前天數行程資料
+        sessionStorage.setItem(day_number, JSON.stringify(last_data));                    //存入sessionStorage
 
         let insertData = [];
-        let cid = $("div.input_title").attr("data-schedule-id");                          //將所有天數的sessionStorage取出
-        $("ul.sum_day").find("li").each(function (index, items) {
+        let cid = $("div.input_title").attr("data-schedule-id");                          //取得總行程的ID
+        $("ul.sum_day").find("li").each(function (index, items) {                         //將所有天數的sessionStorage取出
           let sessionDate = JSON.parse(sessionStorage.getItem("Day" + (index + 1)));
           insertData.push(sessionDate);
         });
@@ -945,6 +953,34 @@
 
       });
 
+      /*-----------------------------產生行程的按鈕------------------------------*/
+      $("button#btn_produce").on("click", function(){
+        $("button#btn_Store").click();
+        let schedule_id = $("div.input_title").attr("data-schedule-id");
+        let title = $("p.text_title").text();
+        let first_day = $("ul.sum_day").attr("data-start");
+        let last_day = $("ul.sum_day").attr("data-end");
+        let total_day = $("ul.sum_day").attr("data-days").toString();
+        let schedule_data = JSON.stringify({
+          "schedule_data":[{
+                            "schedule_id":schedule_id, 
+                            "title":title, 
+                            "first_day":first_day, 
+                            "last_day":last_day, 
+                            "total_day":total_day
+                            }]});
+        $("input#produce_schedule").attr("value", schedule_data);
+        console.log(schedule_data)                               
+
+      });
+
+
+
+
+
+
+
+
       /*-----------------------------點選行程，修改行程備註------------------------------*/
       $("ul.schedule_list").on("click", "li div.detail_block", function () {
         $("div.overlay_add_schedule").addClass("-on1");
@@ -968,7 +1004,10 @@
 
       /*-----------------------------刪除行程，點選垃圾桶的icon------------------------------*/
       $("ul.schedule_list").on("click", "li span.trash", function () {
+        let schedule_product_id = $(this).closest("li").attr("id");
         $(this).closest("li.schedule_block").remove();
+        $("div#"+ schedule_product_id).closest("div.col-lg-4").toggle("-none");
+
         let current_data = [];
         take_schedule_list(current_data);
 
@@ -1010,8 +1049,8 @@
       $("div.change_date").on("click", function(){
         let data = listDateResult(selectedDate.selectedDates);
         if(data.length == 0 || data == []){                               //若取得的資料為空陣列，則跳出提醒視窗
-          $("input.update_date").focus();
-          alert("若只選一天，請在日期上點兩下")
+          // $("input.update_date").focus();
+          alert("請輸入日期\u000d若只選一天，請在日期上點兩下")
         }else if(confirm("所有資料即將被刪除\u000d確定要重新選擇日期嗎?")){
           sessionStorage.clear();                                         //清除sessionStorge資料
           $("ul.sum_day").html("");                                       //清除天數
@@ -1019,7 +1058,7 @@
           let add_day = "";
           let first_day = "";
           let last_day = "";
-          let all_days = "";
+          let total_day = "";
           $.each(data, function(index, items){
             switch(index){
               case 0:
@@ -1029,14 +1068,14 @@
                 last_day = items;
                 break;
               case 2:
-                all_days = items;
+              total_day = items;
                 break;
             }
           });
 
-          $("ul.sum_day").attr("data-start", first_day, "data-end", last_day, "data-days", all_days);
+          $("ul.sum_day").attr("data-start", first_day, "data-end", last_day, "data-days", );
           $("ul.sum_day").attr("data-end", last_day);
-          $("ul.sum_day").attr("data-days", all_days);
+          $("ul.sum_day").attr("data-days", total_day);
           $("div.schedule_header").attr("data-date", first_day);
           $("div.current_date span").html("選擇的日期為：" + first_day +" ～ "+ last_day);
 
@@ -1046,8 +1085,14 @@
           // $("div.change_date button").addClass("-none");
           $("div.update_date input").fadeOut();
           $("div.change_date button").fadeOut();
+
+          if(total_day > 10){
+            $("ul.sum_day").addClass("-onScroll");
+          }else{
+            $("ul.sum_day").removeClass("-onScroll");
+          }
           
-          for(let i = 1; i <= all_days; i++){
+          for(let i = 1; i <= total_day; i++){
             let start_date = flatpickr.formatDate(new Date(first_day), 'Y-m-d');
             console.log(start_date)
             add_day +=
@@ -1058,9 +1103,14 @@
             first_day += (60*60*24*1000);
           }
           $("ul.sum_day").append(add_day);
+        }else{
+          $("div.current_date span").removeClass("-none");
+          $("div.current_date span").fadeIn();
+          $("div.update_date input").fadeOut();
+          $("div.change_date button").fadeOut();
+          $("div.update_date input").val("");
         }
       });
-
 
     });
     /*-----------------------------使用者重新選擇天數時用的function------------------------------*/
@@ -1083,14 +1133,60 @@
       });
 
       if(first_day.length != 0 && last_day != ""){
-        let all_days = ((last_day - first_day) / (60*60*24*1000)) + 1;       //取得選取的天數
-        allDate.push(all_days.toString());
+        let total_day = ((last_day - first_day) / (60*60*24*1000)) + 1;       //取得選取的天數
+        allDate.push(total_day.toString());
       }
       return allDate;
     };  
 
     /*-----------------------------讀取產品的動作------------------------------*/
     function init() {
+      // $.ajax({
+      //   url: "http://localhost:8081/TDA101G1/project/JsonController",
+      //   type: "GET",
+      //   data: {
+      //     "loadProduct": "loadProduct"
+      //   },
+      //   dataType: "json",
+      //   beforeSend: function () {
+      //     $("div.product_body_content").html(
+      //       '<li style="text-align: center;"><i class="fas fa-spinner fa-spin fa-3x"></i></li>');
+      //   },
+      //   success: function (data) {
+      //     let insertHtml = "";
+      //     let items = data.products; //products = server傳回的key
+      //     // console.log(items)
+      //     $.each(items, function (index, value) {
+      //       insertHtml += `<div class="col-6 col-md-6 col-lg-4">
+      //                       <div id="` + value.product_ID + `" class="card">
+      //                         <img src="https://picsum.photos/200/100/?random=1" class="card-img-top">
+      //                         <div class="card-body">
+      //                           <h5 class="card-title">` + value.product_Name + `</h5>
+      //                           <p class="card-text"><i class="fas fa-map-marker-alt"></i><span> ` + value
+      //         .product_Address + `</span></p>
+      //                           <span>4.3</span>
+      //                           <span><i class="fas fa-star"></i></span>
+      //                           <span><i class="fas fa-star"></i></span>
+      //                           <span><i class="fas fa-star"></i></span>
+      //                           <span><i class="fas fa-star"></i></span>
+      //                           <span><i class="fas fa-star"></i></span>
+      //                           <span class="love"><i class="far fa-heart fa-2x"></i></span>
+      //                         </div>
+      //                         <div class="list-group list-group-flush">
+      //                           <p class="list-group-item">` + value.product_Intro + `</p>
+      //                         </div>
+      //                         <p class="stay_time -none">` + value.product_Staytime + `</p>
+      //                       </div>
+      //                     </div>`
+      //     });
+      //     $("div.product_body_content").html("<div class='row'>" + insertHtml);
+
+      //   },
+      //   error: function () {
+      //     alert("fail")
+      //   }
+      // });
+
       $.ajax({
         url: "http://localhost:8081/TDA101G1/project/JsonController",
         type: "GET",
@@ -1105,15 +1201,16 @@
         success: function (data) {
           let insertHtml = "";
           let items = data.products; //products = server傳回的key
-          // console.log(items)
+          let product_id = [];
+          let schedule_product_id = [];
           $.each(items, function (index, value) {
+            product_id.push(value.product_ID);
             insertHtml += `<div class="col-6 col-md-6 col-lg-4">
                             <div id="` + value.product_ID + `" class="card">
                               <img src="https://picsum.photos/200/100/?random=1" class="card-img-top">
                               <div class="card-body">
                                 <h5 class="card-title">` + value.product_Name + `</h5>
-                                <p class="card-text"><i class="fas fa-map-marker-alt"></i><span> ` + value
-              .product_Address + `</span></p>
+                                <p class="card-text"><i class="fas fa-map-marker-alt"></i><span> ` + value.product_Address + `</span></p>
                                 <span>4.3</span>
                                 <span><i class="fas fa-star"></i></span>
                                 <span><i class="fas fa-star"></i></span>
@@ -1130,7 +1227,14 @@
                           </div>`
           });
           $("div.product_body_content").html("<div class='row'>" + insertHtml);
-
+          $("ul.schedule_list").find("li").each(function(index, items){
+            schedule_product_id.push($(items).attr("id"));
+          })
+          for(let i = 0; i < product_id.length; i++){
+            if($.inArray(product_id[i], schedule_product_id) != -1){             //若等於-1，就是表示兩邊列表沒有共同的id
+              $("div#"+ product_id[i]).closest("div.col-lg-4").addClass("-none");  //反之不等於-1，就是表示兩邊有共同的id，所以要隱藏起來
+            }
+          }
         },
         error: function () {
           alert("fail")
@@ -1142,22 +1246,26 @@
     function init2() {
       let add_day = "";
       let millisecond = 60*60*24*1000;
-      let total_day = $("ul.sum_day").attr("data-days");
       let first_day = $("ul.sum_day").attr("data-start");
       let last_day = $("ul.sum_day").attr("data-end");
-      let start_time = new Date(first_day).getTime();   
+      let total_day = $("ul.sum_day").attr("data-days");
+      let time = new Date(first_day).getTime();   
+
+      if(total_day > 10){
+        $("ul.sum_day").addClass("-onScroll");
+      }else{
+        $("ul.sum_day").removeClass("-onScroll");
+      }
 
       for (let i = 1; i <= total_day; i++) {
-        let start_date = flatpickr.formatDate(new Date(start_time), 'Y-m-d');
+        let start_date = flatpickr.formatDate(new Date(time), 'Y-m-d');
         add_day +=
         `<li class="Day` + i + `"data-sort="` + i + `"data-date="`+ start_date +`">
           <button type="button" class="btn btn-primary btn-lg">Day` + i + `</button>
           </li>`;
-        start_time += millisecond;
+        time += millisecond;
         }
       $("ul.sum_day").append(add_day);
-      $("div.schedule_header").attr("data-date", first_day);
-      $("div.current_date span").html("選擇的日期為：" + first_day +" ～ "+ last_day);
     }
 
     /*----------------------------------新增行程區塊----------------------------*/
