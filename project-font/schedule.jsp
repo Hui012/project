@@ -1,9 +1,16 @@
+<%@page import="java.util.List"%>
+<%@page import="com.product.model.ProductVO"%>
+<%@page import="com.product.model.ProductService"%>
 <%@page import="com.customerize.model.CustVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
 // 	String date = (String)session.getAttribute("date");
-	CustVO custVO = (CustVO) request.getAttribute("custVO");
+  CustVO custVO = (CustVO) request.getAttribute("custVO");
+  ProductService dao = new ProductService();
+  List<ProductVO> list = dao.getAll();
+  pageContext.setAttribute("list", list);
 
 %>
 <!doctype html>
@@ -223,9 +230,6 @@
       font-weight: bold;
       color: white;
       text-align: center;
-    }
-    div.input_title div{
-      display: inline-block;
     }
 
     div.input_title input {
@@ -659,8 +663,33 @@
 
           <div class="product_body">
             <div class="product_body_content" style="padding-left: 15px; padding-right: 15px;">
-              <!--------------- 動態新增 --------------->
-            </div>
+              <!-- <div class="row" style="padding-left: 15px; padding-right: 15px;"> -->
+              <!--------------- 動態新增 --------------->                              
+            <!-- <c:forEach var="value" items="${list}">
+              <div class="col-6 col-md-6 col-lg-4">
+                <div id=${value.product_ID} class="card">
+                  <img src="https://picsum.photos/200/100/?random=1" class="card-img-top">
+                  <div class="card-body">
+                    <h5 class="card-title">${value.product_Name}</h5>
+                    <p class="card-text"><i class="fas fa-map-marker-alt"></i><span>${value.product_Address}</span></p>
+                    <span>4.3</span>
+                    <span><i class="fas fa-star"></i></span>
+                    <span><i class="fas fa-star"></i></span>
+                    <span><i class="fas fa-star"></i></span>
+                    <span><i class="fas fa-star"></i></span>
+                    <span><i class="fas fa-star"></i></span>
+                    <span class="love"><i class="far fa-heart fa-2x"></i></span>
+                  </div>
+                  <div class="list-group list-group-flush">
+                    <p class="list-group-item">${value.product_Intro}</p>
+                  </div>
+                  <p class="stay_time -none">${value.product_Staytime}</p>
+                </div>
+              </div>
+            </c:forEach> -->
+          <!-- </div> -->
+
+            
           </div>
         </div>
 
@@ -1141,57 +1170,12 @@
 
     /*-----------------------------讀取產品的動作------------------------------*/
     function init() {
-      // $.ajax({
-      //   url: "http://localhost:8081/TDA101G1/project/JsonController",
-      //   type: "GET",
-      //   data: {
-      //     "loadProduct": "loadProduct"
-      //   },
-      //   dataType: "json",
-      //   beforeSend: function () {
-      //     $("div.product_body_content").html(
-      //       '<li style="text-align: center;"><i class="fas fa-spinner fa-spin fa-3x"></i></li>');
-      //   },
-      //   success: function (data) {
-      //     let insertHtml = "";
-      //     let items = data.products; //products = server傳回的key
-      //     // console.log(items)
-      //     $.each(items, function (index, value) {
-      //       insertHtml += `<div class="col-6 col-md-6 col-lg-4">
-      //                       <div id="` + value.product_ID + `" class="card">
-      //                         <img src="https://picsum.photos/200/100/?random=1" class="card-img-top">
-      //                         <div class="card-body">
-      //                           <h5 class="card-title">` + value.product_Name + `</h5>
-      //                           <p class="card-text"><i class="fas fa-map-marker-alt"></i><span> ` + value
-      //         .product_Address + `</span></p>
-      //                           <span>4.3</span>
-      //                           <span><i class="fas fa-star"></i></span>
-      //                           <span><i class="fas fa-star"></i></span>
-      //                           <span><i class="fas fa-star"></i></span>
-      //                           <span><i class="fas fa-star"></i></span>
-      //                           <span><i class="fas fa-star"></i></span>
-      //                           <span class="love"><i class="far fa-heart fa-2x"></i></span>
-      //                         </div>
-      //                         <div class="list-group list-group-flush">
-      //                           <p class="list-group-item">` + value.product_Intro + `</p>
-      //                         </div>
-      //                         <p class="stay_time -none">` + value.product_Staytime + `</p>
-      //                       </div>
-      //                     </div>`
-      //     });
-      //     $("div.product_body_content").html("<div class='row'>" + insertHtml);
-
-      //   },
-      //   error: function () {
-      //     alert("fail")
-      //   }
-      // });
-
       $.ajax({
         url: "http://localhost:8081/TDA101G1/project/JsonController",
-        type: "GET",
+        type: "POST",
         data: {
           "loadProduct": "loadProduct"
+          
         },
         dataType: "json",
         beforeSend: function () {
@@ -1226,7 +1210,7 @@
                             </div>
                           </div>`
           });
-          $("div.product_body_content").html("<div class='row'>" + insertHtml);
+          $("div.product_body_content").html("<div class='row'>" + insertHtml + "</div>");
           $("ul.schedule_list").find("li").each(function(index, items){
             schedule_product_id.push($(items).attr("id"));
           })
