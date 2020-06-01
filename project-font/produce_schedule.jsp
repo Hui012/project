@@ -17,6 +17,26 @@
         * {
             font-family: 微軟正黑體;
         }
+        body{
+            height: 100%;
+        }
+        div.main-content{
+            min-height: 100%;
+            padding-top:50px;
+            padding-bottom:50px;
+            position: relative;
+            margin-bottom: -100px;
+        }
+        footer {
+            background-color: black;
+            height: 164px;
+            font-size: 24px;
+            font-weight: bold;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
 
         button,
         img,
@@ -29,7 +49,8 @@
             list-style: none;
             padding: 0;
         }
-        .-none{
+
+        .-none {
             display: none;
         }
 
@@ -124,7 +145,8 @@
             width: 100%;
             height: 80px;
         }
-        div.product_ticket{
+
+        div.product_ticket {
             width: 230px;
             height: 110px;
             border: 1px solid black;
@@ -133,34 +155,121 @@
 
         /*-------------------選購明細--------------------*/
         div.cart_content {
+            display: block;
             width: 100%;
             height: 100%;
             border: 1px solid black;
+            max-height: 650px;
+            text-align: center;
         }
-        div.cart_title{
+
+        div.cart_title {
             border: 1px solid black;
             width: 100% + 2px;
             height: 80px;
             margin: -1px 0 0 -1px;
             text-align: center;
         }
-        div.cart_title{
+
+        div.cart_title {
             line-height: 80px;
             font-size: 32px;
             font-weight: bold;
             color: #343434;
         }
-        li.cart_detail{
+
+        li.cart_detail {
             width: 100%;
             height: 140px;
             border-bottom: 1px solid #343434;
+            margin-top: 20px;
         }
-        div.product_block, div.select_block, div.trash_block{
+
+        div.product_block {
             height: 140px;
-            border: 1px solid red;
+        }
+
+        div.product_ticket {
+            box-shadow: 0 0 6px;
+            border-radius: 4px;
+        }
+
+        div.product_ticket_img {
+            width: 120px;
+            height: 100%;
+            border-bottom: 1px solid #343434;
+            display: inline-block;
+        }
+
+        div.product_ticket_name {
+            width: calc(100% - 120px - 4px);
+            height: 100%;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        div.product_ticket_name p {
+            text-align: center;
+            line-height: 108px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #343434;
+        }
+
+        div.trash_block {
+            height: 140px;
+            text-align: center;
+            line-height: 100px;
+        }
+
+        div.select_block {
+            height: 140px;
             text-align: center;
         }
-    
+
+        input.input_quantity {
+            width: 45px;
+            vertical-align: top;
+        }
+
+        div.cart_body {
+            height: calc(100% - 82px - 80px);
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
+
+        div.go_buy {
+            width: 100%;
+            height: 80px;
+            bottom: 0;
+            border-top: 1px solid black;
+            line-height: 80px;
+        }
+
+
+        /*--------------------廣告------------------------*/
+        div.ad_content {
+            width: 100%;
+            height: 100%;
+            border: 1px solid black;
+            display: block;
+        }
+
+        div.ad_title {
+            border: 1px solid black;
+            width: 100% + 2px;
+            height: 80px;
+            margin: -1px 0 0 -1px;
+            text-align: center;
+        }
+
+        div.ad_title {
+            line-height: 80px;
+            font-size: 32px;
+            font-weight: bold;
+            color: #343434;
+        }
+
 
 
         /*------------------行程資訊---------------------*/
@@ -222,6 +331,7 @@
             vertical-align: top;
             width: 198px;
             height: 100%;
+
             /* line-height: 103px; */
         }
 
@@ -266,21 +376,14 @@
             width: 124px;
         }
 
-        footer {
-            background-color: black;
-            height: 164px;
-            font-size: 24px;
-            font-weight: bold;
-            position: absolute;
-            bottom: 0;
-            width: 1920px;
-        }
+        
     </style>
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> -->
     <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_orange.css">
 </head>
 
-<body>
+<body>  
+    <div class="main_content">
 
     <!-- Image and text -->
     <nav class="navbar navbar-light bg-light">
@@ -318,7 +421,7 @@
                                 </div>
                             </div>
                             <div class="text_date">
-                                <p>共5天</p>
+                                <p style="margin: 25px auto auto auto;">共5天</p>
                                 <p>2020-02-11~2020-02-18</p>
                             </div>
                         </div>
@@ -329,48 +432,50 @@
                                 </div>
                             </div>
                             <div class="text_money">
-                                <span>TWD 10000</span>
+                                <span style="line-height: 103px;">TWD 10000</span>
                             </div>
                         </div>
                     </div>
 
                     <!--------------- 動態新增 --------------->
 
-                    <ul class="schedule_detail">
-                        <div class="all">
-                            <div class="row" style="padding-left: 15px; padding-right: 15px;">
-                                <div class="col col-md-4" style="padding-right: 0; padding-left: 0;">
-                                    <div class="day_info">
-                                        <div class="day_icon">
-                                            <div class="day_date">
-                                                <span>D1</span>
-                                            </div>
-                                        </div>
-                                        <div class="day_text_date">
-                                            <p>2020/04/21</p>
-                                            <p>週三</p>
+
+                    <div class="all">
+                        <div class="row" style="padding-left: 15px; padding-right: 15px;">
+                            <div class="col col-md-4" style="padding-right: 0; padding-left: 0;">
+                                <div class="day_info">
+                                    <div class="day_icon">
+                                        <div class="day_date">
+                                            <span>D1</span>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col col-md-4" style="padding-right: 0; padding-left: 0;">
-                                    <div class="day_weather">
-                                        <p class="km" style="margin-bottom: 6px;"">單日里程：15</p>
-                                        <p>天氣預測：22 C <i class="fas fa-cloud fa-2x -none"></i><i class="fas fa-sun fa-2x"></i>
-                                            <i class="fas fa-cloud-showers-heavy fa-2x -none"></i>
-                                            <i class="fas fa-cloud-sun fa-2x -none"></i<i class="fas fa-cloud-sun-rain fa-2x -none"></i></p>
-                                    </div>
-                                </div>
-                                <div class="col col-md-4" style="padding-right: 0; padding-left: 0;">
-                                    <div class="day_spent">
-                                        <p>單日花費：$1500</p>
-                                        <p>人數：2</p>
+                                    <div class="day_text_date">
+                                        <p>2020/04/21</p>
+                                        <p>週三</p>
                                     </div>
                                 </div>
                             </div>
+                            <div class="col col-md-4" style="padding-right: 0; padding-left: 0;">
+                                <div class="day_weather">
+                                    <p class="km" style="margin-bottom: 6px;"">單日里程：15</p>
+                                        <p>天氣預測：22 C <i class=" fas fa-cloud fa-2x -none"></i><i
+                                            class="fas fa-sun fa-2x"></i>
+                                        <i class="fas fa-cloud-showers-heavy fa-2x -none"></i>
+                                        <i class="fas fa-cloud-sun fa-2x -none"></i<i
+                                                class="fas fa-cloud-sun-rain fa-2x -none"></i></p>
+                                </div>
+                            </div>
+                            <div class="col col-md-4" style="padding-right: 0; padding-left: 0;">
+                                <div class="day_spent">
+                                    <p>單日花費：$1500</p>
+                                    <p>人數：2</p>
+                                </div>
+                            </div>
                         </div>
+                    </div>
 
 
-
+                    <ul class="schedule_detail">
                         <li class="schedule_block" id="` + product_ID + `" data-sort="` + sort + `"
                             style="padding-left: 15px; padding-right: 15px;">
                             <div class="row" style="padding-left: 15px; padding-right: 15px;">
@@ -394,38 +499,38 @@
                             </div>
                         </li>
 
-                        <li class="schedule_block" id="` + product_ID + `"data-sort="` + sort + `" style="padding-left: 15px; padding-right: 15px;">
+                        <li class="schedule_block" id="` + product_ID + `" data-sort="` + sort + `"
+                            style="padding-left: 15px; padding-right: 15px;">
                             <div class="row" style="padding-left: 15px; padding-right: 15px;">
-                              <div class="col col-md-12">
-                                  <div class="row" style="padding-left: 15px; padding-right: 15px; margin-top: 20px;">
-                                  <div class="col col-md-3">
-                                    <span><i class="fas fa-car-side fa-2x"></i></span>
-                                    <span>25KM</span>
-                                  </div>
-                                  <div class="col col-md-6" style="text-align: center;">
-                                    <span style="margin: auto;"><i class="fas fa-arrow-down fa-2x"></i></span>
-                                  </div>
-                                </div>
-  
-                                <div class="detail_block">
-                                  <div class="detail_top">
-                                    <div class="detail_img">
-                                      <img src="` + product_img + `">
+                                <div class="col col-md-12" style="padding: 0;">
+                                    <div class="row" style="padding-left: 15px; padding-right: 15px; margin-top: 20px;">
+                                        <div class="col col-md-3">
+                                            <span><i class="fas fa-car-side fa-2x"></i></span>
+                                            <span>25KM</span>
+                                        </div>
+                                        <div class="col col-md-6" style="text-align: center;">
+                                            <span style="margin: auto;"><i class="fas fa-arrow-down fa-2x"></i></span>
+                                        </div>
                                     </div>
-                                    <div class="detail_time">
-                                      <p style="font-size: 24px">` + product_name + `</p>
-                                      <p><i class="far fa-clock"></i> 建議遊玩時間：<span>` + stay_time + `</span>小時</p>
-                                    </div>
-                                  </div>
-                                  <div class="detail_info">
-                                    <p>` + schedule_info + `</p>
-                                  </div>
-                                </div>
-  
-                              </div>
-                            </div>
-                          </li>
 
+                                    <div class="detail_block">
+                                        <div class="detail_top">
+                                            <div class="detail_img">
+                                                <img src="` + product_img + `">
+                                            </div>
+                                            <div class="detail_time">
+                                                <p style="font-size: 24px">` + product_name + `</p>
+                                                <p><i class="far fa-clock"></i> 建議遊玩時間：<span>` + stay_time + `</span>小時
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="detail_info">
+                                            <p>` + schedule_info + `</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -434,20 +539,33 @@
                     <div class="cart_title">
                         <p>選購明細</p>
                     </div>
-                    <ul class="cart_list">
-                        <!--------------- 動態新增 --------------->
-                        <li id="" class="cart_detail">
-                            <div class="row" style="padding-left: 15px; padding-right: 15px;">
-                                    <div class="col col-md-7" style="padding-right: 0; padding-left: 0;">
+                    <div class="cart_body">
+                        <ul class="cart_list">
+                            <!--------------- 動態新增 --------------->
+                            <li id="" class="cart_detail">
+                                <div class="row" style="padding-left: 15px; padding-right: 15px;">
+                                    <div class="col col-md-6">
                                         <div class="product_block">
                                             <div class="product_ticket">
-
+                                                <div class="product_ticket_img">
+                                                    <img src="https://picsum.photos/120/108/?random=1">
+                                                </div>
+                                                <div class="product_ticket_name">
+                                                    <p>故宮博物院</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col col-md-4" style="padding-right: 0; padding-left: 0;">
+                                    <div class="col col-md-5" style="padding-right: 0; padding-left: 0;">
                                         <div class="select_block">
-                                            <input class="input_quantity" type="number" value="1" name="points" min="1" max="99"></input>
+                                            <select class="select_options" style="height: 30px; margin-top: 30px;">
+                                                <option>半票</option>
+                                                <option>全票</option>
+                                                <option>愛心票</option>
+                                            </select>
+                                            <input class="input_quantity" style="margin-top: 30px;" type="number"
+                                                value="1" name="points" min="1" max="99"></input>
+                                            <p>NT$ 1000</p>
                                         </div>
                                     </div>
                                     <div class="col col-md-1" style="padding-right: 0; padding-left: 0;">
@@ -455,101 +573,291 @@
                                             <span class="trash"><i class="fas fa-trash-alt fa-2x"></i></span>
                                         </div>
                                     </div>
+                                </div>
+                            </li>
+                            <li id="" class="cart_detail">
+                                <div class="row" style="padding-left: 15px; padding-right: 15px;">
+                                    <div class="col col-md-6">
+                                        <div class="product_block">
+                                            <div class="product_ticket">
+                                                <div class="product_ticket_img">
+                                                    <img src="https://picsum.photos/120/108/?random=1">
+                                                </div>
+                                                <div class="product_ticket_name">
+                                                    <p>故宮博物院</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col col-md-5" style="padding-right: 0; padding-left: 0;">
+                                        <div class="select_block">
+                                            <select class="select_options" style="height: 30px; margin-top: 30px;">
+                                                <option>半票</option>
+                                                <option>全票</option>
+                                                <option>愛心票</option>
+                                            </select>
+                                            <input class="input_quantity" style="margin-top: 30px;" type="number"
+                                                value="1" name="points" min="1" max="99"></input>
+                                            <p>NT$ 1000</p>
+                                        </div>
+                                    </div>
+                                    <div class="col col-md-1" style="padding-right: 0; padding-left: 0;">
+                                        <div class="trash_block">
+                                            <span class="trash"><i class="fas fa-trash-alt fa-2x"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li id="" class="cart_detail">
+                                <div class="row" style="padding-left: 15px; padding-right: 15px;">
+                                    <div class="col col-md-6">
+                                        <div class="product_block">
+                                            <div class="product_ticket">
+                                                <div class="product_ticket_img">
+                                                    <img src="https://picsum.photos/120/108/?random=1">
+                                                </div>
+                                                <div class="product_ticket_name">
+                                                    <p>故宮博物院</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col col-md-5" style="padding-right: 0; padding-left: 0;">
+                                        <div class="select_block">
+                                            <select class="select_options" style="height: 30px; margin-top: 30px;">
+                                                <option>半票</option>
+                                                <option>全票</option>
+                                                <option>愛心票</option>
+                                            </select>
+                                            <input class="input_quantity" style="margin-top: 30px;" type="number"
+                                                value="1" name="points" min="1" max="99"></input>
+                                            <p>NT$ 1000</p>
+                                        </div>
+                                    </div>
+                                    <div class="col col-md-1" style="padding-right: 0; padding-left: 0;">
+                                        <div class="trash_block">
+                                            <span class="trash"><i class="fas fa-trash-alt fa-2x"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li id="" class="cart_detail">
+                                <div class="row" style="padding-left: 15px; padding-right: 15px;">
+                                    <div class="col col-md-6">
+                                        <div class="product_block">
+                                            <div class="product_ticket">
+                                                <div class="product_ticket_img">
+                                                    <img src="https://picsum.photos/120/108/?random=1">
+                                                </div>
+                                                <div class="product_ticket_name">
+                                                    <p>故宮博物院</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col col-md-5" style="padding-right: 0; padding-left: 0;">
+                                        <div class="select_block">
+                                            <select class="select_options" style="height: 30px; margin-top: 30px;">
+                                                <option>半票</option>
+                                                <option>全票</option>
+                                                <option>愛心票</option>
+                                            </select>
+                                            <input class="input_quantity" style="margin-top: 30px;" type="number"
+                                                value="1" name="points" min="1" max="99"></input>
+                                            <p>NT$ 1000</p>
+                                        </div>
+                                    </div>
+                                    <div class="col col-md-1" style="padding-right: 0; padding-left: 0;">
+                                        <div class="trash_block">
+                                            <span class="trash"><i class="fas fa-trash-alt fa-2x"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li id="" class="cart_detail">
+                                <div class="row" style="padding-left: 15px; padding-right: 15px;">
+                                    <div class="col col-md-6">
+                                        <div class="product_block">
+                                            <div class="product_ticket">
+                                                <div class="product_ticket_img">
+                                                    <img src="https://picsum.photos/120/108/?random=1">
+                                                </div>
+                                                <div class="product_ticket_name">
+                                                    <p>故宮博物院</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col col-md-5" style="padding-right: 0; padding-left: 0;">
+                                        <div class="select_block">
+                                            <select class="select_options" style="height: 30px; margin-top: 30px;">
+                                                <option>半票</option>
+                                                <option>全票</option>
+                                                <option>愛心票</option>
+                                            </select>
+                                            <input class="input_quantity" style="margin-top: 30px;" type="number"
+                                                value="1" name="points" min="1" max="99"></input>
+                                            <p>NT$ 1000</p>
+                                        </div>
+                                    </div>
+                                    <div class="col col-md-1" style="padding-right: 0; padding-left: 0;">
+                                        <div class="trash_block">
+                                            <span class="trash"><i class="fas fa-trash-alt fa-2x"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li id="" class="cart_detail">
+                                <div class="row" style="padding-left: 15px; padding-right: 15px;">
+                                    <div class="col col-md-6">
+                                        <div class="product_block">
+                                            <div class="product_ticket">
+                                                <div class="product_ticket_img">
+                                                    <img src="https://picsum.photos/120/108/?random=1">
+                                                </div>
+                                                <div class="product_ticket_name">
+                                                    <p>故宮博物院</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col col-md-5" style="padding-right: 0; padding-left: 0;">
+                                        <div class="select_block">
+                                            <select class="select_options" style="height: 30px; margin-top: 30px;">
+                                                <option>半票</option>
+                                                <option>全票</option>
+                                                <option>愛心票</option>
+                                            </select>
+                                            <input class="input_quantity" style="margin-top: 30px;" type="number"
+                                                value="1" name="points" min="1" max="99"></input>
+                                            <p>NT$ 1000</p>
+                                        </div>
+                                    </div>
+                                    <div class="col col-md-1" style="padding-right: 0; padding-left: 0;">
+                                        <div class="trash_block">
+                                            <span class="trash"><i class="fas fa-trash-alt fa-2x"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div class="go_buy">
+                        <div class="row" style="padding-left: 15px; padding-right: 15px;">
+                            <div class="col col-md-6" style="padding-right: 0; padding-left: 0;">
+                                <p>合計：NT$4000</p>
+                            </div>
+                            <div class="col col-md-6" style="padding-right: 0; padding-left: 0;">
+                                <button id="btn_buy" type="button" class="btn btn-primary btn-lg">直接購買</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ad_content">
+                    <div class="ad_title">
+                        <p>廣告</p>
+                    </div>
+                    <ul class="ad_list">
+                        <!--------------- 動態新增 --------------->
+                        <li id="" class="ad_detail">
+                            <div class="row" style="padding-left: 15px; padding-right: 15px;">
+                                <div class="col col-md-6">
+                                </div>
                             </div>
                         </li>
                     </ul>
                 </div>
+
+
             </div>
+
+
         </div>
-    </div>
+
+
+            <footer class="footer mt-auto py-3">
+                <div class="container">
+                    <span class="text-muted">WEB DEVELOPER</span>
+                </div>
+            </footer>
+
+            <!-- Optional JavaScript -->
+            <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+                integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+                crossorigin="anonymous">
+            </script>
+            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+                integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+                crossorigin="anonymous">
+            </script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+                integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+                crossorigin="anonymous">
+            </script>
+
+            <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+            <script>
+                $(function () {
 
 
 
-
-
-    <!-- <footer class="footer mt-auto py-3">
-        <div class="container">
-            <span class="text-muted">WEB DEVELOPER</span>
-        </div>
-    </footer> -->
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
-    </script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
-        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous">
-    </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script>
-        $(function () {
-
-
-
-            // <div class="all">
-            //                 <div class="row" style="padding-left: 15px; padding-right: 15px;">
-            //                     <div class="col col-md-4" style="padding-right: 0; padding-left: 0;">
-            //                         <div class="day_info">
-            //                             <div class="day_icon">
-            //                                 <div class="day_date">
-            //                                     <span>D1</span>
-            //                                 </div>
-            //                             </div>
-            //                             <div class="day_text_date">
-            //                                 <p>2020/04/21</p>
-            //                                 <p>週三</p>
-            //                             </div>
-            //                         </div>
-            //                     </div>
-            //                     <div class="col col-md-4" style="padding-right: 0; padding-left: 0;">
-            //                         <div class="day_weather">
-            //                             <p>天氣預測：22</p>
-            //                             <p>單日里程：15</p>
-            //                         </div>
-            //                     </div>
-            //                     <div class="col col-md-4" style="padding-right: 0; padding-left: 0;">
-            //                         <div class="day_spent">
-            //                             <p>人數：2</p>
-            //                             <p>單日花費：$1500</p>
-            //                         </div>
-            //                     </div>
-            //                 </div>
-            //             </div>
+                    // <div class="all">
+                    //                 <div class="row" style="padding-left: 15px; padding-right: 15px;">
+                    //                     <div class="col col-md-4" style="padding-right: 0; padding-left: 0;">
+                    //                         <div class="day_info">
+                    //                             <div class="day_icon">
+                    //                                 <div class="day_date">
+                    //                                     <span>D1</span>
+                    //                                 </div>
+                    //                             </div>
+                    //                             <div class="day_text_date">
+                    //                                 <p>2020/04/21</p>
+                    //                                 <p>週三</p>
+                    //                             </div>
+                    //                         </div>
+                    //                     </div>
+                    //                     <div class="col col-md-4" style="padding-right: 0; padding-left: 0;">
+                    //                         <div class="day_weather">
+                    //                             <p>天氣預測：22</p>
+                    //                             <p>單日里程：15</p>
+                    //                         </div>
+                    //                     </div>
+                    //                     <div class="col col-md-4" style="padding-right: 0; padding-left: 0;">
+                    //                         <div class="day_spent">
+                    //                             <p>人數：2</p>
+                    //                             <p>單日花費：$1500</p>
+                    //                         </div>
+                    //                     </div>
+                    //                 </div>
+                    //             </div>
 
 
 
-            //             <li class="schedule_block" id="` + product_ID + `" data-sort="` + sort + `"
-            //                 style="padding-left: 15px; padding-right: 15px;">
-            //                 <div class="row" style="padding-left: 15px; padding-right: 15px;">
-            //                     <div class="col col-md-12" style="padding: 0;">
-            //                         <div class="detail_block">
-            //                             <div class="detail_top">
-            //                                 <div class="detail_img">
-            //                                     <img src="` + product_img + `">
-            //                                 </div>
-            //                                 <div class="detail_time">
-            //                                     <p style="font-size: 24px">` + product_name + `</p>
-            //                                     <p><i class="far fa-clock"></i> 建議遊玩時間：<span>` + stay_time + `</span>小時
-            //                                     </p>
-            //                                 </div>
-            //                             </div>
-            //                             <div class="detail_info">
-            //                                 <p>` + schedule_info + `</p>
-            //                             </div>
-            //                         </div>
-            //                     </div>
-            //                 </div>
-            //             </li>
-
-
-
-
-
+                    //             <li class="schedule_block" id="` + product_ID + `" data-sort="` + sort + `"
+                    //                 style="padding-left: 15px; padding-right: 15px;">
+                    //                 <div class="row" style="padding-left: 15px; padding-right: 15px;">
+                    //                     <div class="col col-md-12" style="padding: 0;">
+                    //                         <div class="detail_block">
+                    //                             <div class="detail_top">
+                    //                                 <div class="detail_img">
+                    //                                     <img src="` + product_img + `">
+                    //                                 </div>
+                    //                                 <div class="detail_time">
+                    //                                     <p style="font-size: 24px">` + product_name + `</p>
+                    //                                     <p><i class="far fa-clock"></i> 建議遊玩時間：<span>` + stay_time + `</span>小時
+                    //                                     </p>
+                    //                                 </div>
+                    //                             </div>
+                    //                             <div class="detail_info">
+                    //                                 <p>` + schedule_info + `</p>
+                    //                             </div>
+                    //                         </div>
+                    //                     </div>
+                    //                 </div>
+                    //             </li>
 
 
 
@@ -559,8 +867,13 @@
 
 
 
-        });
-    </script>
+
+
+
+
+
+                });
+            </script>
 </body>
 
 </html>

@@ -473,7 +473,7 @@
                 let insertHtml = `<li style="padding-left: 15px; padding-right: 15px;">
                                     <div class="row">
                                         <div class="col-10">
-                                            <img class="`+ data +`"name="`+ data +`" src="/img/`+ data +`.png" data-sort="`+sort +`">
+                                            <img class="`+ data +`"name="`+ data +`" src="<%=request.getContextPath()%>/project/img/`+ data +`.png" data-sort="`+sort +`">
                                             <input type="hidden" name="location" value="`+ data +`">
                                         </div>
                                         <div class="col-2 align-self-center">
