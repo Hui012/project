@@ -32,7 +32,7 @@
             height: 164px;
             font-size: 24px;
             font-weight: bold;
-            position: fixed;
+            position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
@@ -764,6 +764,7 @@
                         <li id="" class="ad_detail">
                             <div class="row" style="padding-left: 15px; padding-right: 15px;">
                                 <div class="col col-md-6">
+                                    
                                 </div>
                             </div>
                         </li>
@@ -775,13 +776,13 @@
 
 
         </div>
+                <footer class="footer">
+                    <!-- <div class="container"> -->
+                        <span class="text-muted">WEB DEVELOPER</span>
+                    <!-- </div> -->
+                </footer>
 
 
-            <footer class="footer mt-auto py-3">
-                <div class="container">
-                    <span class="text-muted">WEB DEVELOPER</span>
-                </div>
-            </footer>
 
             <!-- Optional JavaScript -->
             <!-- jQuery first, then Popper.js, then Bootstrap JS -->

@@ -6,10 +6,9 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
-// 	String date = (String)session.getAttribute("date");
+
   CustVO custVO = (CustVO) request.getAttribute("custVO");
-  ProductService dao = new ProductService();
-  List<ProductVO> list = dao.getAll();
+  List<ProductVO> list = (List<ProductVO>) request.getAttribute("products");
   pageContext.setAttribute("list", list);
 
 %>
@@ -25,7 +24,6 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
     integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
   <!-- 載入 Font Awesome -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
   <style>
     * {
       font-family: 微軟正黑體;
@@ -44,9 +42,11 @@
       margin-top: 90px;
     }
 
-    div button.btn {
+    div button.addbg {
       width: 100%;
       margin-bottom: 20px;
+      background-color: #E5B280;
+      border: #E5B280;
     }
 
     /* -----------------行程內容----------------- */
@@ -241,6 +241,11 @@
       font-size: 24px;
     }
 
+    div.text_title,
+    div.edit_title {
+      display: inline-block;
+    }
+
     div#first_row {
       height: 80px;
       margin-bottom: 10px;
@@ -255,6 +260,10 @@
       height: 370px;
       max-height: 100%;
       margin: auto;
+    }
+    div.card img{
+      width: 300px;
+      height: 150px;
     }
 
     div.schedule_map {
@@ -361,10 +370,6 @@
 
     .-on {
       display: none;
-    }
-
-    .-bg {
-      background-color: #E6903B;
     }
 
     .-onScroll {
@@ -556,19 +561,28 @@
     div.Transportation {
       text-align: center;
       /* line-height: 60px; */
-      width: 100%; 
+      width: 100%;
       height: 100%;
     }
-    div.Transportation button{
+
+    div.Transportation button {
       width: 100px;
       height: 50px;
       border-radius: 4px;
       margin: auto;
     }
 
+    /*----------------------------天數垃圾桶-------------------------------*/
+    span.delete_day {
+      font-size: 18px;
+      z-index: 20;
+      cursor: pointer;
+      /* margin-left: 10px; */
+      float: right;
+    }
   </style>
-  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> -->
-  <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_orange.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <!-- <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_orange.css"> -->
 </head>
 
 <body>
@@ -628,7 +642,7 @@
           <!--------------- 動態新增 --------------->
         </ul>
         <div class="add_day">
-          <button type="button" class="btn btn-primary btn-lg add_day">新增一天</button>
+          <button type="button" class="btn btn-primary btn-lg add_day" style="width: 100%;">新增一天</button>
         </div>
       </div>
       <div class="col col-md-4">
@@ -666,25 +680,25 @@
               <div class="row" style="padding-left: 15px; padding-right: 15px;">
                 <div class="col col-md-3">
                   <label class="label_area">
-                    <input type="checkbox" name="product_group" value="all" class="checkbox_area">
+                    <input type="checkbox" name="product_group" value="all" class="checkbox_area" checked>
                     <a>全部</a>
                   </label>
                 </div>
                 <div class="col col-md-3">
                   <label class="label_area">
-                    <input type="checkbox" name="product_group" value="activities" class="checkbox_area">
+                    <input type="checkbox" name="product_group" value="activities" class="checkbox_area" checked>
                     <a>景點</a>
                   </label>
                 </div>
                 <div class="col col-md-3">
                   <label class="label_area">
-                    <input type="checkbox" name="product_group" value="restaurant" class="checkbox_area">
+                    <input type="checkbox" name="product_group" value="restaurant" class="checkbox_area" checked>
                     <a>美食</a>
                   </label>
                 </div>
                 <div class="col col-md-3">
                   <label class="label_area">
-                    <input type="checkbox" name="product_group" value="accommodation" class="checkbox_area">
+                    <input type="checkbox" name="product_group" value="accommodation" class="checkbox_area" checked>
                     <a>住宿</a>
                   </label>
                 </div>
@@ -712,46 +726,80 @@
           <div class="product_body">
             <div class="product_body_content" style="padding-left: 15px; padding-right: 15px;">
               <!-- <div class="row" style="padding-left: 15px; padding-right: 15px;"> -->
-              <!--------------- 動態新增 --------------->
-              <!-- <c:forEach var="value" items="${list}">
-              <div class="col-6 col-md-6 col-lg-4">
-                <div id=${value.product_ID} class="card">
-                  <img src="https://picsum.photos/200/100/?random=1" class="card-img-top">
-                  <div class="card-body">
-                    <h5 class="card-title">${value.product_Name}</h5>
-                    <p class="card-text"><i class="fas fa-map-marker-alt"></i><span>${value.product_Address}</span></p>
-                    <span>4.3</span>
-                    <span><i class="fas fa-star"></i></span>
-                    <span><i class="fas fa-star"></i></span>
-                    <span><i class="fas fa-star"></i></span>
-                    <span><i class="fas fa-star"></i></span>
-                    <span><i class="fas fa-star"></i></span>
-                    <span class="love"><i class="far fa-heart fa-2x"></i></span>
-                  </div>
-                  <div class="list-group list-group-flush">
-                    <p class="list-group-item">${value.product_Intro}</p>
-                  </div>
-                  <p class="stay_time -none">${value.product_Staytime}</p>
+              <!--------------- 一開始為JSP載入，等後續動作會改為AJAX動態新增 --------------->
+                <div class="row">
+                  <c:forEach var="value" items="${list}">
+                      <div class="col-6 col-md-6 col-lg-4">
+                        <div id="${value.product_ID}" class="card">
+                          <img src="<%=request.getContextPath()%>/ImageController?product_id=${value.product_ID}" class="card-img-top">
+                          <div class="card-body">
+                            <h5 class="card-title">${value.product_Name}</h5>
+                            <p class="card-text"><i class="fas fa-map-marker-alt"></i><span>${value.product_Address}</span></p>
+                            <span>4.3</span>
+                            <span><i class="fas fa-star"></i></span>
+                            <span><i class="fas fa-star"></i></span>
+                            <span><i class="fas fa-star"></i></span>
+                            <span><i class="fas fa-star"></i></span>
+                            <span><i class="fas fa-star"></i></span>
+                            <span class="love"><i class="far fa-heart fa-2x"></i></span>
+                          </div>
+                          <div class="list-group list-group-flush">
+                            <p class="list-group-item">${value.product_Intro}</p>
+                          </div>
+                          <p class="stay_time -none">${value.product_Staytime}</p>
+                        </div>
+                      </div>
+                  </c:forEach>
                 </div>
-              </div>
-            </c:forEach> -->
-              <!-- </div> -->
-
-
-            </div>
-          </div>
-          <!-- 地圖模式使用的按鈕，一開始不顯示，設定為none -->
-          <div class="schedule_map -none">
 
           </div>
+        </div>
+        <!-- 地圖模式使用的畫面，一開始不顯示，設定為none -->
+        <div class="schedule_map -none">
 
         </div>
+
       </div>
     </div>
+  </div>
   </div>
 
   <!-- 新增行程的Modal -->
   <div class="overlay_add_schedule">
+    <article>
+      <div class="overlay_content">
+        <div class="overlay_header">
+          <p>填寫資訊</p>
+        </div>
+        <div class="overlay_body">
+          <div class="body_content">
+            <div class="content_top">
+              <div class="content_img">
+                <img src="">
+              </div>
+              <div class="context_title">
+                <p class="text"></p>
+                <p style="font-size: 16px;"><i class="far fa-clock fa-1x"></i> 建議遊玩時間：<span></span>小時</p>
+              </div>
+            </div>
+            <hr class="content_hr">
+            <div class="content_bottom">
+              <p class="schedule_info">行程備註</p>
+              <div class="text_info">
+                <textarea id="content_area" name="content_area" placeholder="最多50個字"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="btn_block">
+          <button id="btn_cancel" type="button">取消</button>
+          <button id="btn_confirm" type="button">確認</button>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <div class="overlay_delete_day -none">
     <article>
       <div class="overlay_content">
         <div class="overlay_header">
@@ -796,12 +844,13 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
     integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous">
   </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script>
     $(function () {
 
-      init();
+      // init();
       init2();
       /*-----------------------------地圖模式------------------------------*/
       $("button#btn_map").on("click", function () {
@@ -817,6 +866,14 @@
           $("div.btn_block button#btn_confirm").click();
         }
       });
+      /*-----------------------------可按enter------------------------------*/
+      $("input.checkbox_area").on("click", function(){
+        // $("div.checkbox_area").find("input").each(function(index, items){
+        //   console.log(index)
+        //   console.log(items)
+        // })
+        console.log($(this).attr("name"))
+      })
 
       /*-----------------------------筆icon按下去的動作------------------------------*/
       $("span.edit_title").on("click", function () {
@@ -933,19 +990,21 @@
         if (check_Id(schedule_id, product_ID) == false) { //若為false就是產品列表所點選的動作
           $("div.product_body_content").find("div#" + product_ID).closest("div.col-lg-4").toggle("-none");
         } //點選取消時，原選取的卡片，會返回產品列表
+        
       });
 
       /*-----------------------------新增天數的按鈕------------------------------*/
       $("div.add_day").on("click", function () {
         let last_day_num = parseInt($("ul.sum_day").find("li").last().attr("data-sort")) +
-        1; //取最後一個li的天數，然後+1給下一天用
+          1; //取最後一個li的天數，然後+1給下一天用
         let last_date = $("ul.sum_day").find("li").last().attr("data-date"); //取最後一個li的日期
         let millisecond = new Date(last_date).getTime() + (60 * 60 * 24 * 1000); //+1天
         let add_date = flatpickr.formatDate(new Date(millisecond), 'Y-m-d'); //格式化為Y-m-d
         let first_day = $("ul.sum_day").attr("data-start");
         let add_day =
           `<li class="Day` + last_day_num + `"data-sort="` + last_day_num + `"data-date="` + add_date + `">
-            <button type="button" class="btn btn-primary btn-lg">Day` + last_day_num + `</button>
+            <button type="button" class="btn btn-primary btn-lg addbg">Day` + last_day_num + `<span class="delete_day -none"><i class="fas fa-trash-alt"></i></span></button>
+            
           </li>`;
         if (last_day_num > 10) {
           $("ul.sum_day").addClass("-onScroll");
@@ -959,6 +1018,7 @@
 
       /*-----------------------------切換天數的按鈕------------------------------*/
       $("ul.sum_day").on("click", "button", function () {
+        $(this).addClass("selected")
         let day_number = $("div.schedule_header p").html(); //取得當前的天數
         let current_data = [];
         take_schedule_list(current_data); //取得行程列表當前資料
@@ -970,6 +1030,7 @@
         $("ul.schedule_list").html(""); //先將行程列表清空
 
         let get_Data = JSON.parse(sessionStorage.getItem($(this).text())); //取得要切換天數的sessionStorage，把資料印出
+        console.log(get_Data)
         $.each(get_Data, function (index, items) {
           scheduleView(items.product_ID, items.sort, items.product_img, items.product_name, items.stay_time,
             items.schedule_info);
@@ -997,6 +1058,23 @@
       // $("ul#schedule_list").on("DOMNodeInserted",function(){
       // console.log("新增了")
       // })
+      /*-----------------------------滑鼠移進天數的動作------------------------------*/
+      $("ul.sum_day button").on("mouseenter", function () {
+        $(this).find("span.delete_day").removeClass("-none");
+        console.log(1464654561111)
+        $(this).find("span.delete_day").on("click", function (e) {
+          e.stopImmediatePropagation() //取消事件的进一步捕获或冒泡，同时阻止任何事件处理程序被调用
+          // $("div.overlay_add_schedule").addClass("-on1");
+
+
+        });
+      });
+      /*-----------------------------滑鼠移出天數的動作------------------------------*/
+      $("ul.sum_day").on("mouseleave", "button", function () {
+        $(this).find("span.delete_day").addClass("-none");
+      });
+
+
 
       /*-----------------------------點選儲存的按鈕------------------------------*/
       $("button#btn_Store").on("click", function () {
@@ -1065,13 +1143,6 @@
 
       });
 
-
-
-
-
-
-
-
       /*-----------------------------點選行程，修改行程備註------------------------------*/
       $("ul.schedule_list").on("click", "li div.detail_block", function () {
         $("div.overlay_add_schedule").addClass("-on1");
@@ -1101,6 +1172,10 @@
 
         let current_data = [];
         take_schedule_list(current_data);
+
+        if(current_data.length == 0){
+          $("p.no_schedule").removeClass("-none");
+        }
 
         $("ul.schedule_list").html("");
         for (i of current_data) {
@@ -1188,7 +1263,7 @@
             console.log(start_date)
             add_day +=
               `<li class="Day` + i + `"data-sort="` + i + `"data-date="` + start_date + `">
-              <button type="button" class="btn btn-primary btn-lg">Day` + i + `</button>
+              <button type="button" class="btn btn-primary btn-lg addbg">Day` + i + `</button>
               </li>`;
             first_day = new Date(first_day).getTime();
             first_day += (60 * 60 * 24 * 1000);
@@ -1256,8 +1331,7 @@
                               <img src="https://picsum.photos/200/100/?random=1" class="card-img-top">
                               <div class="card-body">
                                 <h5 class="card-title">` + value.product_Name + `</h5>
-                                <p class="card-text"><i class="fas fa-map-marker-alt"></i><span> ` + value
-              .product_Address + `</span></p>
+                                <p class="card-text"><i class="fas fa-map-marker-alt"></i><span> ` + value.product_Address + `</span></p>
                                 <span>4.3</span>
                                 <span><i class="fas fa-star"></i></span>
                                 <span><i class="fas fa-star"></i></span>
@@ -1308,7 +1382,7 @@
         let start_date = flatpickr.formatDate(new Date(time), 'Y-m-d');
         add_day +=
           `<li class="Day` + i + `"data-sort="` + i + `"data-date="` + start_date + `">
-          <button type="button" class="btn btn-primary btn-lg">Day` + i + `</button>
+          <button type="button" class="btn btn-primary btn-lg addbg">Day` + i + `<span class="delete_day -none"><i class="fas fa-trash-alt"></i></span></button>
           </li>`;
         time += millisecond;
       }
