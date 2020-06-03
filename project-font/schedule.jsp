@@ -108,6 +108,10 @@
       padding: 0;
     }
 
+    li {
+      list-style: none;
+    }
+
     div.detail_block {
       width: 450px;
       height: 150px;
@@ -261,7 +265,8 @@
       max-height: 100%;
       margin: auto;
     }
-    div.card img{
+
+    div.card img {
       width: 300px;
       height: 150px;
     }
@@ -597,7 +602,8 @@
   <div class="container-fluid">
     <div class="row" id="first_row">
       <div class="col col-md-3" style="padding: 0;">
-        <div class="input_title" data-schedule-id="${custVO.cust_Schedule_ID}">
+        <div class="input_title" data-schedule-id="${custVO.cust_Schedule_ID}" data-quantity="${custVO.cust_Quantity}"
+        		data-position="${custVO.cust_Position}"	data-selected-county="${custVO.cust_Selected_County}">
           <div class="text_title">
             <p class="text_title">請輸入標題 </p>
           </div>
@@ -680,25 +686,28 @@
               <div class="row" style="padding-left: 15px; padding-right: 15px;">
                 <div class="col col-md-3">
                   <label class="label_area">
-                    <input type="checkbox" name="product_group" value="all" class="checkbox_area" checked>
+                    <input id="all" type="checkbox" name="product_group" value="全部" class="checkbox_area" checked>
                     <a>全部</a>
                   </label>
                 </div>
                 <div class="col col-md-3">
                   <label class="label_area">
-                    <input type="checkbox" name="product_group" value="activities" class="checkbox_area" checked>
+                    <input id="activities" type="checkbox" name="product_group" value="景點" class="checkbox_area"
+                      checked>
                     <a>景點</a>
                   </label>
                 </div>
                 <div class="col col-md-3">
                   <label class="label_area">
-                    <input type="checkbox" name="product_group" value="restaurant" class="checkbox_area" checked>
+                    <input id="restaurant" type="checkbox" name="product_group" value="餐廳" class="checkbox_area"
+                      checked>
                     <a>美食</a>
                   </label>
                 </div>
                 <div class="col col-md-3">
                   <label class="label_area">
-                    <input type="checkbox" name="product_group" value="accommodation" class="checkbox_area" checked>
+                    <input id="accommodation" type="checkbox" name="product_group" value="住宿" class="checkbox_area"
+                      checked>
                     <a>住宿</a>
                   </label>
                 </div>
@@ -727,41 +736,43 @@
             <div class="product_body_content" style="padding-left: 15px; padding-right: 15px;">
               <!-- <div class="row" style="padding-left: 15px; padding-right: 15px;"> -->
               <!--------------- 一開始為JSP載入，等後續動作會改為AJAX動態新增 --------------->
-                <div class="row">
-                  <c:forEach var="value" items="${list}">
-                      <div class="col-6 col-md-6 col-lg-4">
-                        <div id="${value.product_ID}" class="card">
-                          <img src="<%=request.getContextPath()%>/ImageController?product_id=${value.product_ID}" class="card-img-top">
-                          <div class="card-body">
-                            <h5 class="card-title">${value.product_Name}</h5>
-                            <p class="card-text"><i class="fas fa-map-marker-alt"></i><span>${value.product_Address}</span></p>
-                            <span>4.3</span>
-                            <span><i class="fas fa-star"></i></span>
-                            <span><i class="fas fa-star"></i></span>
-                            <span><i class="fas fa-star"></i></span>
-                            <span><i class="fas fa-star"></i></span>
-                            <span><i class="fas fa-star"></i></span>
-                            <span class="love"><i class="far fa-heart fa-2x"></i></span>
-                          </div>
-                          <div class="list-group list-group-flush">
-                            <p class="list-group-item">${value.product_Intro}</p>
-                          </div>
-                          <p class="stay_time -none">${value.product_Staytime}</p>
-                        </div>
+              <!-- <div class="row">
+                <c:forEach var="value" items="${list}">
+                  <div class="col-6 col-md-6 col-lg-4">
+                    <div id="${value.product_ID}" class="card">
+                      <img src="<%=request.getContextPath()%>/ImageController?product_id=${value.product_ID}"
+                        class="card-img-top">
+                      <div class="card-body">
+                        <h5 class="card-title">${value.product_Name}</h5>
+                        <p class="card-text"><i class="fas fa-map-marker-alt"></i><span>${value.product_Address}</span>
+                        </p>
+                        <span>4.3</span>
+                        <span><i class="fas fa-star"></i></span>
+                        <span><i class="fas fa-star"></i></span>
+                        <span><i class="fas fa-star"></i></span>
+                        <span><i class="fas fa-star"></i></span>
+                        <span><i class="fas fa-star"></i></span>
+                        <span class="love"><i class="far fa-heart fa-2x"></i></span>
                       </div>
-                  </c:forEach>
-                </div>
+                      <div class="list-group list-group-flush">
+                        <p class="list-group-item">${value.product_Intro}</p>
+                      </div>
+                      <p class="stay_time -none">${value.product_Staytime}</p>
+                    </div>
+                  </div>
+                </c:forEach>
+              </div> -->
+
+            </div>
+          </div>
+          <!-- 地圖模式使用的畫面，一開始不顯示，設定為none -->
+          <div class="schedule_map -none">
 
           </div>
-        </div>
-        <!-- 地圖模式使用的畫面，一開始不顯示，設定為none -->
-        <div class="schedule_map -none">
 
         </div>
-
       </div>
     </div>
-  </div>
   </div>
 
   <!-- 新增行程的Modal -->
@@ -849,8 +860,17 @@
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script>
     $(function () {
-
-      // init();
+      
+      /*-----------------------------先讀取一份checkbox的資料------------------------------*/
+      let list_selected_county = $("div.input_title").attr("data-selected-county");
+      let selected_county = "";
+      selected_county = list_selected_county.substring(1, list_selected_county.length-1).split(",");
+      let selected_class = [];
+      $("input:checkbox:checked[name=product_group]").each(function (i, items) { //可以確認Checkbox被勾選的為哪些
+        selected_class.push($(items).val());
+      });
+      listProductResult(selected_county, selected_class);
+ 
       init2();
       /*-----------------------------地圖模式------------------------------*/
       $("button#btn_map").on("click", function () {
@@ -866,14 +886,28 @@
           $("div.btn_block button#btn_confirm").click();
         }
       });
-      /*-----------------------------可按enter------------------------------*/
-      $("input.checkbox_area").on("click", function(){
-        // $("div.checkbox_area").find("input").each(function(index, items){
-        //   console.log(index)
-        //   console.log(items)
-        // })
-        console.log($(this).attr("name"))
-      })
+        /*-----------------------------Checkbox篩選------------------------------*/
+        $("input.checkbox_area").on("click", function () {
+          if (this.checked != true) {
+            $("#all").prop("checked", false);
+          }
+
+          let selected_class = [];
+          $("input:checkbox:checked[name=product_group]").each(function (i, items) { //可以確認Checkbox被勾選的為哪些
+            selected_class.push($(items).val())
+          });
+          listProductResult(selected_county, selected_class);
+          console.log(selected_class)
+
+        });
+
+        $("input#all").on("click", function () {
+          if (this.checked == true) {
+            $("#activities, #restaurant, #accommodation").prop("checked", true);
+          } else {
+            $("#activities, #restaurant, #accommodation").prop("checked", false);
+          }
+        });
 
       /*-----------------------------筆icon按下去的動作------------------------------*/
       $("span.edit_title").on("click", function () {
@@ -990,7 +1024,7 @@
         if (check_Id(schedule_id, product_ID) == false) { //若為false就是產品列表所點選的動作
           $("div.product_body_content").find("div#" + product_ID).closest("div.col-lg-4").toggle("-none");
         } //點選取消時，原選取的卡片，會返回產品列表
-        
+
       });
 
       /*-----------------------------新增天數的按鈕------------------------------*/
@@ -1016,9 +1050,12 @@
         $("div.current_date span").html("選擇的日期為：" + first_day + " ～ " + add_date);
       });
 
+
+      
       /*-----------------------------切換天數的按鈕------------------------------*/
       $("ul.sum_day").on("click", "button", function () {
-        $(this).addClass("selected")
+        
+        // $(this).addClass("selected")
         let day_number = $("div.schedule_header p").html(); //取得當前的天數
         let current_data = [];
         take_schedule_list(current_data); //取得行程列表當前資料
@@ -1030,29 +1067,19 @@
         $("ul.schedule_list").html(""); //先將行程列表清空
 
         let get_Data = JSON.parse(sessionStorage.getItem($(this).text())); //取得要切換天數的sessionStorage，把資料印出
-        console.log(get_Data)
+        if(get_Data.length != 0 && get_Data != null){               //判斷取得的sessionStorage有沒有資料，若有就將"請加入行程"-none，反之則無
+          $("p.no_schedule").addClass("-none");
+        }else{
+          $("p.no_schedule").removeClass("-none");
+        }
         $.each(get_Data, function (index, items) {
-          scheduleView(items.product_ID, items.sort, items.product_img, items.product_name, items.stay_time,
-            items.schedule_info);
+          scheduleView(items.product_ID, items.sort, items.product_img, items.product_name, items.stay_time, items.schedule_info);
         });
-
-        //   temp = "";
-        init();
-        //   $.ajax({
-        //     url: "http://localhost:8081/TDA101G1/project/JsonController",
-        //     type: "GET",
-        //     data: {
-        //       "updateSchedule": "updateSchedule"
-        //     },
-        //     dataType: "json",
-        //     success: function (data) {
-        //       console.log(data);
-        //     }
-
-
-
-
-
+        $("div.product_body_content").html('<li style="text-align: center;"><i class="fas fa-spinner fa-spin fa-3x"></i></li>');  //讀取動畫
+        setTimeout(function(){
+          sortProduct(filter_product);     //將最新產品的篩選結果，重新顯示一次
+        }, 300);
+     
       });
 
       // $("ul#schedule_list").on("DOMNodeInserted",function(){
@@ -1061,7 +1088,6 @@
       /*-----------------------------滑鼠移進天數的動作------------------------------*/
       $("ul.sum_day button").on("mouseenter", function () {
         $(this).find("span.delete_day").removeClass("-none");
-        console.log(1464654561111)
         $(this).find("span.delete_day").on("click", function (e) {
           e.stopImmediatePropagation() //取消事件的进一步捕获或冒泡，同时阻止任何事件处理程序被调用
           // $("div.overlay_add_schedule").addClass("-on1");
@@ -1073,8 +1099,6 @@
       $("ul.sum_day").on("mouseleave", "button", function () {
         $(this).find("span.delete_day").addClass("-none");
       });
-
-
 
       /*-----------------------------點選儲存的按鈕------------------------------*/
       $("button#btn_Store").on("click", function () {
@@ -1100,7 +1124,7 @@
           url: "http://localhost:8081/TDA101G1/project/JsonController",
           type: "GET",
           data: {
-            "insertSchedule": "insertSchedule",
+            "action": "insertSchedule",
             "cid": cid,
             "insertData": JSON.stringify(insertData)
           },
@@ -1117,7 +1141,6 @@
             console.log("fail")
           }
         });
-
 
       });
 
@@ -1173,7 +1196,7 @@
         let current_data = [];
         take_schedule_list(current_data);
 
-        if(current_data.length == 0){
+        if (current_data.length == 0) {
           $("p.no_schedule").removeClass("-none");
         }
 
@@ -1181,16 +1204,6 @@
         for (i of current_data) {
           scheduleView(i.product_ID, i.sort, i.product_img, i.product_name, i.stay_time, i.schedule_info);
         }
-
-        // $(this).closest("li.schedule_block").animate({
-        //   opacity: 0,
-        // },1000, function(){
-        //     $(this).remove();
-
-        //     //$(this).next().find("div.row.del").remove();
-        //    });
-
-        // $(this).closest("li.schedule_block").fadeOut()
       });
 
       /*-----------------------------載入日期樣式------------------------------*/
@@ -1305,30 +1318,41 @@
       return allDate;
     };
 
-    /*-----------------------------讀取產品的動作------------------------------*/
-    function init() {
+    /*-----------------------------與後端連線，讀取篩選後的產品function------------------------------*/
+    var filter_product = "";  //將篩選後的結果，儲存一份給其他天數用，就不需每次切換天數時都要request一次，只要再次篩選，就會即時更新內容
+    function listProductResult(selected_county, selected_class) {
       $.ajax({
         url: "http://localhost:8081/TDA101G1/project/JsonController",
-        type: "POST",
+        type: "GET",
         data: {
-          "loadProduct": "loadProduct"
-
+          "action": "loadProduct",
+          "selected_county": JSON.stringify(selected_county),
+          "selected_class": JSON.stringify(selected_class)
         },
         dataType: "json",
         beforeSend: function () {
-          $("div.product_body_content").html(
-            '<li style="text-align: center;"><i class="fas fa-spinner fa-spin fa-3x"></i></li>');
+          $("div.product_body_content").html('<li style="text-align: center;"><i class="fas fa-spinner fa-spin fa-3x"></i></li>');
         },
         success: function (data) {
-          let insertHtml = "";
-          let items = data.products; //products = server傳回的key
-          let product_id = [];
-          let schedule_product_id = [];
-          $.each(items, function (index, value) {
-            product_id.push(value.product_ID);
-            insertHtml += `<div class="col-6 col-md-6 col-lg-4">
+          filter_product = data;
+          sortProduct(data);
+        },
+        error: function () {
+          alert("fail")
+        }
+      });
+    }
+    /*-----------------------------使用者重新選擇天數時用的function------------------------------*/
+    function sortProduct(data) {
+      let insertHtml = "";
+      let items = data.products; //products = server傳回的key
+      let product_id = [];
+      let schedule_product_id = [];
+      $.each(items, function (index, value) {
+        product_id.push(value.product_ID);
+        insertHtml += `<div class="col-6 col-md-6 col-lg-4">
                             <div id="` + value.product_ID + `" class="card">
-                              <img src="https://picsum.photos/200/100/?random=1" class="card-img-top">
+                              <img src="<%=request.getContextPath()%>/ImageController?product_id=`+value.product_ID+`"class="card-img-top">
                               <div class="card-body">
                                 <h5 class="card-title">` + value.product_Name + `</h5>
                                 <p class="card-text"><i class="fas fa-map-marker-alt"></i><span> ` + value.product_Address + `</span></p>
@@ -1346,21 +1370,16 @@
                               <p class="stay_time -none">` + value.product_Staytime + `</p>
                             </div>
                           </div>`
-          });
-          $("div.product_body_content").html("<div class='row'>" + insertHtml + "</div>");
-          $("ul.schedule_list").find("li").each(function (index, items) {
-            schedule_product_id.push($(items).attr("id"));
-          })
-          for (let i = 0; i < product_id.length; i++) {
-            if ($.inArray(product_id[i], schedule_product_id) != -1) { //若等於-1，就是表示兩邊列表沒有共同的id
-              $("div#" + product_id[i]).closest("div.col-lg-4").addClass("-none"); //反之不等於-1，就是表示兩邊有共同的id，所以要隱藏起來
-            }
-          }
-        },
-        error: function () {
-          alert("fail")
-        }
       });
+      $("div.product_body_content").html("<div class='row'>" + insertHtml + "</div>");
+      $("ul.schedule_list").find("li").each(function (index, items) {
+        schedule_product_id.push($(items).attr("id"));
+      })
+      for (let i = 0; i < product_id.length; i++) {
+        if ($.inArray(product_id[i], schedule_product_id) != -1) { //若等於-1，就是表示兩邊列表沒有共同的id
+          $("div#" + product_id[i]).closest("div.col-lg-4").addClass("-none"); //反之不等於-1，就是表示兩邊有共同的id，所以要隱藏起來
+        }
+      }
     }
 
     /*-----------------------------載入選擇的天數------------------------------*/

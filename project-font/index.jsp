@@ -336,9 +336,9 @@
                         <div class="col-12 col-sm-12">
                             <aside class="aside1">
                                 <span>日期：</span><input class="user_date" type="text" name="date"><br>
-                                <span>人數：</span><input type="text" name="people"><br>
+                                <span>人數：</span><input type="text" name="quantity"><br>
                                 <div class="geolocation">
-                                    <span>地點：</span><input id="geolocation" type="text" name="first_location"><span
+                                    <span>地點：</span><input id="geolocation" type="text" name="position"><span
                                         class="position"><i class="fas fa-crosshairs"></i></span>
                                 </div>
                             </aside>
@@ -371,7 +371,7 @@
                     <div class="row">
                         <div class="col-6 col-md-6 col-lg-4">
                             <div class="img_block0">
-                                <img class="keelung" name="keelung"
+                                <img class="keelung" name="基隆"
                                     src="<%=request.getContextPath()%>/project/img/keelung.png" data-sort="0">
                             </div>
                         </div>
@@ -383,19 +383,19 @@
                         </div>
                         <div class="col-12 col-md-12 col-lg-4">
                             <div class="img_block2">
-                                <img class="taoyuan" name="taoyuan"
+                                <img class="taoyuan" name="桃園"
                                     src="<%=request.getContextPath()%>/project/img/taoyuan.png" data-sort="2">
                             </div>
                         </div>
                         <div class="col-6 col-md-6 col-lg-4">
                             <div class="img_block3">
-                                <img class="hsinchu" name="hsinchu"
+                                <img class="hsinchu" name="新竹"
                                     src="<%=request.getContextPath()%>/project/img/hsinchu.png" data-sort="3">
                             </div>
                         </div>
                         <div class="col-6 col-md-6 col-lg-4">
                             <div class="img_block4">
-                                <img class="miaoli" name="miaoli"
+                                <img class="miaoli" name="苗栗"
                                     src="<%=request.getContextPath()%>/project/img/miaoli.png" data-sort="4">
                             </div>
                         </div>
@@ -407,55 +407,55 @@
                         </div>
                         <div class="col-6 col-md-6 col-lg-4">
                             <div class="img_block6">
-                                <img class="nantou" name="nantou"
+                                <img class="nantou" name="南投"
                                     src="<%=request.getContextPath()%>/project/img/nantou.png" data-sort="6">
                             </div>
                         </div>
                         <div class="col-6 col-md-6 col-lg-4">
                             <div class="img_block7">
-                                <img class="yunlin" name="yunlin"
+                                <img class="yunlin" name="雲林"
                                     src="<%=request.getContextPath()%>/project/img/yunlin.png" data-sort="7">
                             </div>
                         </div>
                         <div class="col-12 col-md-12 col-lg-4">
                             <div class="img_block8">
-                                <img class="chiayi" name="chiayi"
+                                <img class="chiayi" name="嘉義"
                                     src="<%=request.getContextPath()%>/project/img/chiayi.png" data-sort="8">
                             </div>
                         </div>
                         <div class="col-6 col-md-6 col-lg-4">
                             <div class="img_block9">
-                                <img class="tainan" name="tainan"
+                                <img class="tainan" name="台南"
                                     src="<%=request.getContextPath()%>/project/img/tainan.png" data-sort="9">
                             </div>
                         </div>
                         <div class="col-6 col-md-6 col-lg-4">
                             <div class="img_block10">
-                                <img class="kaohsiung" name="kaohsiung"
+                                <img class="kaohsiung" name="高雄"
                                     src="<%=request.getContextPath()%>/project/img/kaohsiung.png" data-sort="10">
                             </div>
                         </div>
                         <div class="col-12 col-md-12 col-lg-4">
                             <div class="img_block11">
-                                <img class="pingtung" name="pingtung"
+                                <img class="pingtung" name="屏東"
                                     src="<%=request.getContextPath()%>/project/img/pingtung.png" data-sort="11">
                             </div>
                         </div>
                         <div class="col-6 col-md-6 col-lg-4">
                             <div class="img_block12">
-                                <img class="yilan" name="yilan"
+                                <img class="yilan" name="宜蘭"
                                     src="<%=request.getContextPath()%>/project/img/yilan.png" data-sort="12">
                             </div>
                         </div>
                         <div class="col-6 col-md-6 col-lg-4">
                             <div class="img_block13">
-                                <img class="hualien" name="hualien"
+                                <img class="hualien" name="花蓮"
                                     src="<%=request.getContextPath()%>/project/img/hualien.png" data-sort="13">
                             </div>
                         </div>
                         <div class="col-12 col-md-12 col-lg-4">
                             <div class="img_block14">
-                                <img class="taitung" name="taitung"
+                                <img class="taitung" name="台東"
                                     src="<%=request.getContextPath()%>/project/img/taitung.png" data-sort="14">
                             </div>
                         </div>
@@ -548,8 +548,6 @@
                 }
             });
 
-
-
         var selectedDate = $("input.user_date").flatpickr({
             altInput: true,
             altFormat: "Y-m-d",
@@ -566,12 +564,13 @@
         $("aside.aside2 img").on("click", function () {
             $(this).closest("div.col-lg-4").toggleClass("-on");
             let data = $(this).attr("name");
+            let name = $(this).attr("class");
             let sort = $(this).attr("data-sort");
             let insertHtml = `<li style="padding-left: 15px; padding-right: 15px;">
                                     <div class="row">
                                         <div class="col-10">
-                                            <img class="` + data + `"name="` + data +
-                `" src="<%=request.getContextPath()%>/project/img/` + data + `.png" data-sort="` + sort + `">
+                                            <img class="` + name + `"name="` + data +
+                `" src="<%=request.getContextPath()%>/project/img/` + name + `.png" data-sort="` + sort + `">
                                             <input type="hidden" name="product_county" value="` + data + `">
                                         </div>
                                         <div class="col-2 align-self-center">
@@ -633,14 +632,21 @@
 
         $("div.overlay_schedule button").on("click", function () {
             let schedule = $(this).attr("value");
-            let insertHtml = `<input type="hidden" name="selected_schedule" value="` + schedule + `">`;
-            $("form div.btn_submit").append(insertHtml);
+            console.log(schedule)
+            console.log(schedule === "DIY_schedule")
+            if(schedule === "DIY_schedule"){
+                $("input.confirm").click();
+            }else{
+                let insertHtml = `<input type="hidden" name="selected_schedule" value="` + schedule + `">`;
+                $("form div.btn_submit").append(insertHtml);
 
-            setTimeout(function () {
-                $("div.overlay_schedule").removeClass("-on1");
-            }, 1000);
+                setTimeout(function () {
+                    $("div.overlay_schedule").removeClass("-on1");
+                }, 1000);
 
-            $("div.overlay_style").addClass("-on1");
+                $("div.overlay_style").addClass("-on1");
+            }
+            
         });
 
         $("div.overlay_style button").on("click", function () {
