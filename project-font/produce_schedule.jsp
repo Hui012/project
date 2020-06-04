@@ -809,11 +809,19 @@ pageContext.setAttribute("list", lists);
 
 
         </div>
+<<<<<<< HEAD
                 <!-- <footer class="footer"> -->
                     <!-- <div class="container"> -->
                         <!-- <span class="text-muted">WEB DEVELOPER</span> -->
                     <!-- </div> -->
                 <!-- </footer> -->
+=======
+                <footer class="footer">
+                    <!-- <div class="container"> -->
+                        <span class="text-muted">WEB DEVELOPER</span>
+                    <!-- </div> -->
+                </footer>
+>>>>>>> c4ecbf13292006d8bb1b9d1b93acdc662f9acef4
 
 
 

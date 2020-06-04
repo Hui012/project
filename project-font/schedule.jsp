@@ -42,7 +42,11 @@
       margin-top: 30px;
     }
 
+<<<<<<< HEAD
     div button.add_bg {
+=======
+    div button.addbg {
+>>>>>>> c4ecbf13292006d8bb1b9d1b93acdc662f9acef4
       width: 100%;
       margin-bottom: 20px;
       background-color: #E5B280;
@@ -585,6 +589,7 @@
       /* margin-left: 10px; */
       float: right;
     }
+<<<<<<< HEAD
     /*---------------------查詢不到產品資料時-------------------*/
     p#no_data{
       color:#343434; 
@@ -603,6 +608,8 @@
       text-align: center;
       line-height: 390px;
     }
+=======
+>>>>>>> c4ecbf13292006d8bb1b9d1b93acdc662f9acef4
   </style>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <!-- <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_orange.css"> -->
@@ -635,8 +642,13 @@
   <div class="container-fluid">
     <div class="row" id="first_row">
       <div class="col col-md-3" style="padding: 0;">
+<<<<<<< HEAD
         <div class="input_title" data-schedule-id="${custVO.cust_Schedule_ID}" data-member-id="${custVO.member_ID}"
         data-quantity="${custVO.cust_Quantity}" data-position="${custVO.cust_Position}"	data-selected-county="${custVO.cust_Selected_County}">
+=======
+        <div class="input_title" data-schedule-id="${custVO.cust_Schedule_ID}" data-quantity="${custVO.cust_Quantity}"
+        		data-position="${custVO.cust_Position}"	data-selected-county="${custVO.cust_Selected_County}">
+>>>>>>> c4ecbf13292006d8bb1b9d1b93acdc662f9acef4
           <div class="text_title">
             <p class="text_title">請輸入標題 </p>
           </div>
@@ -873,7 +885,11 @@
         </div>
         <div class="btn_block">
           <button id="btn_cancel" type="button">取消</button>
+<<<<<<< HEAD
           <!-- <button id="btn_confirm" type="button">確認</button> -->
+=======
+          <button id="btn_confirm" type="button">確認</button>
+>>>>>>> c4ecbf13292006d8bb1b9d1b93acdc662f9acef4
         </div>
       </div>
     </article>
@@ -895,6 +911,7 @@
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script>
     $(function () {
+<<<<<<< HEAD
 
 
       /*--------------------搜尋---------------------*/
@@ -931,6 +948,9 @@
           } 
         });
       }
+=======
+      
+>>>>>>> c4ecbf13292006d8bb1b9d1b93acdc662f9acef4
       /*-----------------------------先讀取一份checkbox的資料------------------------------*/
       let list_selected_county = $("div.input_title").attr("data-selected-county");
       let selected_county = "";
@@ -966,12 +986,21 @@
           $("input:checkbox:checked[name=product_group]").each(function (i, items) { //可以確認Checkbox被勾選的為哪些
             selected_class.push($(items).val())
           });
+<<<<<<< HEAD
           listProductResult(selected_county, selected_class);                       //ajax與後端拿資料
           console.log(selected_class)
 
         });
         /*-----------------------------Checkbox全選/全不選------------------------------*/
         $("input#all").on("click", function () {  
+=======
+          listProductResult(selected_county, selected_class);
+          console.log(selected_class)
+
+        });
+
+        $("input#all").on("click", function () {
+>>>>>>> c4ecbf13292006d8bb1b9d1b93acdc662f9acef4
           if (this.checked == true) {
             $("#activities, #restaurant, #accommodation").prop("checked", true);
           } else {
@@ -1066,15 +1095,27 @@
 
       /*-----------------------------新增天數的按鈕------------------------------*/
       $("div.add_day").on("click", function () {
+<<<<<<< HEAD
         let $ul = $("ul#sum_day");
         let first_day = $ul.attr("data-start");
         let last_day = $ul.find("li").last().attr("data-date"); //取最後一個li的日期
         let last_day_num = parseInt($ul.find("li").last().attr("data-sort")) + 1; //取最後一個li的天數，然後+1給下一天用
         let millisecond = new Date(last_day).getTime() + (60 * 60 * 24 * 1000); //+1天
+=======
+        let last_day_num = parseInt($("ul.sum_day").find("li").last().attr("data-sort")) +
+          1; //取最後一個li的天數，然後+1給下一天用
+        let last_date = $("ul.sum_day").find("li").last().attr("data-date"); //取最後一個li的日期
+        let millisecond = new Date(last_date).getTime() + (60 * 60 * 24 * 1000); //+1天
+>>>>>>> c4ecbf13292006d8bb1b9d1b93acdc662f9acef4
         let add_date = flatpickr.formatDate(new Date(millisecond), 'Y-m-d'); //格式化為Y-m-d
         let add_day =
           `<li class="Day` + last_day_num + `"data-sort="` + last_day_num + `"data-date="` + add_date + `">
+<<<<<<< HEAD
             <button type="button" class="btn btn-primary btn-lg add_bg">Day` + last_day_num + `<span class="delete_day -none"><i class="fas fa-trash-alt"></i></span></button>
+=======
+            <button type="button" class="btn btn-primary btn-lg addbg">Day` + last_day_num + `<span class="delete_day -none"><i class="fas fa-trash-alt"></i></span></button>
+            
+>>>>>>> c4ecbf13292006d8bb1b9d1b93acdc662f9acef4
           </li>`;
         if (last_day_num > 10) {
           $ul.addClass("-onScroll");
@@ -1086,9 +1127,18 @@
         $ul.attr("data-end", add_date);
         $("div.current_date span").html("選擇的日期為：" + first_day + " ～ " + add_date);
       });
+<<<<<<< HEAD
       
       /*-----------------------------切換天數的按鈕------------------------------*/
       $("ul#sum_day").on("click", "button", function () {
+=======
+
+
+      
+      /*-----------------------------切換天數的按鈕------------------------------*/
+      $("ul.sum_day").on("click", "button", function () {
+        
+>>>>>>> c4ecbf13292006d8bb1b9d1b93acdc662f9acef4
         // $(this).addClass("selected")
         let day_number = $("div.schedule_header p").html(); //取得當前的天數
         let current_data = [];
@@ -1101,10 +1151,15 @@
         $("ul.schedule_list").html(""); //先將行程列表清空
 
         let get_Data = JSON.parse(sessionStorage.getItem($(this).text())); //取得要切換天數的sessionStorage，把資料印出
+<<<<<<< HEAD
         if(get_Data != null){               //判斷取得的sessionStorage有沒有資料，若有就將"請加入行程"-none，反之則無
           if(get_Data.length != 0){
             $("p.no_schedule").addClass("-none");
           }
+=======
+        if(get_Data.length != 0 && get_Data != null){               //判斷取得的sessionStorage有沒有資料，若有就將"請加入行程"-none，反之則無
+          $("p.no_schedule").addClass("-none");
+>>>>>>> c4ecbf13292006d8bb1b9d1b93acdc662f9acef4
         }else{
           $("p.no_schedule").removeClass("-none");
         }
@@ -1123,6 +1178,7 @@
       // e.stopImmediatePropagation()
       // })
       /*-----------------------------滑鼠移進天數的動作------------------------------*/
+<<<<<<< HEAD
       $("ul#sum_day").on("mouseenter", "button", function () {
         $(this).find("span.delete_day").removeClass("-none");
         $(this).find("span.delete_day").on("click", function (e) {
@@ -1154,6 +1210,21 @@
               $ul.attr("data-days", li_length);
               $("div.current_date span").html("選擇的日期為：" + first_day + " ～ " + last_day);
             }
+=======
+      $("ul.sum_day button").on("mouseenter", function () {
+        $(this).find("span.delete_day").removeClass("-none");
+        $(this).find("span.delete_day").on("click", function (e) {
+          e.stopImmediatePropagation() //取消事件的进一步捕获或冒泡，同时阻止任何事件处理程序被调用
+          // $("div.overlay_add_schedule").addClass("-on1");
+
+
+        });
+      });
+      /*-----------------------------滑鼠移出天數的動作------------------------------*/
+      $("ul.sum_day").on("mouseleave", "button", function () {
+        $(this).find("span.delete_day").addClass("-none");
+      });
+>>>>>>> c4ecbf13292006d8bb1b9d1b93acdc662f9acef4
 
           e.stopImmediatePropagation() //取消事件的进一步捕获或冒泡，同时阻止任何事件处理程序被调用
         });
@@ -1258,6 +1329,7 @@
         $("div#" + schedule_product_id).closest("div.col-lg-4").toggle("-none");
 
         let current_data = [];
+<<<<<<< HEAD
         take_schedule_list(current_data);         //讀取當前天數的內容，儲存於current_data
         if (current_data.length == 0) {
           $("p.no_schedule").removeClass("-none");
@@ -1269,6 +1341,18 @@
           scheduleView(items.product_ID, i, items.product_img, items.product_name, items.stay_time, items.schedule_info);
         } //每次刪除行程時，就重新排列一次順序，利用陣列特性，以i來替代sort項目
 
+=======
+        take_schedule_list(current_data);
+
+        if (current_data.length == 0) {
+          $("p.no_schedule").removeClass("-none");
+        }
+
+        $("ul.schedule_list").html("");
+        for (i of current_data) {
+          scheduleView(i.product_ID, i.sort, i.product_img, i.product_name, i.stay_time, i.schedule_info);
+        }
+>>>>>>> c4ecbf13292006d8bb1b9d1b93acdc662f9acef4
       });
 
       /*-----------------------------載入日期樣式------------------------------*/
@@ -1340,7 +1424,11 @@
             console.log(start_date)
             add_day +=
               `<li class="Day` + i + `"data-sort="` + i + `"data-date="` + start_date + `">
+<<<<<<< HEAD
               <button type="button" class="btn btn-primary btn-lg add_bg">Day` + i + `</button>
+=======
+              <button type="button" class="btn btn-primary btn-lg addbg">Day` + i + `</button>
+>>>>>>> c4ecbf13292006d8bb1b9d1b93acdc662f9acef4
               </li>`;
             first_day = new Date(first_day).getTime();
             first_day += (60 * 60 * 24 * 1000);
@@ -1410,7 +1498,11 @@
         }
       });
     }
+<<<<<<< HEAD
     /*-----------------------------將後端傳回的產品資料顯示出來的function------------------------------*/
+=======
+    /*-----------------------------使用者重新選擇天數時用的function------------------------------*/
+>>>>>>> c4ecbf13292006d8bb1b9d1b93acdc662f9acef4
     function sortProduct(data) {
       let insertHtml = "";
       let items = data.products; //products = server傳回的key
@@ -1439,6 +1531,7 @@
                             </div>
                           </div>`
       });
+<<<<<<< HEAD
 
       if(insertHtml.length == 0 && insertHtml == ""){             //若為true代表沒有查詢到資料
         let html = `<div id="no"><img src="<%=request.getContextPath()%>/ImageController?product_id=no_data" width="300" height="300"></div>
@@ -1467,6 +1560,15 @@
           if ($.inArray(product_id[i], schedule_product_id) != -1) { //若等於-1，就是表示兩邊列表沒有共同的id
             $("div#" + product_id[i]).closest("div.col-lg-4").addClass("-none"); //反之不等於-1，就是表示兩邊有共同的id，所以要隱藏起來
           }
+=======
+      $("div.product_body_content").html("<div class='row'>" + insertHtml + "</div>");
+      $("ul.schedule_list").find("li").each(function (index, items) {
+        schedule_product_id.push($(items).attr("id"));
+      })
+      for (let i = 0; i < product_id.length; i++) {
+        if ($.inArray(product_id[i], schedule_product_id) != -1) { //若等於-1，就是表示兩邊列表沒有共同的id
+          $("div#" + product_id[i]).closest("div.col-lg-4").addClass("-none"); //反之不等於-1，就是表示兩邊有共同的id，所以要隱藏起來
+>>>>>>> c4ecbf13292006d8bb1b9d1b93acdc662f9acef4
         }
       }
     }
@@ -1494,7 +1596,11 @@
         let start_date = flatpickr.formatDate(new Date(time), 'Y-m-d');
         add_day +=
           `<li class="Day` + i + `"data-sort="` + i + `"data-date="` + start_date + `">
+<<<<<<< HEAD
           <button type="button" class="btn btn-primary btn-lg add_bg">Day` + i + `<span class="delete_day -none"><i class="fas fa-trash-alt"></i></span></button>
+=======
+          <button type="button" class="btn btn-primary btn-lg addbg">Day` + i + `<span class="delete_day -none"><i class="fas fa-trash-alt"></i></span></button>
+>>>>>>> c4ecbf13292006d8bb1b9d1b93acdc662f9acef4
           </li>`;
         time += millisecond;
       }

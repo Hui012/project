@@ -297,8 +297,11 @@
             display: inline-block;
         }
 
+<<<<<<< HEAD
         /*-----------------定位圖像-----------------*/
 
+=======
+>>>>>>> c4ecbf13292006d8bb1b9d1b93acdc662f9acef4
         div.geolocation {
             position: relative;
             display: inline-block;
@@ -310,11 +313,14 @@
             right: 0%;
             transform: translate(-50%, -50%);
         }
+<<<<<<< HEAD
         /*-----------------日期欄位-----------------*/
         .form-control[readonly]{
             background-color: white;
             border: 1px solid black;
         }
+=======
+>>>>>>> c4ecbf13292006d8bb1b9d1b93acdc662f9acef4
     </style>
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> -->
     <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_orange.css">
@@ -358,9 +364,16 @@
                     <div class="row">
                         <div class="col-12 col-sm-12">
                             <aside class="aside1">
+<<<<<<< HEAD
                                 <span>日期：</span><input class="user_date" type="text" name="date" placeholder="${errors.date}"><br>
                                 <span>人數：</span><input type="text" name="cust_quantity" placeholder="${errors.quantity}"><br>                                <div class="geolocation">
                                     <span>地點：</span><input id="geolocation" type="text" name="cust_position" placeholder="${errors.position}"><span
+=======
+                                <span>日期：</span><input class="user_date" type="text" name="date"><br>
+                                <span>人數：</span><input type="text" name="quantity"><br>
+                                <div class="geolocation">
+                                    <span>地點：</span><input id="geolocation" type="text" name="position"><span
+>>>>>>> c4ecbf13292006d8bb1b9d1b93acdc662f9acef4
                                         class="position"><i class="fas fa-crosshairs"></i></span>
                                 </div>
                             </aside>
@@ -381,8 +394,13 @@
                                 <div class="btn_submit">
                                     <input type="button" class="btn_cloose_style" value="送出">
                                     <input type="submit" class="confirm">
+<<<<<<< HEAD
                                     <input type="hidden" name="action" value="create_schedule">
                                     <input type="hidden" class="user_dates" name="cust_date">
+=======
+                                    <input type="hidden" name="action" value="user_data">
+                                    <input type="hidden" class="user_dates" name="user_dates">
+>>>>>>> c4ecbf13292006d8bb1b9d1b93acdc662f9acef4
                                 </div>
                             </main>
                         </div>
@@ -586,7 +604,10 @@
 
         $("aside.aside2 img").on("click", function () {
             $(this).closest("div.col-lg-4").toggleClass("-on");
+<<<<<<< HEAD
             $("ul.selected_location p").text("");
+=======
+>>>>>>> c4ecbf13292006d8bb1b9d1b93acdc662f9acef4
             let data = $(this).attr("name");
             let name = $(this).attr("class");
             let sort = $(this).attr("data-sort");
@@ -654,8 +675,15 @@
             }, 1000);
         });
 
+<<<<<<< HEAD
         $("div.overlay_schedule button").on("click", function () {                  //自動行程、手動行程、參考行程
             let schedule = $(this).attr("value");
+=======
+        $("div.overlay_schedule button").on("click", function () {
+            let schedule = $(this).attr("value");
+            console.log(schedule)
+            console.log(schedule === "DIY_schedule")
+>>>>>>> c4ecbf13292006d8bb1b9d1b93acdc662f9acef4
             if(schedule === "DIY_schedule"){
                 $("input.confirm").click();
             }else{
@@ -710,6 +738,13 @@
                 }
             });
 
+<<<<<<< HEAD
+=======
+            console.log(startTime)
+            console.log(endTime)
+            console.log(startTime.length != 0)
+            console.log(endTime != "")
+>>>>>>> c4ecbf13292006d8bb1b9d1b93acdc662f9acef4
             if (startTime.length != 0 && endTime != "") {
                 result = ((endTime - startTime) / (60 * 60 * 24 * 1000)) + 1; //沒有轉換為毫秒，也可相減
                 allDate.push(result.toString());
