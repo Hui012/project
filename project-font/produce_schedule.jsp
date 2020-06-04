@@ -1,8 +1,21 @@
+<%@page import="java.util.List"%>
+<%@page import="com.customerizedetail.model.CustDetailVO"%>
+<%@page import="com.customerize.model.CustVO"%>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!doctype html>
 <html lang="en">
+<%
 
+CustVO custVO = (CustVO) request.getAttribute("custVO");
+List<CustDetailVO> lists = (List<CustDetailVO>) request.getAttribute("custDetailVOs");
+pageContext.setAttribute("list", lists);
+
+
+
+
+
+%>
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -32,7 +45,7 @@
             height: 164px;
             font-size: 24px;
             font-weight: bold;
-            position: fixed;
+            position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
@@ -385,17 +398,36 @@
 <body>  
     <div class="main_content">
 
-    <!-- Image and text -->
-    <nav class="navbar navbar-light bg-light">
-        <a class="navbar-brand" href="#">Tourism</a>
-    </nav>
+        <nav class="navbar navbar-expand navbar-light d-flex justify-content-start" style="background-color: #e3f2fd;">
+            <a class="navbar-brand mr-auto" href="#">
+              <img src="<%=request.getContextPath()%>/project/img/logo.png" width="30" height="30" class="d-inline-block align-top" alt="tourism">
+              Tourism</a>
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" href="#"><i class="fas fa-pen"></i>建立行程</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#"><i class="fas fa-store"></i>商城</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#"><i class="fas fa-shopping-cart"></i>購物車</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#"><i class="fas fa-sign-in-alt"></i>會員中心</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#"><i class="fas fa-user"></i>USER</a>
+              </li>
+            </ul>
+          </nav>
 
 
     <div class="container-fliud">
-        <div class="top_navbar">
+        <div class="top_navbar" data-schedule-id="${custVO.cust_Schedule_ID}" data-member-id="${custVO.member_ID}"
+                                data-position="${custVO.cust_Position}"	data-selected-county="${custVO.cust_Selected_County}">
             <div class="row" style="margin: 0;">
                 <div class="col col-md-6">
-                    <span class="text_title">台北之旅</span>
+                    <span class="text_title">${custVO.cust_Schedule_Name}</span>
                 </div>
                 <div class="col col-md-6">
                     <div class="btn_model">
@@ -421,8 +453,8 @@
                                 </div>
                             </div>
                             <div class="text_date">
-                                <p style="margin: 25px auto auto auto;">共5天</p>
-                                <p>2020-02-11~2020-02-18</p>
+                                <p style="margin: 25px auto auto auto;"><span>共</span>${custVO.cust_Schedule_Total_Day}<span>天</span></p>
+                                <p>${custVO.cust_Schedule_Start_Time}~${custVO.cust_Schedule_End_Time}</p>
                             </div>
                         </div>
                         <div class="schedule_spent">
@@ -438,37 +470,37 @@
                     </div>
 
                     <!--------------- 動態新增 --------------->
-
-
+				<c:forEach var="value" items="${list}">
+				<c:set var="date1" value="${value.cust_Schedule_Detail_Date}"></c:set>
                     <div class="all">
                         <div class="row" style="padding-left: 15px; padding-right: 15px;">
                             <div class="col col-md-4" style="padding-right: 0; padding-left: 0;">
                                 <div class="day_info">
                                     <div class="day_icon">
                                         <div class="day_date">
-                                            <span>D1</span>
+                                            <span>D1</span>${value.productVO.product_Name}
                                         </div>
                                     </div>
                                     <div class="day_text_date">
-                                        <p>2020/04/21</p>
+                                        <p>${value.cust_Schedule_Detail_Date}</p>
                                         <p>週三</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col col-md-4" style="padding-right: 0; padding-left: 0;">
                                 <div class="day_weather">
-                                    <p class="km" style="margin-bottom: 6px;"">單日里程：15</p>
-                                        <p>天氣預測：22 C <i class=" fas fa-cloud fa-2x -none"></i><i
-                                            class="fas fa-sun fa-2x"></i>
-                                        <i class="fas fa-cloud-showers-heavy fa-2x -none"></i>
-                                        <i class="fas fa-cloud-sun fa-2x -none"></i<i
-                                                class="fas fa-cloud-sun-rain fa-2x -none"></i></p>
+                                    <p class="km" style="margin-bottom: 6px;">單日里程：15</p>
+                                    <p>天氣預測：22 C <i class=" fas fa-cloud fa-2x -none"></i>
+                                    <i class="fas fa-sun fa-2x"></i>
+                                    <i class="fas fa-cloud-showers-heavy fa-2x -none"></i>
+                                    <i class="fas fa-cloud-sun fa-2x -none"></i>
+                                    <i class="fas fa-cloud-sun-rain fa-2x -none"></i></p>
                                 </div>
                             </div>
                             <div class="col col-md-4" style="padding-right: 0; padding-left: 0;">
                                 <div class="day_spent">
                                     <p>單日花費：$1500</p>
-                                    <p>人數：2</p>
+                                    <p><span>人數：</span>${custVO.cust_Quantity}</p>
                                 </div>
                             </div>
                         </div>
@@ -532,6 +564,7 @@
                             </div>
                         </li>
                     </ul>
+                </c:forEach>
                 </div>
             </div>
             <div class="col col-md-5" style="padding-left: 0;">
@@ -764,6 +797,7 @@
                         <li id="" class="ad_detail">
                             <div class="row" style="padding-left: 15px; padding-right: 15px;">
                                 <div class="col col-md-6">
+                                    
                                 </div>
                             </div>
                         </li>
@@ -775,13 +809,13 @@
 
 
         </div>
+                <!-- <footer class="footer"> -->
+                    <!-- <div class="container"> -->
+                        <!-- <span class="text-muted">WEB DEVELOPER</span> -->
+                    <!-- </div> -->
+                <!-- </footer> -->
 
 
-            <footer class="footer mt-auto py-3">
-                <div class="container">
-                    <span class="text-muted">WEB DEVELOPER</span>
-                </div>
-            </footer>
 
             <!-- Optional JavaScript -->
             <!-- jQuery first, then Popper.js, then Bootstrap JS -->
