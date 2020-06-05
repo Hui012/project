@@ -924,7 +924,12 @@
             $("div.product_body_content").html('<li style="text-align: center;"><i class="fas fa-spinner fa-spin fa-3x"></i></li>');
           },
           success: function (data) {
-            sortProduct(data);
+            if(data.hasOwnProperty("products")){   //判斷回傳的物件是否有查詢到資料 = 這個key
+              filter_product = data.products;      //products = server傳回的key
+              sortProduct(data.products);
+            }else{
+              sortProduct(data.checkBox_no_result);
+            }
           },
           error: function () {
 
@@ -963,11 +968,13 @@
           }
 
           let selected_class = [];
-          $("input:checkbox:checked[name=product_group]").each(function (i, items) { //可以確認Checkbox被勾選的為哪些
-            selected_class.push($(items).val())
-          });
-          listProductResult(selected_county, selected_class);                       //ajax與後端拿資料
-          console.log(selected_class)
+          setTimeout(function(){
+            $("input:checkbox:checked[name=product_group]").each(function (i, items) { //可以確認Checkbox被勾選的為哪些
+              selected_class.push($(items).val())
+            });
+            listProductResult(selected_county, selected_class);                       //ajax與後端拿資料
+            console.log(selected_class)
+          },50)
 
         });
         /*-----------------------------Checkbox全選/全不選------------------------------*/
@@ -1402,8 +1409,15 @@
           $("div.product_body_content").html('<li style="text-align: center;"><i class="fas fa-spinner fa-spin fa-3x"></i></li>');
         },
         success: function (data) {
-          filter_product = data;
-          sortProduct(data);
+          console.log((data.hasOwnProperty("products")))
+          if(data.hasOwnProperty("products")){   //判斷回傳的物件是否有查詢到資料 = 這個key
+            filter_product = data.products;      //products = server傳回的key
+            sortProduct(data.products);
+          }else{
+            sortProduct(data.checkBox_no_result);
+            console.log(data.checkBox_no_result.length)
+          }
+          
         },
         error: function () {
           alert("fail")
@@ -1412,35 +1426,7 @@
     }
     /*-----------------------------將後端傳回的產品資料顯示出來的function------------------------------*/
     function sortProduct(data) {
-      let insertHtml = "";
-      let items = data.products; //products = server傳回的key
-      let product_id = [];
-      let schedule_product_id = [];
-      $.each(items, function (index, value) {
-        product_id.push(value.product_ID);
-        insertHtml += `<div class="col-6 col-md-6 col-lg-4">
-                            <div id="` + value.product_ID + `" class="card">
-                              <img src="<%=request.getContextPath()%>/ImageController?product_id=`+value.product_ID+`"class="card-img-top">
-                              <div class="card-body">
-                                <h5 class="card-title">` + value.product_Name + `</h5>
-                                <p class="card-text"><i class="fas fa-map-marker-alt"></i><span> ` + value.product_Address + `</span></p>
-                                <span>4.3</span>
-                                <span><i class="fas fa-star"></i></span>
-                                <span><i class="fas fa-star"></i></span>
-                                <span><i class="fas fa-star"></i></span>
-                                <span><i class="fas fa-star"></i></span>
-                                <span><i class="fas fa-star"></i></span>
-                                <span class="love"><i class="far fa-heart fa-2x"></i></span>
-                              </div>
-                              <div class="list-group list-group-flush">
-                                <p class="list-group-item">` + value.product_Intro + `</p>
-                              </div>
-                              <p class="stay_time -none">` + value.product_Staytime + `</p>
-                            </div>
-                          </div>`
-      });
-
-      if(insertHtml.length == 0 && insertHtml == ""){             //若為true代表沒有查詢到資料
+      if(data.length === 0){             //若為true代表沒有查詢到資料
         let html = `<div id="no"><img src="<%=request.getContextPath()%>/ImageController?product_id=no_data" width="300" height="300"></div>
                     <p id="no_data">頁面即將在<span id="sec"></span>秒鐘自動轉跳...若無反應<span id="no_data">請按此</span></p>`
         $("div.product_body_content").html(html);
@@ -1457,8 +1443,35 @@
           sortProduct(filter_product);
         },3500)
         $("input#search").val("");
-
+        return;
       }else{
+        let insertHtml = "";
+        let product_id = [];
+        let schedule_product_id = [];
+        $.each(data, function (index, value) {
+          product_id.push(value.product_ID);
+          insertHtml += `<div class="col-6 col-md-6 col-lg-4">
+                              <div id="` + value.product_ID + `" class="card">
+                                <img src="<%=request.getContextPath()%>/ImageController?product_id=`+value.product_ID+`"class="card-img-top">
+                                <div class="card-body">
+                                  <h5 class="card-title">` + value.product_Name + `</h5>
+                                  <p class="card-text"><i class="fas fa-map-marker-alt"></i><span> ` + value.product_Address + `</span></p>
+                                  <span>4.3</span>
+                                  <span><i class="fas fa-star"></i></span>
+                                  <span><i class="fas fa-star"></i></span>
+                                  <span><i class="fas fa-star"></i></span>
+                                  <span><i class="fas fa-star"></i></span>
+                                  <span><i class="fas fa-star"></i></span>
+                                  <span class="love"><i class="far fa-heart fa-2x"></i></span>
+                                </div>
+                                <div class="list-group list-group-flush">
+                                  <p class="list-group-item">` + value.product_Intro + `</p>
+                                </div>
+                                <p class="stay_time -none">` + value.product_Staytime + `</p>
+                              </div>
+                            </div>`
+        });
+      
         $("div.product_body_content").html("<div class='row'>" + insertHtml + "</div>");
         $("ul.schedule_list").find("li").each(function (index, items) {
           schedule_product_id.push($(items).attr("id"));
