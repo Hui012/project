@@ -6,13 +6,17 @@
 <%@page import="com.customerize.model.CustVO"%>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!doctype html>
 <html lang="en">
 <%
 
-CustVO custVO = (CustVO) request.getAttribute("custVO");
+// CustVO custVO = (CustVO) request.getAttribute("custVO");
 List<CustDetailVO> lists = (List<CustDetailVO>) request.getAttribute("custDetailVOs");
 pageContext.setAttribute("list", lists);
+
+
+// session.setAttribute("list", lists);
 
 
 %>
@@ -49,9 +53,9 @@ pageContext.setAttribute("list", lists);
             height: 164px;
             font-size: 24px;
             font-weight: bold;
-            position: absolute;
+            /* position: absolute;
             bottom: 0;
-            left: 0;
+            left: 0; */
             width: 100%;
         }
 
@@ -178,6 +182,8 @@ pageContext.setAttribute("list", lists);
             border: 1px solid black;
             max-height: 650px;
             text-align: center;
+            position: sticky;
+            top: 56px
         }
 
         div.cart_title {
@@ -218,6 +224,11 @@ pageContext.setAttribute("list", lists);
             display: inline-block;
         }
 
+        div.product_ticket_img img {
+            width: 100%;
+            height: 100%;
+        }
+
         div.product_ticket_name {
             width: calc(100% - 120px - 4px);
             height: 100%;
@@ -226,11 +237,13 @@ pageContext.setAttribute("list", lists);
         }
 
         div.product_ticket_name p {
+            margin-top: 40px;
             text-align: center;
-            line-height: 108px;
+            /* line-height: 108px; */
             font-size: 16px;
             font-weight: bold;
             color: #343434;
+            word-break: break-all;
         }
 
         div.trash_block {
@@ -432,390 +445,236 @@ pageContext.setAttribute("list", lists);
                     <div class="col col-md-6">
                         <span class="text_title">${custVO.cust_Schedule_Name}</span>
                     </div>
+
                     <div class="col col-md-6">
-                        <div class="btn_model">
-                            <button id="btn_map" type="button" class="btn btn-primary btn-lg">行程路線</button>
-                            <button id="btn_produce" type="submit" class="btn btn-primary btn-lg">編輯行程</button>
-                            <button id="btn_share" type="button" class="btn btn-primary btn-lg">分享行程</button>
-                        </div>
+                        <form action="CustController" method="POST">
+                            <div class="btn_model">
+                                <button id="btn_map" type="button" class="btn btn-primary btn-lg">行程路線</button>
+                                <button id="btn_produce" type="submit" class="btn btn-primary btn-lg">編輯行程</button>
+                                <button id="btn_share" type="button" class="btn btn-primary btn-lg">分享行程</button>
+                                <input type="hidden" name="action" value="edit_schedule">
+                                <input type="hidden" name="cust_schedule_id" value="${custVO.cust_Schedule_ID}">
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="container" style="margin-top: -1px;">
-            <div class="row">
-                <div class="col col-md-7" style="padding-right: 0;">
-                    <div class="schedule_content">
-                        <div class="schedule_info">
-                            <div class="total_day">
-                                <div class="icon_date_block">
-                                    <div class="icon_date">
-                                        <i class="far fa-calendar-alt fa-2x"></i>
+            <div class="test">
+                <div class="row">
+                    <div class="col col-md-7" style="padding-right: 0;">
+                        <div class="schedule_content">
+                            <div class="schedule_info">
+                                <div class="total_day">
+                                    <div class="icon_date_block">
+                                        <div class="icon_date">
+                                            <i class="far fa-calendar-alt fa-2x"></i>
+                                        </div>
+                                    </div>
+                                    <div class="text_date">
+                                        <p style="margin: 25px auto auto auto;">
+                                            <span>共</span>${custVO.cust_Schedule_Total_Day}<span>天</span></p>
+                                        <p>${custVO.cust_Schedule_Start_Time}~${custVO.cust_Schedule_End_Time}</p>
                                     </div>
                                 </div>
-                                <div class="text_date">
-                                    <p style="margin: 25px auto auto auto;">
-                                        <span>共</span>${custVO.cust_Schedule_Total_Day}<span>天</span></p>
-                                    <p>${custVO.cust_Schedule_Start_Time}~${custVO.cust_Schedule_End_Time}</p>
+                                <div class="schedule_spent">
+                                    <div class="icon_money_block">
+                                        <div class="icon_money">
+                                            <i class="fas fa-dollar-sign fa-2x"></i>
+                                        </div>
+                                    </div>
+                                    <div class="text_money">
+                                        <span style="line-height: 103px;">TWD 10000</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="schedule_spent">
-                                <div class="icon_money_block">
-                                    <div class="icon_money">
-                                        <i class="fas fa-dollar-sign fa-2x"></i>
-                                    </div>
-                                </div>
-                                <div class="text_money">
-                                    <span style="line-height: 103px;">TWD 10000</span>
-                                </div>
-                            </div>
-                        </div>
-						
-                        <ul class="schedule_detail">
-                            <!--------------- 動態新增 --------------->
 
-                            <%int i = 0;%>
-                            <c:forEach var="value" items="${list}">
-                            
-                            <jsp:useBean id="CustDetailVO" class="com.customerizedetail.model.CustDetailVO"></jsp:useBean>
-                                <c:if test="${value.cust_Schedule_Detail_Seq == 0}">
-                                    <div class="all">
-                                        <div class="row" style="padding-left: 15px; padding-right: 15px;">
-                                            <div class="col col-md-4" style="padding-right: 0; padding-left: 0;">
-                                                <div class="day_info">
-                                                    <div class="day_icon">
-                                                        <div class="day_date">
-                                                            <span>D<%=++i%></span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="day_text_date">
-                                                        <p>${value.cust_Schedule_Detail_Date}</p>
-                                                        <p>週 
-                                                        <%out.print()
-//                                                         Calendar cal = Calendar.getInstance();
-// Date date = new Date(CustDetailVO.getCust_Schedule_Detail_Date().getTime());
-// cal.setTime(date);
-// out.print(cal.get(Calendar.DAY_OF_WEEK) - 1);
-%>
-														</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col col-md-4" style="padding-right: 0; padding-left: 0;">
-                                                <div class="day_weather">
-                                                    <p class="km" style="margin-bottom: 6px;">單日里程：15</p>
-                                                    <p>天氣預測：22 C <i class=" fas fa-cloud fa-2x -none"></i>
-                                                        <i class="fas fa-sun fa-2x"></i>
-                                                        <i class="fas fa-cloud-showers-heavy fa-2x -none"></i>
-                                                        <i class="fas fa-cloud-sun fa-2x -none"></i>
-                                                        <i class="fas fa-cloud-sun-rain fa-2x -none"></i>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div class="col col-md-4" style="padding-right: 0; padding-left: 0;">
-                                                <div class="day_spent">
-                                                    <p>單日花費：$1500</p>
-                                                    <p><span>人數：</span>${custVO.cust_Quantity}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <li class="schedule_block" id="${value.productVO.product_ID}" data-sort="${value.cust_Schedule_Detail_Seq}"
-                                        style="padding-left: 15px; padding-right: 15px;">
-                                        <div class="row" style="padding-left: 15px; padding-right: 15px;">
-                                            <div class="col col-md-12" style="padding: 0;">
-                                                <div class="detail_block">
-                                                    <div class="detail_top">
-                                                        <div class="detail_img">
-                                                            <img src="<%=request.getContextPath()%>/ImageController?product_id=${value.productVO.product_ID}">
-                                                        </div>
-                                                        <div class="detail_time">
-                                                            <p style="font-size: 24px">${value.productVO.product_Name}
-                                                            </p>
-                                                            <p><i class="far fa-clock"></i>
-                                                               	 建議遊玩時間：<span>${value.productVO.product_Staytime}</span>小時
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="detail_info">
-                                                        <p>${value.cust_Schedule_Detail_Info}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </c:if>
-                                <c:if test="${value.cust_Schedule_Detail_Seq != 0}">
-                                    <li class="schedule_block" id="${value.productVO.product_ID}" data-sort="`${value.cust_Schedule_Detail_Seq}"
-                                        style="padding-left: 15px; padding-right: 15px;">
-                                        <div class="row" style="padding-left: 15px; padding-right: 15px;">
-                                            <div class="col col-md-12" style="padding: 0;">
-                                                <div class="row"
-                                                    style="padding-left: 15px; padding-right: 15px; margin-top: 20px;">
-                                                    <div class="col col-md-3">
-                                                        <span><i class="fas fa-car-side fa-2x"></i></span>
-                                                        <span>25KM</span>
-                                                    </div>
-                                                    <div class="col col-md-6" style="text-align: center;">
-                                                        <span style="margin: auto;"><i class="fas fa-arrow-down fa-2x"></i></span>
-                                                    </div>
-                                                </div>
-
-                                                <div class="detail_block">
-                                                    <div class="detail_top">
-                                                        <div class="detail_img">
-                                                            <img src="<%=request.getContextPath()%>/ImageController?product_id=${value.productVO.product_ID}">
-                                                        </div>
-                                                        <div class="detail_time">
-                                                            <p style="font-size: 24px">${value.productVO.product_Name}
-                                                            </p>
-                                                            <p><i class="far fa-clock"></i>
-                                                              	 建議遊玩時間：<span>${value.productVO.product_Staytime}</span>小時
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="detail_info">
-                                                        <p>${value.cust_Schedule_Detail_Info}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </c:if>
-                            </c:forEach>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col col-md-5" style="padding-left: 0;">
-                    <div class="cart_content">
-                        <div class="cart_title">
-                            <p>選購明細</p>
-                        </div>
-                        <div class="cart_body">
-                            <ul class="cart_list">
+                            <ul class="schedule_detail">
                                 <!--------------- 動態新增 --------------->
-                                <li id="" class="cart_detail">
-                                    <div class="row" style="padding-left: 15px; padding-right: 15px;">
-                                        <div class="col col-md-6">
-                                            <div class="product_block">
-                                                <div class="product_ticket">
-                                                    <div class="product_ticket_img">
-                                                        <img src="https://picsum.photos/120/108/?random=1">
+                                <%int i = 0;%>
+                                <c:forEach var="value" items="${list}">
+                                    <c:if test="${value.cust_Schedule_Detail_Seq == 0}">
+                                        <div class="all">
+                                            <div class="row" style="padding-left: 15px; padding-right: 15px;">
+                                                <div class="col col-md-4" style="padding-right: 0; padding-left: 0;">
+                                                    <div class="day_info">
+                                                        <div class="day_icon">
+                                                            <div class="day_date">
+                                                                <span>D<%=++i%></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="day_text_date">
+                                                            <p>${value.cust_Schedule_Detail_Date}</p>
+                                                            <p>
+                                                                <fmt:formatDate pattern="E"
+                                                                    value="${value.cust_Schedule_Detail_Date}" />
+                                                            </p>
+                                                        </div>
                                                     </div>
-                                                    <div class="product_ticket_name">
-                                                        <p>故宮博物院</p>
+                                                </div>
+                                                <div class="col col-md-4" style="padding-right: 0; padding-left: 0;">
+                                                    <div class="day_weather">
+                                                        <p class="km" style="margin-bottom: 6px;">單日里程：15</p>
+                                                        <p>天氣預測：22 C <i class=" fas fa-cloud fa-2x -none"></i>
+                                                            <i class="fas fa-sun fa-2x"></i>
+                                                            <i class="fas fa-cloud-showers-heavy fa-2x -none"></i>
+                                                            <i class="fas fa-cloud-sun fa-2x -none"></i>
+                                                            <i class="fas fa-cloud-sun-rain fa-2x -none"></i>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="col col-md-4" style="padding-right: 0; padding-left: 0;">
+                                                    <div class="day_spent">
+                                                        <p>單日花費：$1500</p>
+                                                        <p><span>人數：</span>${custVO.cust_Quantity}</p>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col col-md-5" style="padding-right: 0; padding-left: 0;">
-                                            <div class="select_block">
-                                                <select class="select_options" style="height: 30px; margin-top: 30px;">
-                                                    <option>半票</option>
-                                                    <option>全票</option>
-                                                    <option>愛心票</option>
-                                                </select>
-                                                <input class="input_quantity" style="margin-top: 30px;" type="number"
-                                                    value="1" name="points" min="1" max="99"></input>
-                                                <p>NT$ 1000</p>
-                                            </div>
-                                        </div>
-                                        <div class="col col-md-1" style="padding-right: 0; padding-left: 0;">
-                                            <div class="trash_block">
-                                                <span class="trash"><i class="fas fa-trash-alt fa-2x"></i></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li id="" class="cart_detail">
-                                    <div class="row" style="padding-left: 15px; padding-right: 15px;">
-                                        <div class="col col-md-6">
-                                            <div class="product_block">
-                                                <div class="product_ticket">
-                                                    <div class="product_ticket_img">
-                                                        <img src="https://picsum.photos/120/108/?random=1">
-                                                    </div>
-                                                    <div class="product_ticket_name">
-                                                        <p>故宮博物院</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col col-md-5" style="padding-right: 0; padding-left: 0;">
-                                            <div class="select_block">
-                                                <select class="select_options" style="height: 30px; margin-top: 30px;">
-                                                    <option>半票</option>
-                                                    <option>全票</option>
-                                                    <option>愛心票</option>
-                                                </select>
-                                                <input class="input_quantity" style="margin-top: 30px;" type="number"
-                                                    value="1" name="points" min="1" max="99"></input>
-                                                <p>NT$ 1000</p>
-                                            </div>
-                                        </div>
-                                        <div class="col col-md-1" style="padding-right: 0; padding-left: 0;">
-                                            <div class="trash_block">
-                                                <span class="trash"><i class="fas fa-trash-alt fa-2x"></i></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li id="" class="cart_detail">
-                                    <div class="row" style="padding-left: 15px; padding-right: 15px;">
-                                        <div class="col col-md-6">
-                                            <div class="product_block">
-                                                <div class="product_ticket">
-                                                    <div class="product_ticket_img">
-                                                        <img src="https://picsum.photos/120/108/?random=1">
-                                                    </div>
-                                                    <div class="product_ticket_name">
-                                                        <p>故宮博物院</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col col-md-5" style="padding-right: 0; padding-left: 0;">
-                                            <div class="select_block">
-                                                <select class="select_options" style="height: 30px; margin-top: 30px;">
-                                                    <option>半票</option>
-                                                    <option>全票</option>
-                                                    <option>愛心票</option>
-                                                </select>
-                                                <input class="input_quantity" style="margin-top: 30px;" type="number"
-                                                    value="1" name="points" min="1" max="99"></input>
-                                                <p>NT$ 1000</p>
-                                            </div>
-                                        </div>
-                                        <div class="col col-md-1" style="padding-right: 0; padding-left: 0;">
-                                            <div class="trash_block">
-                                                <span class="trash"><i class="fas fa-trash-alt fa-2x"></i></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li id="" class="cart_detail">
-                                    <div class="row" style="padding-left: 15px; padding-right: 15px;">
-                                        <div class="col col-md-6">
-                                            <div class="product_block">
-                                                <div class="product_ticket">
-                                                    <div class="product_ticket_img">
-                                                        <img src="https://picsum.photos/120/108/?random=1">
-                                                    </div>
-                                                    <div class="product_ticket_name">
-                                                        <p>故宮博物院</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col col-md-5" style="padding-right: 0; padding-left: 0;">
-                                            <div class="select_block">
-                                                <select class="select_options" style="height: 30px; margin-top: 30px;">
-                                                    <option>半票</option>
-                                                    <option>全票</option>
-                                                    <option>愛心票</option>
-                                                </select>
-                                                <input class="input_quantity" style="margin-top: 30px;" type="number"
-                                                    value="1" name="points" min="1" max="99"></input>
-                                                <p>NT$ 1000</p>
-                                            </div>
-                                        </div>
-                                        <div class="col col-md-1" style="padding-right: 0; padding-left: 0;">
-                                            <div class="trash_block">
-                                                <span class="trash"><i class="fas fa-trash-alt fa-2x"></i></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li id="" class="cart_detail">
-                                    <div class="row" style="padding-left: 15px; padding-right: 15px;">
-                                        <div class="col col-md-6">
-                                            <div class="product_block">
-                                                <div class="product_ticket">
-                                                    <div class="product_ticket_img">
-                                                        <img src="https://picsum.photos/120/108/?random=1">
-                                                    </div>
-                                                    <div class="product_ticket_name">
-                                                        <p>故宮博物院</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col col-md-5" style="padding-right: 0; padding-left: 0;">
-                                            <div class="select_block">
-                                                <select class="select_options" style="height: 30px; margin-top: 30px;">
-                                                    <option>半票</option>
-                                                    <option>全票</option>
-                                                    <option>愛心票</option>
-                                                </select>
-                                                <input class="input_quantity" style="margin-top: 30px;" type="number"
-                                                    value="1" name="points" min="1" max="99"></input>
-                                                <p>NT$ 1000</p>
-                                            </div>
-                                        </div>
-                                        <div class="col col-md-1" style="padding-right: 0; padding-left: 0;">
-                                            <div class="trash_block">
-                                                <span class="trash"><i class="fas fa-trash-alt fa-2x"></i></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li id="" class="cart_detail">
-                                    <div class="row" style="padding-left: 15px; padding-right: 15px;">
-                                        <div class="col col-md-6">
-                                            <div class="product_block">
-                                                <div class="product_ticket">
-                                                    <div class="product_ticket_img">
-                                                        <img src="https://picsum.photos/120/108/?random=1">
-                                                    </div>
-                                                    <div class="product_ticket_name">
-                                                        <p>故宮博物院</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col col-md-5" style="padding-right: 0; padding-left: 0;">
-                                            <div class="select_block">
-                                                <select class="select_options" style="height: 30px; margin-top: 30px;">
-                                                    <option>半票</option>
-                                                    <option>全票</option>
-                                                    <option>愛心票</option>
-                                                </select>
-                                                <input class="input_quantity" style="margin-top: 30px;" type="number"
-                                                    value="1" name="points" min="1" max="99"></input>
-                                                <p>NT$ 1000</p>
-                                            </div>
-                                        </div>
-                                        <div class="col col-md-1" style="padding-right: 0; padding-left: 0;">
-                                            <div class="trash_block">
-                                                <span class="trash"><i class="fas fa-trash-alt fa-2x"></i></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
 
+                                        <li class="schedule_block" id="${value.productVO.product_ID}"
+                                            data-sort="${value.cust_Schedule_Detail_Seq}"
+                                            style="padding-left: 15px; padding-right: 15px;">
+                                            <div class="row" style="padding-left: 15px; padding-right: 15px;">
+                                                <div class="col col-md-12" style="padding: 0;">
+                                                    <div class="detail_block">
+                                                        <div class="detail_top">
+                                                            <div class="detail_img">
+                                                                <img
+                                                                    src="<%=request.getContextPath()%>/ImageController?product_id=${value.productVO.product_ID}">
+                                                            </div>
+                                                            <div class="detail_time">
+                                                                <p style="font-size: 24px">
+                                                                    ${value.productVO.product_Name}
+                                                                </p>
+                                                                <p><i class="far fa-clock"></i>
+                                                                   	建議遊玩時間：<span>${value.productVO.product_Staytime}</span>小時
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="detail_info">
+                                                            <p>${value.cust_Schedule_Detail_Info}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </c:if>
+                                    <c:if test="${value.cust_Schedule_Detail_Seq != 0}">
+                                        <li class="schedule_block" id="${value.productVO.product_ID}"
+                                            data-sort="`${value.cust_Schedule_Detail_Seq}"
+                                            style="padding-left: 15px; padding-right: 15px;">
+                                            <div class="row" style="padding-left: 15px; padding-right: 15px;">
+                                                <div class="col col-md-12" style="padding: 0;">
+                                                    <div class="row"
+                                                        style="padding-left: 15px; padding-right: 15px; margin-top: 20px;">
+                                                        <div class="col col-md-3">
+                                                            <span><i class="fas fa-car-side fa-2x"></i></span>
+                                                            <span>25KM</span>
+                                                        </div>
+                                                        <div class="col col-md-6" style="text-align: center;">
+                                                            <span style="margin: auto;"><i
+                                                                    class="fas fa-arrow-down fa-2x"></i></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="detail_block">
+                                                        <div class="detail_top">
+                                                            <div class="detail_img">
+                                                                <img
+                                                                    src="<%=request.getContextPath()%>/ImageController?product_id=${value.productVO.product_ID}">
+                                                            </div>
+                                                            <div class="detail_time">
+                                                                <p style="font-size: 24px">
+                                                                    ${value.productVO.product_Name}
+                                                                </p>
+                                                                <p><i class="far fa-clock"></i>
+                                                                    建議遊玩時間：<span>${value.productVO.product_Staytime}</span>小時
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="detail_info">
+                                                            <p>${value.cust_Schedule_Detail_Info}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </c:if>
+                                </c:forEach>
                             </ul>
                         </div>
-                        <div class="go_buy">
-                            <div class="row" style="padding-left: 15px; padding-right: 15px;">
-                                <div class="col col-md-6" style="padding-right: 0; padding-left: 0;">
-                                    <p>合計：NT$4000</p>
-                                </div>
-                                <div class="col col-md-6" style="padding-right: 0; padding-left: 0;">
-                                    <button id="btn_buy" type="button" class="btn btn-primary btn-lg">直接購買</button>
+                    </div>
+                    <div class="col col-md-5" style="padding-left: 0;">
+                        <div class="cart_content">
+                            <div class="cart_title">
+                                <p>選購明細</p>
+                            </div>
+                            <div class="cart_body">
+                                <ul class="cart_list">
+                                    <!--------------- 動態新增 --------------->
+                                    <c:forEach var="value" items="${list}">
+                                        <li id="${value.productVO.product_ID}" class="cart_detail">
+                                            <div class="row" style="padding-left: 15px; padding-right: 15px;">
+                                                <div class="col col-md-6">
+                                                    <div class="product_block">
+                                                        <div class="product_ticket">
+                                                            <div class="product_ticket_img">
+                                                                <img
+                                                                    src="<%=request.getContextPath()%>/ImageController?product_id=${value.productVO.product_ID}">
+                                                            </div>
+                                                            <div class="product_ticket_name">
+                                                                <p>${value.productVO.product_Name}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col col-md-5" style="padding-right: 0; padding-left: 0;">
+                                                    <div class="select_block">
+                                                        <select class="select_options"
+                                                            style="height: 30px; margin-top: 30px;">
+                                                            <option>半票</option>
+                                                            <option>全票</option>
+                                                            <option>愛心票</option>
+                                                        </select>
+                                                        <input class="input_quantity" style="margin-top: 30px;"
+                                                            type="number" value="1" name="points" min="1"
+                                                            max="99"></input>
+                                                        <p>NT$ 1000</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col col-md-1" style="padding-right: 0; padding-left: 0;">
+                                                    <div class="trash_block">
+                                                        <span class="trash"><i
+                                                                class="fas fa-trash-alt fa-2x"></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </c:forEach>
+                                </ul>
+                            </div>
+                            <div class="go_buy">
+                                <div class="row" style="padding-left: 15px; padding-right: 15px;">
+                                    <div class="col col-md-6" style="padding-right: 0; padding-left: 0;">
+                                        <p>合計：NT$4000</p>
+                                    </div>
+                                    <div class="col col-md-6" style="padding-right: 0; padding-left: 0;">
+                                        <button id="btn_buy" type="button" class="btn btn-primary btn-lg">直接購買</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="ad_content">
+                        <!-- <div class="ad_content">
                         <div class="ad_title">
                             <p>廣告</p>
                         </div>
-                        <ul class="ad_list">
-                            <!--------------- 動態新增 --------------->
-                            <li id="" class="ad_detail">
+                        <ul class="ad_list"> -->
+                        <!--------------- 動態新增 --------------->
+                        <!-- <li id="" class="ad_detail">
                                 <div class="row" style="padding-left: 15px; padding-right: 15px;">
                                     <div class="col col-md-6">
 
@@ -823,96 +682,41 @@ pageContext.setAttribute("list", lists);
                                 </div>
                             </li>
                         </ul>
+                    </div> -->
+
+
                     </div>
-
-
                 </div>
-
-
             </div>
-            <!-- <footer class="footer"> -->
-            <!-- <div class="container"> -->
-            <!-- <span class="text-muted">WEB DEVELOPER</span> -->
-            <!-- </div> -->
-            <!-- </footer> -->
+        </div>
+    </div>
+    <footer class="footer"> -->
+        <div class="container">
+            <span class="text-muted">WEB DEVELOPER</span>
+        </div>
+    </footer>
 
 
 
-            <!-- Optional JavaScript -->
-            <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-                integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-                crossorigin="anonymous">
-            </script>
-            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-                integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-                crossorigin="anonymous">
-            </script>
-            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
-                integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
-                crossorigin="anonymous">
-            </script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous">
+    </script>
 
-            <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-            <script>
-                $(function () {
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        $(function () {
+            /*----------------------------編輯行程按鈕--------------------------------*/
+            // $("button#btn_produce").on("click", function(){
 
-
-
-                    // <div class="all">
-                    //                 <div class="row" style="padding-left: 15px; padding-right: 15px;">
-                    //                     <div class="col col-md-4" style="padding-right: 0; padding-left: 0;">
-                    //                         <div class="day_info">
-                    //                             <div class="day_icon">
-                    //                                 <div class="day_date">
-                    //                                     <span>D1</span>
-                    //                                 </div>
-                    //                             </div>
-                    //                             <div class="day_text_date">
-                    //                                 <p>2020/04/21</p>
-                    //                                 <p>週三</p>
-                    //                             </div>
-                    //                         </div>
-                    //                     </div>
-                    //                     <div class="col col-md-4" style="padding-right: 0; padding-left: 0;">
-                    //                         <div class="day_weather">
-                    //                             <p>天氣預測：22</p>
-                    //                             <p>單日里程：15</p>
-                    //                         </div>
-                    //                     </div>
-                    //                     <div class="col col-md-4" style="padding-right: 0; padding-left: 0;">
-                    //                         <div class="day_spent">
-                    //                             <p>人數：2</p>
-                    //                             <p>單日花費：$1500</p>
-                    //                         </div>
-                    //                     </div>
-                    //                 </div>
-                    //             </div>
-
-
-
-                    //             <li class="schedule_block" id="` + product_ID + `" data-sort="` + sort + `"
-                    //                 style="padding-left: 15px; padding-right: 15px;">
-                    //                 <div class="row" style="padding-left: 15px; padding-right: 15px;">
-                    //                     <div class="col col-md-12" style="padding: 0;">
-                    //                         <div class="detail_block">
-                    //                             <div class="detail_top">
-                    //                                 <div class="detail_img">
-                    //                                     <img src="` + product_img + `">
-                    //                                 </div>
-                    //                                 <div class="detail_time">
-                    //                                     <p style="font-size: 24px">` + product_name + `</p>
-                    //                                     <p><i class="far fa-clock"></i> 建議遊玩時間：<span>` + stay_time + `</span>小時
-                    //                                     </p>
-                    //                                 </div>
-                    //                             </div>
-                    //                             <div class="detail_info">
-                    //                                 <p>` + schedule_info + `</p>
-                    //                             </div>
-                    //                         </div>
-                    //                     </div>
-                    //                 </div>
-                    //             </li>
+            // });
 
 
 
@@ -925,10 +729,8 @@ pageContext.setAttribute("list", lists);
 
 
 
-
-
-                });
-            </script>
+        });
+    </script>
 </body>
 
 </html>
