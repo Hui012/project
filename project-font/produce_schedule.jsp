@@ -12,7 +12,7 @@
 <%
 
 // CustVO custVO = (CustVO) request.getAttribute("custVO");
-List<CustDetailVO> lists = (List<CustDetailVO>) request.getAttribute("custDetailVOs");
+List<CustDetailVO> lists = (List<CustDetailVO>) request.getAttribute("custDetails");
 pageContext.setAttribute("list", lists);
 
 
@@ -34,6 +34,7 @@ pageContext.setAttribute("list", lists);
     <style>
         * {
             font-family: 微軟正黑體;
+            font-weight: bold;
         }
 
         body {
@@ -169,7 +170,7 @@ pageContext.setAttribute("list", lists);
 
         div.product_ticket {
             width: 230px;
-            height: 110px;
+            height: 120px;
             border: 1px solid black;
         }
 
@@ -249,7 +250,7 @@ pageContext.setAttribute("list", lists);
         div.trash_block {
             height: 140px;
             text-align: center;
-            line-height: 100px;
+            line-height: 140px;
         }
 
         div.select_block {
@@ -542,13 +543,13 @@ pageContext.setAttribute("list", lists);
                                                     <div class="detail_block">
                                                         <div class="detail_top">
                                                             <div class="detail_img">
-                                                                <img
-                                                                    src="<%=request.getContextPath()%>/ImageController?product_id=${value.productVO.product_ID}">
+                                                                <img src="<%=request.getContextPath()%>/ImageController?action=printImage_product_id&product_id=${value.product_ID}">
                                                             </div>
                                                             <div class="detail_time">
                                                                 <p style="font-size: 24px">
                                                                     ${value.productVO.product_Name}
                                                                 </p>
+<%--                                                                 <fmt:parseNumber var="time" integerOnly="" value="${value.productVO.product_Staytime}"></fmt:parseNumber> --%>
                                                                 <p><i class="far fa-clock"></i>
                                                                    	建議遊玩時間：<span>${value.productVO.product_Staytime}</span>小時
                                                                 </p>
@@ -584,14 +585,14 @@ pageContext.setAttribute("list", lists);
                                                         <div class="detail_top">
                                                             <div class="detail_img">
                                                                 <img
-                                                                    src="<%=request.getContextPath()%>/ImageController?product_id=${value.productVO.product_ID}">
+                                                                    src="<%=request.getContextPath()%>/ImageController?action=printImage_product_id&product_id=${value.product_ID}">
                                                             </div>
                                                             <div class="detail_time">
                                                                 <p style="font-size: 24px">
                                                                     ${value.productVO.product_Name}
                                                                 </p>
                                                                 <p><i class="far fa-clock"></i>
-                                                                    建議遊玩時間：<span>${value.productVO.product_Staytime}</span>小時
+                                                                建議遊玩時間：<span>${value.productVO.product_Staytime}</span>小時
                                                                 </p>
                                                             </div>
                                                         </div>
@@ -613,17 +614,17 @@ pageContext.setAttribute("list", lists);
                                 <p>選購明細</p>
                             </div>
                             <div class="cart_body">
-                                <ul class="cart_list">
+                                <ul id="cart_list">
                                     <!--------------- 動態新增 --------------->
                                     <c:forEach var="value" items="${list}">
                                         <li id="${value.productVO.product_ID}" class="cart_detail">
                                             <div class="row" style="padding-left: 15px; padding-right: 15px;">
-                                                <div class="col col-md-6">
+                                                <div class="col col-md-6" style="padding-left: 5px;">
                                                     <div class="product_block">
                                                         <div class="product_ticket">
                                                             <div class="product_ticket_img">
                                                                 <img
-                                                                    src="<%=request.getContextPath()%>/ImageController?product_id=${value.productVO.product_ID}">
+                                                                    src="<%=request.getContextPath()%>/ImageController?action=printImage_product_id&product_id=${value.productVO.product_ID}">
                                                             </div>
                                                             <div class="product_ticket_name">
                                                                 <p>${value.productVO.product_Name}</p>
@@ -633,21 +634,27 @@ pageContext.setAttribute("list", lists);
                                                 </div>
                                                 <div class="col col-md-5" style="padding-right: 0; padding-left: 0;">
                                                     <div class="select_block">
-                                                        <select class="select_options"
-                                                            style="height: 30px; margin-top: 30px;">
-                                                            <option>半票</option>
-                                                            <option>全票</option>
-                                                            <option>愛心票</option>
-                                                        </select>
-                                                        <input class="input_quantity" style="margin-top: 30px;"
-                                                            type="number" value="1" name="points" min="1"
+                                                        <p style="margin: 0;">${value.cust_Schedule_Detail_Date}</p>
+                                                        <input class="input_quantity" style="margin-top: 15px;"
+                                                            type="number" value="${custVO.cust_Quantity}" name="points" min="1"
                                                             max="99"></input>
-                                                        <p>NT$ 1000</p>
+                                                        <c:forEach var="productDetail" items="${value.productVO.productDetailVOs}" varStatus="status">
+	                                                        <c:if test="${status.first}">
+	                                                        	<span style="line-height: 60px;"> NT$ <span id="sum">${productDetail.product_Detail_Money * custVO.cust_Quantity}</span></span>
+		                                                    </c:if>
+                                                        </c:forEach>
+                                                        <select class="select_options" style="height: 30px; width: 80%;">
+                                                            <c:forEach var="productDetail" items="${value.productVO.productDetailVOs}">
+	                                                            <c:if test="${value.productVO.product_ID == productDetail.product_ID}">
+	                                                            	<option value="${productDetail.product_Detail_Money}">${productDetail.product_Detail_Spc}</option>
+	                                                            </c:if>
+                                                             </c:forEach>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="col col-md-1" style="padding-right: 0; padding-left: 0;">
                                                     <div class="trash_block">
-                                                        <span class="trash"><i
+                                                        <span class="trash" style="cursor: pointer;"><i
                                                                 class="fas fa-trash-alt fa-2x"></i></span>
                                                     </div>
                                                 </div>
@@ -659,7 +666,15 @@ pageContext.setAttribute("list", lists);
                             <div class="go_buy">
                                 <div class="row" style="padding-left: 15px; padding-right: 15px;">
                                     <div class="col col-md-6" style="padding-right: 0; padding-left: 0;">
-                                        <p>合計：NT$4000</p>
+                                    <c:set value="0" var="sum"/> 
+                                    <c:forEach var="value" items="${list}">
+	                                    <c:forEach var="productDetail" items="${value.productVO.productDetailVOs}" varStatus="status">
+		                                	<c:if test="${status.first}">
+		                                		<c:set value="${sum + (productDetail.product_Detail_Money * custVO.cust_Quantity)}" var="sum"/>
+			                                </c:if>
+	                                    </c:forEach>
+                                    </c:forEach>
+                                        	<p>合計：NT$<span id="total_price">${sum}</span></p>
                                     </div>
                                     <div class="col col-md-6" style="padding-right: 0; padding-left: 0;">
                                         <button id="btn_buy" type="button" class="btn btn-primary btn-lg">直接購買</button>
@@ -713,13 +728,25 @@ pageContext.setAttribute("list", lists);
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         $(function () {
+            sessionStorage.clear(); //清除sessionStorge資料
+
             /*----------------------------編輯行程按鈕--------------------------------*/
-            // $("button#btn_produce").on("click", function(){
+            $("div.select_block").on("change", function(){
+                let price = $(this).find("select.select_options").val();
+                let quantity = $(this).find(".input_quantity").val();
+                let total_price = 0;
+                $(this).find("span#sum").html(quantity * price);
+                $("ul#cart_list").find("li").each(function(i, value){
+                    total_price += parseInt($(value).find("span#sum").html());
+                });
+                $("span#total_price").html(total_price);
+            });
 
-            // });
 
-
-
+            /*----------------------------刪除購買項目--------------------------------*/
+            $("span.trash").on("click", function(){
+                $(this).closest("li").remove();
+            })
 
 
 
