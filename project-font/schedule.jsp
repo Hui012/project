@@ -576,21 +576,6 @@
       text-decoration: underline;
     }
 
-    /*----------------------------地圖模式-------------------------------*/
-    div.Transportation {
-      text-align: center;
-      /* line-height: 60px; */
-      width: 100%;
-      height: 100%;
-    }
-
-    div.Transportation button {
-      width: 100px;
-      height: 50px;
-      border-radius: 4px;
-      margin: auto;
-    }
-
     /*----------------------------天數垃圾桶-------------------------------*/
     span.delete_day {
       font-size: 18px;
@@ -774,8 +759,32 @@
       border-radius: 10px;
       -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
     }
+
+    /*---------------------google map-------------------------*/
+    /*----------------------------地圖模式-------------------------------*/
+    div.Transportation {
+      text-align: center;
+      /* line-height: 60px; */
+      width: 100%;
+      height: 100%;
+    }
+
+    div.Transportation button {
+      width: 100px;
+      height: 50px;
+      border-radius: 4px;
+      margin: auto;
+    }
     #map {
       height: 100%;
+    }
+
+    .-select_travel_mode{
+      color: white;
+      background-color: #007bff !important;
+      border: 5px solid #007bff;
+      outline: 5px auto -webkit-focus-ring-color !important;
+      /* outline: 1px dotted; */
     }
   </style>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -844,6 +853,7 @@
             <button id="btn_Store" type="button" class="btn btn-primary btn-lg">儲存行程</button>
             <button id="btn_produce" type="submit" class="btn btn-primary btn-lg">產生行程</button>
             <button id="btn_map" type="button" class="btn btn-primary btn-lg">地圖模式</button>
+            <button id="btn_standard" type="button" class="btn btn-primary btn-lg -none">標準模式</button>
             <input type="hidden" name="action" value="produce_schedule">
             <input id="produce_schedule" type="hidden" name="schedule_data">
           </div>
@@ -922,19 +932,21 @@
             <!-- 地圖模式使用的按鈕，一開始不顯示，設定為none -->
             <div class="Transportation -none">
               <div class="row" style="padding-left: 15px; padding-right: 15px;">
-                <div class="col col-md-4">
-                  <button id="car"><i class="fas fa-car fa-2x"></i></button>
+                <div class="col col-md-3">
+                  <button class="btn_optimize" name="btn_optimize" style="margin-top: 5px; line-height: 50px;">優化路線</button>
                 </div>
-                <div class="col col-md-4">
-                  <button id="motorcycle"><i class="fas fa-motorcycle fa-2x"></i></button>
-                  <button class="test">test</button>
+                <div class="col col-md-3">
+                  <button id="btn_car" name="DRIVING" style="margin-top: 5px; line-height: 50px;""><i class="fas fa-car fa-2x"></i></button>
                 </div>
-                <div class="col col-md-4">
-                  <button id="walk"><i class="fas fa-walking fa-2x"></i></i></button>
+                <div class="col col-md-3">
+                  <button id="btn_motorcycle" name="BICYCLING" style="margin-top: 5px; line-height: 50px;""><i class="fas fa-motorcycle fa-2x"></i></button>
+                </div>
+                <div class="col col-md-3">
+                  <button id="btn_walk" name="WALKING" style="margin-top: 5px; line-height: 50px;""><i class="fas fa-walking fa-2x"></i></i></button>
                 </div>
               </div>
-            </div>
-
+            </div> 
+ 
           </div>
 
           <div class="product_body">
@@ -966,7 +978,7 @@
             <div class="row" style="padding: 0 15px; height: 200px;">
               <div class="col col-md-6" style="padding: 0;">
                 <div class="product_info_img">
-                  <img src="https://picsum.photos/500/200/?random=1">
+                  <img src=" ">
                 </div>
               </div>
               <div class="col col-md-6">
@@ -1100,16 +1112,26 @@
       
       var user_departure = {lat: 25.047859199999998, lng: 121.52668159999999};
     /*-----------------------------地圖模式------------------------------*/
-    $("button#btn_map").on("click", function () {
+    $("button#btn_map").on("click", function (e) {
+      $("div.Transportation").find("button").each(function(i, value){   //把有-select_travel_mode的class移除
+          if($(this).hasClass("-select_travel_mode")){
+            $(this).removeClass("-select_travel_mode");
+          }
+        });
+      $("button#btn_car").addClass("-select_travel_mode");
+      $("button#btn_standard").removeClass("-none");
+      $(this).addClass("-none");
       $("div.product_body").toggle("-none");
       $("div.checkbox_area").toggle("-none");
       $("div.schedule_map").toggle("-none");
       $("div.Transportation").toggle("-none");
-      initMap();
-      var directionsRenderer = new google.maps.DirectionsRenderer;
-      var directionsService = new google.maps.DirectionsService;
-      directionsRenderer.setMap(map);
-      calculateAndDisplayRoute(directionsService, directionsRenderer, false, temp);
+      if ($("ul.schedule_list").find("li").hasClass("schedule_block")) {
+          initMap();
+          var directionsRenderer = new google.maps.DirectionsRenderer;
+          var directionsService = new google.maps.DirectionsService;
+          directionsRenderer.setMap(map);
+          calculateAndDisplayRoute(directionsService, directionsRenderer, false, tempCallback);
+        }
       
       
       var iconBase = 'http://maps.google.com/mapfiles/kml/paddle/';
@@ -1160,23 +1182,79 @@
       // marker.addListener('click', function() {
       //   infowindow.open(map, marker);
       // });
-      
-      
-
-      
-
+    
     });
-    /*==============================================================*/
+    
+    
+    $("button#btn_standard").on("click", function () {
+      
+      $("button#btn_map").removeClass("-none");
+      $(this).addClass("-none");
+      $("div.product_body").toggle("-none");
+      $("div.checkbox_area").toggle("-none");
+      $("div.schedule_map").toggle("-none");
+      $("div.Transportation").toggle("-none");
+    });
 
 
-    $("button.test").on("click", function(){
+    // if(!$("button#btn_standard").hasClass("-none")){
+     
+
+    $("div.Transportation").find("button[name!='btn_optimize']").on("click", function(){  //當name不等於btn_optimize的按鈕click時
+      $("div.Transportation").find("button").each(function(i, value){   //把有-select_travel_mode的class移除
+          if($(this).hasClass("-select_travel_mode")){
+            $(this).removeClass("-select_travel_mode");
+          }
+        });
+      $(this).addClass("-select_travel_mode");
+      let travel_mode = $(this).attr("name");
       initMap();
       var directionsRenderer = new google.maps.DirectionsRenderer;
       var directionsService = new google.maps.DirectionsService;
       directionsRenderer.setMap(map);
-      calculateAndDisplayRoute(directionsService, directionsRenderer, true, optimizeSchedule);
+      calculateAndDisplayRoute(directionsService, directionsRenderer, false, tempCallback, travel_mode);
     })
-      function temp(waypoint_order, distance){}
+    
+    // $("button#btn_motorcycle").on("click", function(){
+    //   let travel_mode = "BICYCLING";
+    //   initMap();
+    //   var directionsRenderer = new google.maps.DirectionsRenderer;
+    //   var directionsService = new google.maps.DirectionsService;
+    //   directionsRenderer.setMap(map);
+    //   calculateAndDisplayRoute(directionsService, directionsRenderer, false, tempCallback, travel_mode);
+    // });
+    // btn_car    btn_walk
+
+    /*==============================================================*/
+    $("button.btn_optimize").on("click", function(){
+      let travel_mode;
+      $("div.Transportation").find("button").each(function(i, value){   //把有-select_travel_mode的class移除
+          if($(this).hasClass("-select_travel_mode")){
+            travel_mode = $(this).attr("name");
+          }
+        });
+
+      if ($("ul.schedule_list").find("li").hasClass("schedule_block")) {
+          initMap();
+          var directionsRenderer = new google.maps.DirectionsRenderer;
+          var directionsService = new google.maps.DirectionsService;
+          directionsRenderer.setMap(map);
+          calculateAndDisplayRoute(directionsService, directionsRenderer, true, optimizeSchedule, travel_mode);
+        }else{
+          alert("您還沒加入行程唷~~")
+        }
+    });
+      function tempCallback(waypoint_order, distance){
+        console.log("地圖模式 = " + distance)
+        let listSchedule = [];
+        take_schedule_list(listSchedule);
+        $("ul.schedule_list").html("");
+        for (let i = 0; i < listSchedule.length; i++) {
+          let items = listSchedule[i]; //只是要讓名稱短一點
+          scheduleView(items.product_ID, i, items.product_img, items.product_name, items.stay_time, items
+            .schedule_info, items.product_Latitutde, items.product_Longitude, distance[i]);
+        } 
+      }
 
       function optimizeSchedule(waypoint_order, distance){
         console.log("distance = " + distance)
@@ -1193,13 +1271,11 @@
           }
         }
         sessionStorage.setItem(day_number, JSON.stringify(newSchedule));
-        let current_data = JSON.parse(sessionStorage.getItem(day_number));
         $("ul.schedule_list").html("");
-        for (let i = 0; i < current_data.length; i++) {
-          let items = current_data[i]; //只是要讓名稱短一點
+        for (let i = 0; i < newSchedule.length; i++) {
+          let items = newSchedule[i]; //只是要讓名稱短一點
           scheduleView(items.product_ID, i, items.product_img, items.product_name, items.stay_time, items
             .schedule_info, items.product_Latitutde, items.product_Longitude, distance[i]);
-            console.log(distance)
         } 
       }
 
@@ -1213,10 +1289,14 @@
       }
 
       let distance = [];
-      function calculateAndDisplayRoute(directionsService, directionsRenderer, optimizeWaypoint, callback) {
+      function calculateAndDisplayRoute(directionsService, directionsRenderer, optimizeWaypoint, callback, travelMode) {
+        let travel_mode = travelMode == null?'DRIVING':travelMode;
+        console.log(travelMode)
+        // console.log(travelMode == undefined)
+        // console.log(travelMode == null?'DRIVING':travelMode)
+        // console.log(travelMode == undefined?'DRIVING':travelMode)
         distance = [];
         var waypts = [];
-        var user_destination;
         let li_length =  $("ul.schedule_list").children("li").length;
         $("ul.schedule_list").find("li").each(function(i, value){
           let lat = parseFloat($(this).attr("data-latitutde"));
@@ -1224,44 +1304,45 @@
           if(i == (li_length - 1)){
             user_destination = {lat:lat, lng:lng};
           }else{
-            temp = {
-                      location: {lat:lat, lng:lng},     //使用者選的地點經緯度
-                      stopover: true                    
-                      // type: ('location_'+ (i+1))        //用哪一個icon
-                    }
+            let temp = {
+                          location: {lat:lat, lng:lng},     //使用者選的地點經緯度
+                          stopover: true                    
+                          // type: ('location_'+ (i+1))        //用哪一個icon
+                        }
             waypts.push(temp);     
           }
         });
-
-        directionsService.route({
-          origin: user_departure,         // Note that Javascript allows us to access the constant
-          destination: user_destination,  // using square brackets and a string value as its"property."
-          waypoints: waypts,
-          optimizeWaypoints: optimizeWaypoint,
-          travelMode: google.maps.TravelMode['DRIVING']
-        }, function(response, status) {
-          if (status == 'OK') {
-            let legs = response.routes[0].legs;
-            let waypoint_order = response.routes[0].waypoint_order;
-            console.log(response.routes[0]);
-            for(let i = 0; i < legs.length; i++){
-              distance.push(legs[i].distance.text);
+        if(li_length > 0){
+          directionsService.route({
+            origin: user_departure,         // Note that Javascript allows us to access the constant
+            destination: user_destination,  // using square brackets and a string value as its"property."
+            waypoints: waypts,
+            optimizeWaypoints: optimizeWaypoint,
+            travelMode: google.maps.TravelMode[travel_mode]
+          }, function(response, status) {
+            if (status == 'OK') {
+              console.log(response.routes[0]);
+              let legs = response.routes[0].legs;
+              let waypoint_order = response.routes[0].waypoint_order;
+              for(let i = 0; i < legs.length; i++){
+                distance.push(legs[i].distance.text);
+              }
+              console.log(typeof callback === "function")
+              console.log(callback)
+              // if(typeof callback === "function"){
+                callback(waypoint_order, distance);
+              // }
+              directionsRenderer.setDirections(response);
+            } else {
+              window.alert('Directions request failed due to ' + status);
             }
-            console.log(distance);
-            callback(waypoint_order, distance);
-            directionsRenderer.setDirections(response);
-          } else {
-            window.alert('Directions request failed due to ' + status);
-          }
-        });
+          });
+        }
       } 
 
 
     
-
-
-
-
+      
 
 
 
@@ -1515,7 +1596,7 @@
 
         if (check_Id(schedule_id, product_ID) == false) { //若為false就是就新增行程到左邊列表中
           let sort = (schedule_id.length - 1) + 1; //將schedule_id陣列長度 - 1，利用陣列特性獲得最後一筆資料的數值，再 + 1，即可當成順序sort的值
-          scheduleView(product_ID, sort, product_img, product_name, stay_time, schedule_info, product_Latitutde, product_Longitude, distance);
+          scheduleView(product_ID, sort, product_img, product_name, stay_time, schedule_info, product_Latitutde, product_Longitude);
         } else {
           //若為ture就是等於更新左側的行程備註
           $("div.detail_block").closest("li#" + product_ID).find("div.detail_info p").html(schedule_info);
@@ -1581,8 +1662,13 @@
         $("div.schedule_header").attr("data-date", date); //將切換為選取的日期帶入
         $("div.schedule_header").attr("data-sort", sort); //將切換為選取的日期帶入
         $("ul.schedule_list").html(""); //先將行程列表清空
-
         printSessionStorage_and_refreshProduct($(this).text()); //取得要切換天數的sessionStorage，把資料印出，並更新產品(已被選的不會出現)
+
+        initMap();
+          var directionsRenderer = new google.maps.DirectionsRenderer;
+          var directionsService = new google.maps.DirectionsService;
+          directionsRenderer.setMap(map);
+          calculateAndDisplayRoute(directionsService, directionsRenderer, false, tempCallback);
 
       });
 
@@ -1595,9 +1681,9 @@
             alert("只剩一天無法刪除");
           } else {
             let removeKey = $(this).closest("li").attr("class"); //取得要刪除天數名稱
-            let removeKey_sort = $(this).closest("li").attr("data-sort"); //取得要刪除天數的順序
-            let day_number = $("div.schedule_header p").html(); //取得當前天數名稱
-            let day_number_sort = $("div.schedule_header").attr("data-sort"); //取得當前天數的順序
+            // let removeKey_sort = $(this).closest("li").attr("data-sort"); //取得要刪除天數的順序
+            // let day_number = $("div.schedule_header p").html(); //取得當前天數名稱
+            // let day_number_sort = $("div.schedule_header").attr("data-sort"); //取得當前天數的順序
             $(this).closest("li").remove(); //刪除選取的天數
             sessionStorage.removeItem(removeKey); //sessionStorage一併刪除
             
@@ -1618,7 +1704,13 @@
             $("div.schedule_header p").html("Day1");
             $("div.schedule_header").attr("data-date", first_day);
             $("div.schedule_header").attr("data-sort", 1);
+            $("ul.schedule_list").html(""); //先將行程列表清空
             printSessionStorage_and_refreshProduct("Day1"); //重新取資料，載入行程及產品列表
+            initMap();
+            var directionsRenderer = new google.maps.DirectionsRenderer;
+            var directionsService = new google.maps.DirectionsService;
+            directionsRenderer.setMap(map);
+            calculateAndDisplayRoute(directionsService, directionsRenderer, false, tempCallback);
 
             for (let i = 1; i <= li_length; i++) {
               let date = flatpickr.formatDate(new Date(time), 'Y-m-d');
@@ -1757,19 +1849,32 @@
         if (current_data.length == 0) {
           $("p.no_schedule").removeClass("-none");
         }
-
-
-        $("ul.schedule_list").html("");
-        for (let i = 0; i < current_data.length; i++) {
-          let items = current_data[i]; //只是要讓名稱短一點
-          scheduleView(items.product_ID, i, items.product_img, items.product_name, items.stay_time, items
-            .schedule_info, items.product_Latitutde, items.product_Longitude, distance[i]);
-        } //每次刪除行程時，就重新排列一次順序，利用陣列特性，以i來替代sort項目
+        
         initMap();
         var directionsRenderer = new google.maps.DirectionsRenderer;
         var directionsService = new google.maps.DirectionsService;
         directionsRenderer.setMap(map);
-        calculateAndDisplayRoute(directionsService, directionsRenderer, false, temp);
+        calculateAndDisplayRoute(directionsService, directionsRenderer, false, tempCallback);
+
+
+
+        // if($("button#btn_standard").hasClass("-none")){      //代表現在是標準模式，
+        //   $("ul.schedule_list").html("");
+        //   for (let i = 0; i < current_data.length; i++) {
+        //     let items = current_data[i]; //只是要讓名稱短一點
+        //     scheduleView(items.product_ID, i, items.product_img, items.product_name, items.stay_time, items
+        //       .schedule_info, items.product_Latitutde, items.product_Longitude, distance[i]);
+        //   } //每次刪除行程時，就重新排列一次順序，利用陣列特性，以i來替代sort項目
+        //   console.log("現在是標準模式")
+        // }else{
+        //   console.log("現在是地圖模式")
+        //   initMap();
+        //   var directionsRenderer = new google.maps.DirectionsRenderer;
+        //   var directionsService = new google.maps.DirectionsService;
+        //   directionsRenderer.setMap(map);
+        //   calculateAndDisplayRoute(directionsService, directionsRenderer, false, tempCallback);
+        // }
+
 
       });
 
@@ -2002,8 +2107,9 @@
         $("p.no_schedule").removeClass("-none");
       }
       $.each(get_Data, function (index, items) {
+      console.log(items)
         scheduleView(items.product_ID, items.sort, items.product_img, items.product_name, items.stay_time, items
-          .schedule_info, items.product_Latitutde, items.product_Longitude, distance[index]);
+          .schedule_info, items.product_Latitutde, items.product_Longitude);
       });
       $("div.product_body_content").html(
         '<li style="text-align: center;"><i class="fas fa-spinner fa-spin fa-3x"></i></li>'); //讀取動畫
@@ -2011,7 +2117,7 @@
         sortProduct(filter_product); //將最新產品的篩選結果，重新顯示一次
       }, 300);
     }
-    /*-----------------------------載入此頁面最做的事：選擇的天數、從編輯行程或我的行程按鈕過來------------------------------*/
+    /*-----------------------------載入此頁面做的事：選擇的天數、從編輯行程或我的行程按鈕過來------------------------------*/
     function init(selected_county) {
       let $ul = $("ul#sum_day");
       let add_day = "";
@@ -2085,6 +2191,9 @@
               } //若被捕捉到例外，代表到了最後一筆資料，直接存到sessionStorage
             });
             printSessionStorage_and_refreshProduct(day_number);
+
+            let directionsService = new google.maps.DirectionsService;
+            initKM(directionsService, day_number);
           }
         },
         error: function () {
@@ -2092,11 +2201,93 @@
         }
       });
     }
+
+    function initKM(directionsService, day_number){
+      let get_Data = JSON.parse(sessionStorage.getItem(day_number));
+      let start = "";
+      let distance;
+        $.each(get_Data, function(i, value){
+        if(i == 0){
+          start = {lat: parseFloat(value.product_Latitutde), lng: parseFloat(value.product_Longitude)};
+        }
+        if(i > 0){
+          let end = {lat: parseFloat(value.product_Latitutde), lng: parseFloat(value.product_Longitude)};
+          directionsService.route({
+            origin: start,         // Note that Javascript allows us to access the constant
+            destination: end,  // using square brackets and a string value as its"property."
+            travelMode: google.maps.TravelMode['DRIVING']
+          }, function(response, status) {
+              if (status == 'OK') {
+                distance = response.routes[0].legs[0].distance.text; 
+                $("li#"+value.product_ID).find("span.distance").html(distance);
+                start = {lat: parseFloat(value.product_Latitutde), lng: parseFloat(value.product_Longitude)};
+              } else {
+                window.alert('Directions request failed due to ' + status);
+              }
+          });
+        }
+      });
+    }
+
+
+
+       
+  
+      //   if(li_length > 0){
+      //     directionsService.route({
+      //       origin: user_departure,         // Note that Javascript allows us to access the constant
+      //       destination: user_destination,  // using square brackets and a string value as its"property."
+      //       waypoints: waypts,
+      //       optimizeWaypoints: optimizeWaypoint,
+      //       travelMode: google.maps.TravelMode['DRIVING']
+      //     }, function(response, status) {
+      //       if (status == 'OK') {
+      //         console.log(response.routes[0]);
+      //         let legs = response.routes[0].legs;
+      //         let waypoint_order = response.routes[0].waypoint_order;
+      //         for(let i = 0; i < legs.length; i++){
+      //           distance.push(legs[i].distance.text);
+      //         }
+      //           callback(distance);
+      //       } else {
+      //         window.alert('Directions request failed due to ' + status);
+      //       }
+      //     });
+      //     for (let i = 0; i < get_Data.length; i++) {
+      //     let items = listSchedule[i]; //只是要讓名稱短一點
+      //     scheduleView(items.product_ID, i, items.product_img, items.product_name, items.stay_time, items
+      //       .schedule_info, items.product_Latitutde, items.product_Longitude, distance[i]);
+      //   } 
+      //   }
+      // } 
+      // }
+
+      
+
+
+
+      //     initMap();
+      //     var directionsRenderer = new google.maps.DirectionsRenderer;
+      //     var directionsService = new google.maps.DirectionsService;
+      //     directionsRenderer.setMap(map);
+      //     calculateAndDisplayRoute(directionsService, directionsRenderer, false, tempCallback);
+
+
+
+
+
+
+
+
+
+
+
+
+
     /*----------------------------------新增行程區塊----------------------------*/
     function scheduleView(product_ID, sort, product_img, product_name, stay_time, schedule_info, product_Latitutde,
       product_Longitude, distance) {
-        let distance 
-        console.log(distance == undefined)
+      let distance_result = distance == undefined?"": distance;
       let insertHtml = `<li class="schedule_block" id="` + product_ID + `"data-sort="` + sort + `" data-latitutde="` + product_Latitutde + `" 
                           data-longitude="` + product_Longitude + `" style="padding-left: 15px; padding-right: 15px;">
                           <div class="row" style="padding-left: 15px; padding-right: 15px;">
@@ -2104,7 +2295,7 @@
                                 <div class="row del" style="padding-left: 15px; padding-right: 15px; margin-top: 20px;">
                                 <div class="col col-md-6">
                                   <span><i class="fas fa-car-side fa-2x"></i></span>
-                                  <span class="distance">`+ distance ==null?"":distance +`</span>
+                                  <span class="distance"> `+distance_result+`</span>
                                 </div>
                                 <div class="col col-md-6" >
                                   <span><i class="fas fa-arrow-down fa-2x"></i></span>
